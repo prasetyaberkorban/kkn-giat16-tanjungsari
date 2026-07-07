@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absensi Piket Harian</title>
+  <meta name="description" content="Formulir absensi piket harian posko via mobile.">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <div class="mobile-container">
+    <!-- Form View (Tampilan Awal) -->
+    <div id="form-view" class="card pulse">
+      <div class="logo-header">
+        <div class="date-badge" id="mobile-date-badge" style="margin-bottom: 1rem; display: inline-flex;">
+          📅 Loading Tanggal...
+        </div>
+        <h1>Absen Piket</h1>
+        <p>Pilih nama Anda untuk konfirmasi kehadiran hari ini</p>
+      </div>
+
+      <form id="attendance-form">
+        <!-- Pilihan Nama Anggota -->
+        <div class="form-group">
+          <label for="name-select">Pilih Nama Anggota</label>
+          <div class="select-wrapper">
+            <select id="name-select" class="select-control" required>
+              <option value="" disabled selected>-- Pilih Nama Anda --</option>
+              <optgroup label="TIM A (Zii, Mey, Hani)" id="opt-tim-a"></optgroup>
+              <optgroup label="TIM B (Tian, Ananda, Firzan)" id="opt-tim-b"></optgroup>
+              <optgroup label="TIM C (Cio, Naila, Valen)" id="opt-tim-c"></optgroup>
+              <optgroup label="TIM D (Fay, Nanda)" id="opt-tim-d"></optgroup>
+            </select>
+          </div>
+        </div>
+
+        <!-- Info Tugas Hari Ini (Dinamis setelah nama dipilih) -->
+        <div id="info-tugas-container" style="display: none; margin-bottom: 1.5rem; padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color);">
+          <span style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 0.25rem;">Tugas Anda Hari Ini</span>
+          <span id="info-tugas-val" style="font-size: 1.15rem; font-weight: 700; color: #fff;">-</span>
+        </div>
+
+        <!-- Tombol Konfirmasi -->
+        <button type="submit" class="btn" id="submit-btn">
+          <span>Konfirmasi Kehadiran</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Success View (Tampilan Sukses) -->
+    <div id="success-view" class="card" style="display: none;">
+      <div class="result-view">
+        <div class="status-icon success">✓</div>
+        <h2>Absen Berhasil!</h2>
+        <p style="color: var(--text-secondary);">Data absensi Anda telah disimpan di MongoDB dan Google Sheets.</p>
+        
+        <div class="success-details">
+          <div class="detail-row">
+            <span class="detail-label">Nama</span>
+            <span class="detail-val" id="res-name">-</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Tim</span>
+            <span class="detail-val" id="res-team">-</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Tugas Hari Ini</span>
+            <span class="detail-val" id="res-task">-</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Jam Absen</span>
+            <span class="detail-val" id="res-time">-</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Status</span>
+            <span class="detail-val" id="res-status" style="color: var(--color-success); font-weight: 700;">Hadir</span>
+          </div>
+        </div>
+
+        <!-- Tombol Kembali ke Dashboard Utama -->
+        <button class="btn" onclick="window.location.href = '/'" style="margin-top: 1rem;">
+          🏠 Ke Dashboard Utama
+        </button>
+        <!-- Tombol Absen Anggota Lain -->
+        <button class="btn" onclick="window.location.reload()" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: #fff; box-shadow: none; margin-top: 0.75rem;">
+          🔄 Absen Anggota Lain
+        </button>
+      </div>
+    </div>
+
+    <!-- Error/Warning View (Tampilan Gagal atau Sudah Absen) -->
+    <div id="error-view" class="card" style="display: none;">
+      <div class="result-view">
+        <div class="status-icon error" id="error-icon-val">✗</div>
+        <h2 id="error-title-val">Absen Gagal</h2>
+        <p id="error-message-val" style="color: var(--color-error); font-weight: 500;">Terjadi kesalahan saat memproses absensi.</p>
+        
+        <!-- Tombol Kembali ke Dashboard Utama -->
+        <button class="btn" onclick="window.location.href = '/'" style="margin-top: 1.5rem;">
+          🏠 Ke Dashboard Utama
+        </button>
+        <!-- Tombol Kembali ke Formulir -->
+        <button class="btn" id="error-retry-btn" onclick="showFormView()" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: #fff; box-shadow: none; margin-top: 0.75rem;">
+          🔄 Kembali ke Formulir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/absensi.js"></script>
+</body>
+</html>
