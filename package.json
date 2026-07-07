@@ -1,0 +1,30 @@
+{
+  "name": "piket-absensi",
+  "version": "1.0.0",
+  "description": "Website Jadwal Piket dan Absensi QR Code Terintegrasi MongoDB & Google Sheets",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "piket",
+    "absensi",
+    "qr-code",
+    "mongodb",
+    "google-sheets"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "googleapis": "^140.0.0",
+    "mongoose": "^8.4.3",
+    "node-cron": "^4.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
