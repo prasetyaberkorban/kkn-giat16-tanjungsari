@@ -1029,6 +1029,44 @@
     </div>
   </div>
 
+  <!-- Modal Tambah Cashflow -->
+  <div class="modal-overlay" id="cashflow-modal" onclick="closeCashflowModal()">
+    <div class="modal-card" onclick="event.stopPropagation()" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 id="cashflow-modal-title">💸 Tambah Arus Kas (Cashflow)</h3>
+        <button class="close-modal-btn" onclick="closeCashflowModal()">&times;</button>
+      </div>
+      <form id="cashflow-form" onsubmit="handleSaveCashflow(event)">
+        <input type="hidden" id="cashflow-form-id" value="">
+
+        <div class="form-group" style="text-align: left; margin-bottom: 1rem;">
+          <label style="display: block; color: var(--text-secondary); margin-bottom: 0.25rem; font-size: 0.9rem;">Tanggal:</label>
+          <input type="date" id="cashflow-form-tanggal" class="select-control" style="background: rgba(255, 255, 255, 0.05); padding: 0.85rem;" required>
+        </div>
+
+        <div class="form-group" style="text-align: left; margin-bottom: 1rem;">
+          <label style="display: block; color: var(--text-secondary); margin-bottom: 0.25rem; font-size: 0.9rem;">Jenis:</label>
+          <select id="cashflow-form-jenis" class="select-control" style="background: rgba(255, 255, 255, 0.05);" required>
+            <option value="Pemasukan">Pemasukan (Uang Masuk)</option>
+            <option value="Pengeluaran">Pengeluaran (Uang Keluar)</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="text-align: left; margin-bottom: 1rem;">
+          <label style="display: block; color: var(--text-secondary); margin-bottom: 0.25rem; font-size: 0.9rem;">Keterangan / Sumber / Penggunaan:</label>
+          <input type="text" id="cashflow-form-keterangan" class="select-control" style="background: rgba(255, 255, 255, 0.05); padding: 0.85rem;" required placeholder="Contoh: Iuran anggota, Beli galon...">
+        </div>
+
+        <div class="form-group" style="text-align: left; margin-bottom: 1.5rem;">
+          <label style="display: block; color: var(--text-secondary); margin-bottom: 0.25rem; font-size: 0.9rem;">Nominal (Rp):</label>
+          <input type="number" id="cashflow-form-nominal" class="select-control" style="background: rgba(255, 255, 255, 0.05); padding: 0.85rem;" required min="0" value="0">
+        </div>
+
+        <button type="submit" class="btn" style="background: var(--color-success); border-color: var(--color-success);">Simpan Cashflow</button>
+      </form>
+    </div>
+  </div>
+
   <script src="/app.js"></script>
 </body>
 </html>
