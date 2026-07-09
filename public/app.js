@@ -1587,6 +1587,57 @@ async function exportAllToExcel() {
       console.error('Gagal mengambil data program kerja untuk export global:', err);
     }
 
+    // Sheet 8: RAB (Semua Type)
+    try {
+      const resRab = await fetch('/api/rab');
+      const rabList = await resRab.json();
+      const rabData = rabList.map((item, idx) => ({
+        'No': idx + 1,
+        'Tipe RAB': item.type,
+        'Nama Proker': item.prokerName || '-',
+        'Kebutuhan': item.kebutuhan,
+        'Satuan': item.satuan || '-',
+        'Volume': item.volume,
+        'Harga Satuan': item.hargaSatuan,
+        'Harga Total (Jumlah)': item.type === 'Konsumsi' || item.type === 'Proker' ? (item.volume * item.hargaSatuan) : item.harga,
+        'Anggota': item.anggota || 11
+      }));
+      const wsRab = XLSX.utils.json_to_sheet(rabData);
+      XLSX.utils.book_append_sheet(wb, wsRab, 'RAB (Semua)');
+    } catch (err) {
+      console.error('Gagal mengambil data RAB untuk export global:', err);
+    }
+
+    // Sheet 9: Cashflow
+    try {
+      const resCf = await fetch('/api/cashflow');
+      const cfList = await resCf.json();
+      let saldo = 0;
+      const cfData = cfList.map((item, idx) => {
+        let pemasukan = 0;
+        let pengeluaran = 0;
+        if (item.jenis === 'Pemasukan') {
+          pemasukan = item.nominal;
+          saldo += item.nominal;
+        } else {
+          pengeluaran = item.nominal;
+          saldo -= item.nominal;
+        }
+        return {
+          'No': idx + 1,
+          'Tanggal': item.tanggal,
+          'Keterangan': item.keterangan,
+          'Pemasukan': pemasukan,
+          'Pengeluaran': pengeluaran,
+          'Saldo': saldo
+        };
+      });
+      const wsCf = XLSX.utils.json_to_sheet(cfData);
+      XLSX.utils.book_append_sheet(wb, wsCf, 'Cashflow');
+    } catch (err) {
+      console.error('Gagal mengambil data Cashflow untuk export global:', err);
+    }
+
     // Tulis File Excel
     XLSX.writeFile(wb, 'Laporan_Semua_Data_Posko_Tanjung_Sari.xlsx');
   } catch (err) {
