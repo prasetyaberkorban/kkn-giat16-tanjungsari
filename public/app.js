@@ -2223,12 +2223,46 @@ async function deleteProkerItem(id) {
 let currentRabType = 'Posko';
 let rabData = [];
 
+let rabSettingData = {};
+let cashflowData = [];
+
 async function fetchRab() {
   try {
-    const res = await fetch('/api/rab');
-    rabData = await res.json();
+    const [resRab, resCf] = await Promise.all([
+      fetch('/api/rab'),
+      fetch('/api/cashflow')
+    ]);
+    rabData = await resRab.json();
+    cashflowData = await resCf.json();
   } catch (err) {
-    console.error('Gagal mengambil data RAB:', err);
+    console.error('Gagal mengambil data RAB/Cashflow:', err);
+  }
+}
+
+async function fetchRabSetting(type) {
+  try {
+    const res = await fetch(`/api/rabsetting/${type}`);
+    const data = await res.json();
+    rabSettingData[type] = data.uangSisa || 0;
+  } catch (err) {
+    console.error('Gagal mengambil data RabSetting:', err);
+  }
+}
+
+async function saveUangSisa(type) {
+  const input = document.getElementById(`uang-sisa-${type}`);
+  if (!input) return;
+  const uangSisa = parseFloat(input.value) || 0;
+  try {
+    await fetch(`/api/rabsetting/${type}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ uangSisa })
+    });
+    rabSettingData[type] = uangSisa;
+    // alert('Uang Sisa berhasil disimpan!');
+  } catch (err) {
+    alert('Gagal menyimpan Uang Sisa');
   }
 }
 
