@@ -2289,11 +2289,22 @@ function switchRabType(type) {
 
   // Tampilkan/sembunyikan tombol tambah item
   const addBtn = document.getElementById('add-rab-btn');
-  if (addBtn) {
+  const addPemasukanBtn = document.getElementById('add-pemasukan-btn');
+  const addPengeluaranBtn = document.getElementById('add-pengeluaran-btn');
+
+  if (addBtn && addPemasukanBtn && addPengeluaranBtn) {
     if (type === 'Ringkasan') {
       addBtn.style.display = 'none';
+      addPemasukanBtn.style.display = 'none';
+      addPengeluaranBtn.style.display = 'none';
+    } else if (type === 'Cashflow') {
+      addBtn.style.display = 'none';
+      addPemasukanBtn.style.display = 'block';
+      addPengeluaranBtn.style.display = 'block';
     } else {
       addBtn.style.display = 'block';
+      addPemasukanBtn.style.display = 'none';
+      addPengeluaranBtn.style.display = 'none';
     }
   }
   
