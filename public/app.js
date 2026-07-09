@@ -2951,21 +2951,6 @@ async function syncToGoogleSheets() {
     alert('❌ Terjadi kesalahan jaringan saat sync data.');
   } finally {
     btn.innerHTML = originalText;
-    btn.disabled = false;
-  }
-}
-
-/* ================= CASHFLOW ================= */
-  } catch (err) {
-    console.error('Gagal mengambil data Cashflow:', err);
-  }
-}
-
-function renderCashflow(container) {
-  let tbodyHtml = '';
-  let totalPemasukan = 0;
-  let totalPengeluaran = 0;
-  let saldo = 0;
 
   if (cashflowData.length === 0) {
     tbodyHtml = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 3rem;">🔍 Belum ada data arus kas.</td></tr>`;
