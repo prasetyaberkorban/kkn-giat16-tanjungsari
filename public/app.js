@@ -1749,6 +1749,54 @@ async function exportTabToExcel(tabId) {
       XLSX.utils.book_append_sheet(wb, ws, `Proker - ${selectedProkerType}`);
       filename = `Laporan_Program_Kerja_${selectedProkerType}.xlsx`;
     }
+    else if (tabId === 'rab') {
+      if (currentRabType === 'Cashflow') {
+        const res = await fetch('/api/cashflow');
+        const list = await res.json();
+        let saldo = 0;
+        const data = list.map((item, idx) => {
+          let pemasukan = 0;
+          let pengeluaran = 0;
+          if (item.jenis === 'Pemasukan') {
+            pemasukan = item.nominal;
+            saldo += item.nominal;
+          } else {
+            pengeluaran = item.nominal;
+            saldo -= item.nominal;
+          }
+          return {
+            'No': idx + 1,
+            'Tanggal': item.tanggal,
+            'Keterangan': item.keterangan,
+            'Pemasukan': pemasukan,
+            'Pengeluaran': pengeluaran,
+            'Saldo': saldo
+          };
+        });
+        const ws = XLSX.utils.json_to_sheet(data);
+        XLSX.utils.book_append_sheet(wb, ws, 'Cashflow');
+        filename = 'Laporan_Cashflow.xlsx';
+      } else {
+        const res = await fetch('/api/rab');
+        const list = await res.json();
+        const filtered = currentRabType === 'Ringkasan' ? list : list.filter(i => i.type === currentRabType);
+        
+        const data = filtered.map((item, idx) => ({
+          'No': idx + 1,
+          'Tipe RAB': item.type,
+          'Nama Proker': item.prokerName || '-',
+          'Kebutuhan': item.kebutuhan,
+          'Satuan': item.satuan || '-',
+          'Volume': item.volume,
+          'Harga Satuan': item.hargaSatuan,
+          'Harga Total (Jumlah)': item.type === 'Konsumsi' || item.type === 'Proker' ? (item.volume * item.hargaSatuan) : item.harga,
+          'Anggota': item.anggota || 11
+        }));
+        const ws = XLSX.utils.json_to_sheet(data);
+        XLSX.utils.book_append_sheet(wb, ws, `RAB - ${currentRabType}`);
+        filename = `Laporan_RAB_${currentRabType}.xlsx`;
+      }
+    }
 
     XLSX.writeFile(wb, filename);
   } catch (err) {
