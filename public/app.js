@@ -530,7 +530,8 @@ async function switchWeek(weekNum) {
       // Map tasks to teams
       const tasksMap = {};
       Object.entries(schedule.dailySchedule).forEach(([teamName, info]) => {
-        tasksMap[info.task] = teamName;
+        const membersStr = info.members ? info.members.join(', ') : '';
+        tasksMap[info.task] = membersStr ? `${teamName} (${membersStr})` : teamName;
       });
 
       const row = document.createElement('tr');
