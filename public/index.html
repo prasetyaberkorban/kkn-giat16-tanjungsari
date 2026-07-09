@@ -1046,6 +1046,7 @@
       </div>
       <form id="cashflow-form" onsubmit="handleSaveCashflow(event)">
         <input type="hidden" id="cashflow-form-id" value="">
+        <input type="hidden" id="cashflow-form-jenis" value="Pemasukan">
 
         <div class="form-group" style="text-align: left; margin-bottom: 1rem;">
           <label style="display: block; color: var(--text-secondary); margin-bottom: 0.25rem; font-size: 0.9rem;">Tanggal:</label>
@@ -1053,21 +1054,30 @@
         </div>
 
         <div class="form-group" style="text-align: left; margin-bottom: 1rem;">
-          <label style="display: block; color: var(--text-secondary); margin-bottom: 0.25rem; font-size: 0.9rem;">Jenis:</label>
-          <select id="cashflow-form-jenis" class="select-control" style="background: rgba(255, 255, 255, 0.05);" required>
-            <option value="Pemasukan">Pemasukan (Uang Masuk)</option>
-            <option value="Pengeluaran">Pengeluaran (Uang Keluar)</option>
+          <label style="display: block; color: var(--text-secondary); margin-bottom: 0.25rem; font-size: 0.9rem;">Kategori:</label>
+          <select id="cashflow-form-kategori" class="select-control" style="background: rgba(255, 255, 255, 0.05);" required>
+            <!-- Options populated dynamically based on jenis -->
           </select>
         </div>
 
         <div class="form-group" style="text-align: left; margin-bottom: 1rem;">
-          <label style="display: block; color: var(--text-secondary); margin-bottom: 0.25rem; font-size: 0.9rem;">Keterangan / Sumber / Penggunaan:</label>
-          <input type="text" id="cashflow-form-keterangan" class="select-control" style="background: rgba(255, 255, 255, 0.05); padding: 0.85rem;" required placeholder="Contoh: Iuran anggota, Beli galon...">
+          <label style="display: block; color: var(--text-secondary); margin-bottom: 0.25rem; font-size: 0.9rem;">Deskripsi:</label>
+          <input type="text" id="cashflow-form-deskripsi" class="select-control" style="background: rgba(255, 255, 255, 0.05); padding: 0.85rem;" required placeholder="Contoh: Iuran anggota, Beli galon...">
+        </div>
+
+        <div class="form-group" style="text-align: left; margin-bottom: 1rem;">
+          <label style="display: block; color: var(--text-secondary); margin-bottom: 0.25rem; font-size: 0.9rem;">Harga Satuan (Rp):</label>
+          <input type="number" id="cashflow-form-hargasatuan" class="select-control" style="background: rgba(255, 255, 255, 0.05); padding: 0.85rem;" required min="0" value="0" oninput="calculateCashflowNominal()">
+        </div>
+
+        <div class="form-group" style="text-align: left; margin-bottom: 1rem;">
+          <label style="display: block; color: var(--text-secondary); margin-bottom: 0.25rem; font-size: 0.9rem;">Jumlah Barang / Volume:</label>
+          <input type="number" id="cashflow-form-jumlahbarang" class="select-control" style="background: rgba(255, 255, 255, 0.05); padding: 0.85rem;" required min="1" value="1" oninput="calculateCashflowNominal()">
         </div>
 
         <div class="form-group" style="text-align: left; margin-bottom: 1.5rem;">
-          <label style="display: block; color: var(--text-secondary); margin-bottom: 0.25rem; font-size: 0.9rem;">Nominal (Rp):</label>
-          <input type="number" id="cashflow-form-nominal" class="select-control" style="background: rgba(255, 255, 255, 0.05); padding: 0.85rem;" required min="0" value="0">
+          <label style="display: block; color: var(--text-secondary); margin-bottom: 0.25rem; font-size: 0.9rem;">Nominal Total (Rp):</label>
+          <input type="number" id="cashflow-form-nominal" class="select-control" style="background: rgba(255, 255, 255, 0.05); padding: 0.85rem;" required min="0" value="0" readonly>
         </div>
 
         <button type="submit" class="btn" style="background: var(--color-success); border-color: var(--color-success);">Simpan Cashflow</button>
