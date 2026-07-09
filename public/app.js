@@ -2693,8 +2693,10 @@ function openEditRabModal(id) {
   document.getElementById('rab-form-harga').value = item.harga || 0;
   document.getElementById('rab-form-hargasatuan').value = item.hargaSatuan || 0;
   document.getElementById('rab-form-anggota').value = item.anggota || 11;
+  document.getElementById('rab-form-isautocalc').value = item.isAutoCalc !== false ? 'true' : 'false';
 
   toggleRabFormFields(item.type);
+  toggleRabCalcMode();
   modal.classList.add('active');
 }
 
