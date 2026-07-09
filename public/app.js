@@ -2939,24 +2939,6 @@ async function syncToGoogleSheets() {
       method: 'POST'
     });
     
-    const result = await response.json();
-    
-    if (response.ok) {
-      alert('✅ Sukses: ' + result.message);
-    } else {
-      alert('❌ Gagal: ' + (result.error || 'Terjadi kesalahan'));
-    }
-  } catch (error) {
-    console.error('Error syncing to sheets:', error);
-    alert('❌ Terjadi kesalahan jaringan saat sync data.');
-  } finally {
-    btn.innerHTML = originalText;
-
-  if (cashflowData.length === 0) {
-    tbodyHtml = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 3rem;">🔍 Belum ada data arus kas.</td></tr>`;
-  } else {
-    cashflowData.forEach((item, index) => {
-      let pemasukanStr = '-';
       let pengeluaranStr = '-';
       
       if (item.jenis === 'Pemasukan') {
