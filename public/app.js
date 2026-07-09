@@ -2743,12 +2743,13 @@ async function handleSaveRab(e) {
 
   const kebutuhan = document.getElementById('rab-form-kebutuhan').value;
   const satuan = document.getElementById('rab-form-satuan').value;
-  const volume = parseFloat(document.getElementById('rab-form-volume').value);
-  const harga = parseFloat(document.getElementById('rab-form-harga').value);
-  const hargaSatuan = parseFloat(document.getElementById('rab-form-hargasatuan').value);
-  const anggota = parseInt(document.getElementById('rab-form-anggota').value, 10);
+  const volume = parseFloat(document.getElementById('rab-form-volume').value) || 0;
+  const harga = parseFloat(document.getElementById('rab-form-harga').value) || 0;
+  const hargaSatuan = parseFloat(document.getElementById('rab-form-hargasatuan').value) || 0;
+  const anggota = parseInt(document.getElementById('rab-form-anggota').value, 10) || 11;
+  const isAutoCalc = document.getElementById('rab-form-isautocalc').value === 'true';
 
-  const payload = { type, prokerName, kebutuhan, satuan, volume, harga, hargaSatuan, anggota };
+  const payload = { type, prokerName, kebutuhan, satuan, volume, harga, hargaSatuan, anggota, isAutoCalc };
 
   try {
     let res;
