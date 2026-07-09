@@ -2889,13 +2889,6 @@ async function syncToGoogleSheets() {
 }
 
 /* ================= CASHFLOW ================= */
-
-let cashflowData = [];
-
-async function fetchCashflow() {
-  try {
-    const res = await fetch('/api/cashflow');
-    cashflowData = await res.json();
   } catch (err) {
     console.error('Gagal mengambil data Cashflow:', err);
   }
