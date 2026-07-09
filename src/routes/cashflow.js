@@ -45,4 +45,29 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+
+// PUT update a cashflow item
+router.put('/:id', async (req, res) => {
+  try {
+    const { tanggal, kategori, deskripsi, jenis, hargaSatuan, jumlahBarang, nominal } = req.body;
+    const updatedItem = await Cashflow.findByIdAndUpdate(
+      req.params.id,
+      {
+        tanggal,
+        kategori,
+        deskripsi,
+        jenis,
+        hargaSatuan: parseInt(hargaSatuan) || 0,
+        jumlahBarang: parseInt(jumlahBarang) || 0,
+        nominal: parseInt(nominal) || 0
+      },
+      { new: true }
+    );
+    res.json({ message: 'Cashflow berhasil diupdate', item: updatedItem });
+  } catch (err) {
+    console.error('Error updating Cashflow:', err);
+    res.status(500).json({ error: 'Gagal mengupdate Cashflow' });
+  }
+});
+
 module.exports = router;
