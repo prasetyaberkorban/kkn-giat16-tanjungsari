@@ -2618,6 +2618,33 @@ function populateRabProkerList() {
   });
 }
 
+function toggleRabCalcMode() {
+  const isAuto = document.getElementById('rab-form-isautocalc').value === 'true';
+  const hargaTotalInput = document.getElementById('rab-form-harga');
+  const volumeInput = document.getElementById('rab-form-volume');
+  const hargaSatuanInput = document.getElementById('rab-form-hargasatuan');
+
+  if (isAuto) {
+    hargaTotalInput.readOnly = true;
+    volumeInput.required = true;
+    hargaSatuanInput.required = true;
+    calculateRabTotalAuto();
+  } else {
+    hargaTotalInput.readOnly = false;
+    volumeInput.required = false;
+    hargaSatuanInput.required = false;
+  }
+}
+
+function calculateRabTotalAuto() {
+  const isAuto = document.getElementById('rab-form-isautocalc').value === 'true';
+  if (!isAuto) return;
+
+  const volume = parseFloat(document.getElementById('rab-form-volume').value) || 0;
+  const hargaSatuan = parseFloat(document.getElementById('rab-form-hargasatuan').value) || 0;
+  document.getElementById('rab-form-harga').value = volume * hargaSatuan;
+}
+
 function openAddRabModal(prefillProker = null) {
   if (currentRabType === 'Cashflow') {
     openCashflowModal();
@@ -2635,7 +2662,9 @@ function openAddRabModal(prefillProker = null) {
   
   // Set default type select to current selected tab
   document.getElementById('rab-form-type').value = currentRabType;
+  document.getElementById('rab-form-isautocalc').value = 'true';
   toggleRabFormFields(currentRabType);
+  toggleRabCalcMode();
 
   if (currentRabType === 'Proker' && prefillProker && typeof prefillProker === 'string') {
     document.getElementById('rab-form-proker-name').value = prefillProker;
