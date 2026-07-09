@@ -2706,3 +2706,181 @@ async function syncToGoogleSheets() {
     btn.disabled = false;
   }
 }
+
+/* ================= CASHFLOW ================= */
+
+let cashflowData = [];
+
+async function fetchCashflow() {
+  try {
+    const res = await fetch('/api/cashflow');
+    cashflowData = await res.json();
+  } catch (err) {
+    console.error('Gagal mengambil data Cashflow:', err);
+  }
+}
+
+function renderCashflow(container) {
+  let tbodyHtml = '';
+  let totalPemasukan = 0;
+  let totalPengeluaran = 0;
+  let saldo = 0;
+
+  if (cashflowData.length === 0) {
+    tbodyHtml = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 3rem;">🔍 Belum ada data arus kas.</td></tr>`;
+  } else {
+    cashflowData.forEach((item, index) => {
+      let pemasukanStr = '-';
+      let pengeluaranStr = '-';
+      
+      if (item.jenis === 'Pemasukan') {
+        totalPemasukan += item.nominal;
+        saldo += item.nominal;
+        pemasukanStr = `<span style="color: var(--color-success); font-weight: bold;">+ ${formatRupiah(item.nominal)}</span>`;
+      } else {
+        totalPengeluaran += item.nominal;
+        saldo -= item.nominal;
+        pengeluaranStr = `<span style="color: var(--color-error); font-weight: bold;">- ${formatRupiah(item.nominal)}</span>`;
+      }
+
+      tbodyHtml += `
+        <tr>
+          <td style="font-weight: 600; color: #fff;">${index + 1}</td>
+          <td style="white-space: nowrap;">${item.tanggal}</td>
+          <td style="font-weight: 600; color: var(--color-primary);">${item.keterangan}</td>
+          <td>${pemasukanStr}</td>
+          <td>${pengeluaranStr}</td>
+          <td style="font-weight: bold; color: #fff;">${formatRupiah(saldo)}</td>
+          <td style="text-align: center; white-space: nowrap;">
+            <button class="delete-btn" style="background: none; border: none; color: var(--color-error); cursor: pointer; font-size: 1.15rem; padding: 0.25rem;" onclick="deleteCashflowItem('${item._id}')" title="Hapus">🗑️</button>
+          </td>
+        </tr>
+      `;
+    });
+  }
+
+  container.innerHTML = `
+    <table class="premium-table" id="cashflow-table">
+      <thead>
+        <tr>
+          <th style="width: 60px;">No</th>
+          <th style="width: 120px;">Tanggal</th>
+          <th>Keterangan / Sumber / Penggunaan</th>
+          <th style="width: 150px;">Pemasukan</th>
+          <th style="width: 150px;">Pengeluaran</th>
+          <th style="width: 150px;">Saldo</th>
+          <th style="width: 80px; text-align: center;">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${tbodyHtml}
+      </tbody>
+      <tfoot>
+        <tr style="background: rgba(16, 185, 129, 0.05); font-weight: bold;">
+          <td colspan="3" style="text-align: right; color: #fff; font-size: 1rem; padding: 1rem;">Total Pemasukan:</td>
+          <td style="color: var(--color-success); font-size: 1.05rem; padding: 1rem;">${formatRupiah(totalPemasukan)}</td>
+          <td colspan="3"></td>
+        </tr>
+        <tr style="background: rgba(239, 68, 68, 0.05); font-weight: bold;">
+          <td colspan="3" style="text-align: right; color: #fff; font-size: 1rem; padding: 1rem;">Total Pengeluaran:</td>
+          <td></td>
+          <td style="color: var(--color-error); font-size: 1.05rem; padding: 1rem;">${formatRupiah(totalPengeluaran)}</td>
+          <td colspan="2"></td>
+        </tr>
+        <tr style="background: rgba(99, 102, 241, 0.1); font-weight: bold;">
+          <td colspan="3" style="text-align: right; color: #fff; font-size: 1.1rem; padding: 1.25rem;">Saldo Akhir:</td>
+          <td colspan="2"></td>
+          <td style="color: #a5b4fc; font-size: 1.2rem; padding: 1.25rem;">${formatRupiah(saldo)}</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  `;
+}
+
+function openCashflowModal() {
+  const modal = document.getElementById('cashflow-modal');
+  if (!modal) return;
+
+  document.getElementById('cashflow-form-id').value = '';
+  document.getElementById('cashflow-form').reset();
+  
+  // Set default date to today
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  document.getElementById('cashflow-form-tanggal').value = `${yyyy}-${mm}-${dd}`;
+
+  modal.classList.add('active');
+}
+
+function closeCashflowModal() {
+  const modal = document.getElementById('cashflow-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+async function handleSaveCashflow(e) {
+  e.preventDefault();
+  
+  const id = document.getElementById('cashflow-form-id').value;
+  const tanggal = document.getElementById('cashflow-form-tanggal').value;
+  const keterangan = document.getElementById('cashflow-form-keterangan').value;
+  const jenis = document.getElementById('cashflow-form-jenis').value;
+  const nominal = document.getElementById('cashflow-form-nominal').value;
+
+  const payload = { tanggal, keterangan, jenis, nominal };
+
+  try {
+    let res;
+    if (id) {
+      // Edit is not implemented yet in the UI, but ready for API
+      res = await fetch(`/api/cashflow/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } else {
+      res = await fetch('/api/cashflow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
+
+    if (res.ok) {
+      closeCashflowModal();
+      await fetchCashflow();
+      renderRab(); // renderRab calls renderCashflow if currentRabType === 'Cashflow'
+    } else {
+      const data = await res.json();
+      alert('Gagal menyimpan cashflow: ' + (data.error || 'Unknown error'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Terjadi kesalahan jaringan.');
+  }
+}
+
+async function deleteCashflowItem(id) {
+  if (!confirm('Apakah Anda yakin ingin menghapus catatan arus kas ini?')) return;
+  try {
+    const res = await fetch(`/api/cashflow/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      await fetchCashflow();
+      renderRab();
+    } else {
+      alert('Gagal menghapus cashflow.');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Terjadi kesalahan jaringan.');
+  }
+}
+
+// Override initial load to fetch cashflow
+const _originalFetchRab = fetchRab;
+fetchRab = async function() {
+  await _originalFetchRab();
+  await fetchCashflow();
+};
