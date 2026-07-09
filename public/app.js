@@ -3077,11 +3077,14 @@ async function handleSaveCashflow(e) {
   
   const id = document.getElementById('cashflow-form-id').value;
   const tanggal = document.getElementById('cashflow-form-tanggal').value;
-  const keterangan = document.getElementById('cashflow-form-keterangan').value;
   const jenis = document.getElementById('cashflow-form-jenis').value;
-  const nominal = document.getElementById('cashflow-form-nominal').value;
+  const kategori = document.getElementById('cashflow-form-kategori').value;
+  const deskripsi = document.getElementById('cashflow-form-deskripsi').value;
+  const hargaSatuan = parseFloat(document.getElementById('cashflow-form-hargasatuan').value) || 0;
+  const jumlahBarang = parseFloat(document.getElementById('cashflow-form-jumlahbarang').value) || 0;
+  const nominal = parseFloat(document.getElementById('cashflow-form-nominal').value) || 0;
 
-  const payload = { tanggal, keterangan, jenis, nominal };
+  const payload = { tanggal, jenis, kategori, deskripsi, hargaSatuan, jumlahBarang, nominal };
 
   try {
     let res;
