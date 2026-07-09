@@ -2515,6 +2515,11 @@ function populateRabProkerList() {
 }
 
 function openAddRabModal(prefillProker = null) {
+  if (currentRabType === 'Cashflow') {
+    openCashflowModal();
+    return;
+  }
+
   const modal = document.getElementById('rab-modal');
   if (!modal) return;
 
