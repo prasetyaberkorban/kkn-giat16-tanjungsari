@@ -13,13 +13,15 @@ const TASKS = [
   'Libur'             // Indeks 3
 ];
 
-// Offset untuk masing-masing tim agar mencocokkan jadwal hari Kamis, 9 Juli 2026 (d = 0)
-// Di mana: TIM D = Masak (0), TIM A = Cuci Piring (1), TIM B = Bersih-bersih (2), TIM C = Libur (3)
-const TEAM_OFFSETS = {
-  'TIM D': 0,
-  'TIM A': 1,
-  'TIM B': 2,
-  'TIM C': 3
+// Jadwal tetap berdasarkan hari
+const FIXED_SCHEDULE_BY_DAY = {
+  'Senin':  { 'Masak & Belanja': 'TIM A', 'Cuci Piring': 'TIM B', 'Bersih-Bersih Posko': 'TIM C', 'Libur': 'TIM D' },
+  'Selasa': { 'Masak & Belanja': 'TIM B', 'Cuci Piring': 'TIM C', 'Bersih-Bersih Posko': 'TIM D', 'Libur': 'TIM A' },
+  'Rabu':   { 'Masak & Belanja': 'TIM C', 'Cuci Piring': 'TIM D', 'Bersih-Bersih Posko': 'TIM A', 'Libur': 'TIM B' },
+  'Kamis':  { 'Masak & Belanja': 'TIM D', 'Cuci Piring': 'TIM A', 'Bersih-Bersih Posko': 'TIM B', 'Libur': 'TIM C' },
+  'Jumat':  { 'Masak & Belanja': 'TIM A', 'Cuci Piring': 'TIM B', 'Bersih-Bersih Posko': 'TIM C', 'Libur': 'TIM D' },
+  'Sabtu':  { 'Masak & Belanja': 'TIM B', 'Cuci Piring': 'TIM C', 'Bersih-Bersih Posko': 'TIM D', 'Libur': 'TIM A' },
+  'Minggu': { 'Masak & Belanja': 'TIM C', 'Cuci Piring': 'TIM D', 'Bersih-Bersih Posko': 'TIM A', 'Libur': 'TIM B' }
 };
 
 // Epoch tanggal acuan: Kamis, 9 Juli 2026 (WIB / GMT+7)
@@ -61,18 +63,26 @@ function calculateSchedule(dateStr) {
     daysSinceEpoch = 0;
   }
 
-  // 1. Hitung Tugas Harian Tim
+  // Dapatkan nama hari dalam bahasa Indonesia
+  const daysIndonesian = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+  const targetDate = new Date(`${dateStr}T00:00:00+07:00`);
+  const dayNameIndo = daysIndonesian[targetDate.getDay()];
+
+  // 1. Hitung Tugas Harian Tim (Fix per Hari)
   const dailySchedule = {};
-  Object.keys(TEAMS).forEach(teamName => {
-    const offset = TEAM_OFFSETS[teamName];
-    // Formula rotasi: (offset - daysSinceEpoch) % 4
-    let taskIndex = (offset - daysSinceEpoch) % 4;
-    if (taskIndex < 0) {
-      taskIndex += 4;
+  const daySchedule = FIXED_SCHEDULE_BY_DAY[dayNameIndo];
+  
+  // Reverse mapping: from task->Team to Team->Task
+  const teamToTask = {};
+  if (daySchedule) {
+    for (const [task, team] of Object.entries(daySchedule)) {
+      teamToTask[team] = task;
     }
-    
+  }
+
+  Object.keys(TEAMS).forEach(teamName => {
     dailySchedule[teamName] = {
-      task: TASKS[taskIndex],
+      task: teamToTask[teamName] || 'Libur',
       members: TEAMS[teamName]
     };
   });
@@ -88,11 +98,6 @@ function calculateSchedule(dateStr) {
   
   const bathroomTeamList = ['TIM A', 'TIM B', 'TIM C', 'TIM D'];
   const bathroomPiketTeam = bathroomTeamList[weekIndex];
-
-  // Dapatkan nama hari dalam bahasa Indonesia
-  const daysIndonesian = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-  const targetDate = new Date(`${dateStr}T00:00:00+07:00`);
-  const dayNameIndo = daysIndonesian[targetDate.getDay()];
 
   return {
     date: dateStr,
