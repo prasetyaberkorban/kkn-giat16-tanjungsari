@@ -3128,10 +3128,3 @@ async function deleteCashflowItem(id) {
     alert('Terjadi kesalahan jaringan.');
   }
 }
-
-// Override initial load to fetch cashflow
-const _originalFetchRab = fetchRab;
-fetchRab = async function() {
-  await _originalFetchRab();
-  await fetchRab();
-};
