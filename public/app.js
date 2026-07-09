@@ -1081,6 +1081,25 @@ function calculateCashflowNominal() {
   document.getElementById('cashflow-form-nominal').value = hargaSatuan * jumlahBarang;
 }
 
+
+window.editCashflowItem = function(id) {
+  const item = cashflowData.find(c => c._id === id);
+  if (!item) return;
+  openCashflowModal(item.jenis);
+  setTimeout(() => {
+    document.getElementById('cashflow-form-id').value = item._id;
+    if (window._cashflowDatePicker) {
+      window._cashflowDatePicker.setDate(item.tanggal || new Date());
+    }
+    const katSelect = document.getElementById('cashflow-form-kategori');
+    if(katSelect) katSelect.value = item.kategori || '';
+    document.getElementById('cashflow-form-deskripsi').value = item.deskripsi || '';
+    document.getElementById('cashflow-form-hargasatuan').value = item.hargaSatuan || 0;
+    document.getElementById('cashflow-form-jumlahbarang').value = item.jumlahBarang || 0;
+    document.getElementById('cashflow-form-nominal').value = item.nominal || 0;
+  }, 100);
+};
+
 function openCashflowModal(jenis = 'Pemasukan') {
   const modal = document.getElementById('cashflow-modal');
   if (!modal) return;
@@ -1089,11 +1108,18 @@ function openCashflowModal(jenis = 'Pemasukan') {
   document.getElementById('cashflow-form').reset();
   
   // Set default date to today
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, '0');
-  const dd = String(today.getDate()).padStart(2, '0');
-  document.getElementById('cashflow-form-tanggal').value = `${yyyy}-${mm}-${dd}`;
+  
+  if (!window._cashflowDatePicker) {
+    window._cashflowDatePicker = flatpickr("#cashflow-form-tanggal", {
+      dateFormat: "Y-m-d",
+      altInput: true,
+      altFormat: "d-m-Y",
+      defaultDate: "today"
+    });
+  } else {
+    window._cashflowDatePicker.setDate("today");
+  }
+
 
   // Set jenis and dropdown options
   const jenisInput = document.getElementById('cashflow-form-jenis');
@@ -2299,6 +2325,18 @@ async function fetchRabSetting(type) {
   }
 }
 
+
+window.editUangSisa = function(type) {
+  const container = document.getElementById(`uang-sisa-container-${type}`);
+  if (!container) return;
+  const currentVal = rabSettingData[type] || 0;
+  container.innerHTML = `
+    <span style="color: var(--text-secondary);">Rp</span>
+    <input type="number" id="uang-sisa-${type}" class="select-control" style="width: 120px; padding: 0.25rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--color-warning); font-weight: bold; font-size: 1rem; text-align: right;" value="${currentVal}">
+    <button onclick="saveUangSisa('${type}')" style="background: var(--color-success); border: none; border-radius: 4px; color: white; padding: 0.25rem 0.5rem; cursor: pointer; font-size: 0.9rem;">Simpan</button>
+  `;
+};
+
 async function saveUangSisa(type) {
   const input = document.getElementById(`uang-sisa-${type}`);
   if (!input) return;
@@ -2310,6 +2348,7 @@ async function saveUangSisa(type) {
       body: JSON.stringify({ uangSisa })
     });
     rabSettingData[type] = uangSisa;
+    renderRab();
     // alert('Uang Sisa berhasil disimpan!');
   } catch (err) {
     alert('Gagal menyimpan Uang Sisa');
@@ -2451,9 +2490,9 @@ function renderRab() {
             <td colspan="100%" style="text-align: right; color: #fff; font-size: 1rem; padding: 1rem;">
               <div style="display: flex; justify-content: flex-end; align-items: center; gap: 1rem;">
                 Uang Sisa:
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <span style="color: var(--text-secondary);">Rp</span>
-                  <input type="number" id="uang-sisa-${currentRabType}" class="select-control" style="width: 150px; padding: 0.5rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--color-warning); font-weight: bold; font-size: 1.1rem; text-align: right;" value="${rabSettingData[currentRabType] || 0}" onchange="saveUangSisa('${currentRabType}')">
+                <div style="display: flex; align-items: center; gap: 0.5rem;" id="uang-sisa-container-${currentRabType}">
+                  <span style="color: var(--color-warning); font-weight: bold; font-size: 1.1rem;">${formatRupiah(rabSettingData[currentRabType] || 0)}</span>
+                  <button onclick="editUangSisa('${currentRabType}')" style="background: none; border: none; cursor: pointer; color: var(--color-primary);" title="Edit Uang Sisa">✏️</button>
                 </div>
               </div>
             </td>
@@ -2524,9 +2563,9 @@ function renderRab() {
             <td colspan="100%" style="text-align: right; color: #fff; font-size: 1rem; padding: 1rem;">
               <div style="display: flex; justify-content: flex-end; align-items: center; gap: 1rem;">
                 Uang Sisa:
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <span style="color: var(--text-secondary);">Rp</span>
-                  <input type="number" id="uang-sisa-${currentRabType}" class="select-control" style="width: 150px; padding: 0.5rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--color-warning); font-weight: bold; font-size: 1.1rem; text-align: right;" value="${rabSettingData[currentRabType] || 0}" onchange="saveUangSisa('${currentRabType}')">
+                <div style="display: flex; align-items: center; gap: 0.5rem;" id="uang-sisa-container-${currentRabType}">
+                  <span style="color: var(--color-warning); font-weight: bold; font-size: 1.1rem;">${formatRupiah(rabSettingData[currentRabType] || 0)}</span>
+                  <button onclick="editUangSisa('${currentRabType}')" style="background: none; border: none; cursor: pointer; color: var(--color-primary);" title="Edit Uang Sisa">✏️</button>
                 </div>
               </div>
             </td>
@@ -2595,9 +2634,9 @@ function renderRab() {
             <td colspan="100%" style="text-align: right; color: #fff; font-size: 1rem; padding: 1rem;">
               <div style="display: flex; justify-content: flex-end; align-items: center; gap: 1rem;">
                 Uang Sisa:
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <span style="color: var(--text-secondary);">Rp</span>
-                  <input type="number" id="uang-sisa-${currentRabType}" class="select-control" style="width: 150px; padding: 0.5rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--color-warning); font-weight: bold; font-size: 1.1rem; text-align: right;" value="${rabSettingData[currentRabType] || 0}" onchange="saveUangSisa('${currentRabType}')">
+                <div style="display: flex; align-items: center; gap: 0.5rem;" id="uang-sisa-container-${currentRabType}">
+                  <span style="color: var(--color-warning); font-weight: bold; font-size: 1.1rem;">${formatRupiah(rabSettingData[currentRabType] || 0)}</span>
+                  <button onclick="editUangSisa('${currentRabType}')" style="background: none; border: none; cursor: pointer; color: var(--color-primary);" title="Edit Uang Sisa">✏️</button>
                 </div>
               </div>
             </td>
@@ -2691,9 +2730,9 @@ function renderRab() {
             <td colspan="100%" style="text-align: right; color: #fff; font-size: 1rem; padding: 1rem;">
               <div style="display: flex; justify-content: flex-end; align-items: center; gap: 1rem;">
                 Uang Sisa:
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <span style="color: var(--text-secondary);">Rp</span>
-                  <input type="number" id="uang-sisa-${currentRabType}" class="select-control" style="width: 150px; padding: 0.5rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--color-warning); font-weight: bold; font-size: 1.1rem; text-align: right;" value="${rabSettingData[currentRabType] || 0}" onchange="saveUangSisa('${currentRabType}')">
+                <div style="display: flex; align-items: center; gap: 0.5rem;" id="uang-sisa-container-${currentRabType}">
+                  <span style="color: var(--color-warning); font-weight: bold; font-size: 1.1rem;">${formatRupiah(rabSettingData[currentRabType] || 0)}</span>
+                  <button onclick="editUangSisa('${currentRabType}')" style="background: none; border: none; cursor: pointer; color: var(--color-primary);" title="Edit Uang Sisa">✏️</button>
                 </div>
               </div>
             </td>
@@ -3026,11 +3065,12 @@ function renderCashflow(container) {
         <tr>
           <td style="font-weight: 600; color: #fff;">${index + 1}</td>
           <td style="white-space: nowrap;">${item.tanggal}</td>
-          <td style="font-weight: 600; color: var(--color-primary);">${item.keterangan}</td>
+          <td style="font-weight: 600; color: var(--color-primary);">[${item.kategori || '-'}] ${item.deskripsi || '-'}</td>
           <td>${pemasukanStr}</td>
           <td>${pengeluaranStr}</td>
           <td style="font-weight: bold; color: #fff;">${formatRupiah(saldo)}</td>
           <td style="text-align: center; white-space: nowrap;">
+            <button class="edit-btn" style="background: none; border: none; color: var(--color-primary); cursor: pointer; font-size: 1.15rem; padding: 0.25rem;" onclick="editCashflowItem('${item._id}')" title="Edit">✏️</button>
             <button class="delete-btn" style="background: none; border: none; color: var(--color-error); cursor: pointer; font-size: 1.15rem; padding: 0.25rem;" onclick="deleteCashflowItem('${item._id}')" title="Hapus">🗑️</button>
           </td>
         </tr>
@@ -3076,9 +3116,9 @@ function renderCashflow(container) {
             <td colspan="100%" style="text-align: right; color: #fff; font-size: 1rem; padding: 1rem;">
               <div style="display: flex; justify-content: flex-end; align-items: center; gap: 1rem;">
                 Uang Sisa:
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <span style="color: var(--text-secondary);">Rp</span>
-                  <input type="number" id="uang-sisa-${currentRabType}" class="select-control" style="width: 150px; padding: 0.5rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--color-warning); font-weight: bold; font-size: 1.1rem; text-align: right;" value="${rabSettingData[currentRabType] || 0}" onchange="saveUangSisa('${currentRabType}')">
+                <div style="display: flex; align-items: center; gap: 0.5rem;" id="uang-sisa-container-${currentRabType}">
+                  <span style="color: var(--color-warning); font-weight: bold; font-size: 1.1rem;">${formatRupiah(rabSettingData[currentRabType] || 0)}</span>
+                  <button onclick="editUangSisa('${currentRabType}')" style="background: none; border: none; cursor: pointer; color: var(--color-primary);" title="Edit Uang Sisa">✏️</button>
                 </div>
               </div>
             </td>
