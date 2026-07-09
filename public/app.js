@@ -1075,6 +1075,48 @@ async function deleteGoodsItem(id) {
 
 /* ================= ACTIONS PENYESUAIAN JADWAL & ABSENSI (ADMIN) ================= */
 
+function calculateCashflowNominal() {
+  const hargaSatuan = parseFloat(document.getElementById('cashflow-form-hargasatuan').value) || 0;
+  const jumlahBarang = parseFloat(document.getElementById('cashflow-form-jumlahbarang').value) || 0;
+  document.getElementById('cashflow-form-nominal').value = hargaSatuan * jumlahBarang;
+}
+
+function openCashflowModal(jenis = 'Pemasukan') {
+  const modal = document.getElementById('cashflow-modal');
+  if (!modal) return;
+
+  document.getElementById('cashflow-form-id').value = '';
+  document.getElementById('cashflow-form').reset();
+  
+  // Set default date to today
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  document.getElementById('cashflow-form-tanggal').value = `${yyyy}-${mm}-${dd}`;
+
+  // Set jenis and dropdown options
+  const jenisInput = document.getElementById('cashflow-form-jenis');
+  if(jenisInput) jenisInput.value = jenis;
+  
+  const title = document.getElementById('cashflow-modal-title');
+  if(title) title.innerText = jenis === 'Pemasukan' ? '💸 Tambah Pemasukan' : '💸 Tambah Pengeluaran';
+
+  const kategoriSelect = document.getElementById('cashflow-form-kategori');
+  if(kategoriSelect) {
+    kategoriSelect.innerHTML = '';
+    if (jenis === 'Pemasukan') {
+      const opts = ['Kampus', 'Urunan', 'Denda', 'Lainnya'];
+      opts.forEach(opt => kategoriSelect.innerHTML += `<option value="${opt}">${opt}</option>`);
+    } else {
+      const opts = ['Posko', 'Konsumsi', 'Transportasi', 'Proker', 'Lainnya'];
+      opts.forEach(opt => kategoriSelect.innerHTML += `<option value="${opt}">${opt}</option>`);
+    }
+  }
+
+  modal.classList.add('active');
+}
+
 function openScheduleOverrideModal() {
   const modal = document.getElementById('override-schedule-modal');
   if (!modal) return;
