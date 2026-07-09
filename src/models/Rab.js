@@ -9,6 +9,7 @@ const RabSchema = new mongoose.Schema({
   harga: { type: Number, default: 0 },
   hargaSatuan: { type: Number, default: 0 },
   anggota: { type: Number, default: 11 },
+  isAutoCalc: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now }
 });
 
