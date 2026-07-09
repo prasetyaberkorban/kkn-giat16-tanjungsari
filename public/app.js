@@ -2192,6 +2192,11 @@ function renderRab() {
 
   container.innerHTML = '';
 
+  if (currentRabType === 'Cashflow') {
+    renderCashflow(container);
+    return;
+  }
+
   const items = rabData.filter(item => item.type === currentRabType);
 
   if (currentRabType === 'Posko') {
