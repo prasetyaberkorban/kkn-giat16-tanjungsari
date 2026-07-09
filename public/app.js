@@ -2234,8 +2234,16 @@ async function fetchRab() {
     ]);
     rabData = await resRab.json();
     cashflowData = await resCf.json();
+    
+    // Fetch settings for all types
+    const types = ['Posko', 'Konsumsi', 'Transportasi', 'Proker'];
+    await Promise.all(types.map(async (t) => {
+      const rs = await fetch(`/api/rabsetting/${t}`);
+      const data = await rs.json();
+      rabSettingData[t] = data.uangSisa || 0;
+    }));
   } catch (err) {
-    console.error('Gagal mengambil data RAB/Cashflow:', err);
+    console.error('Gagal mengambil data RAB/Cashflow/Settings:', err);
   }
 }
 
