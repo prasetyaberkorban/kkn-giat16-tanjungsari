@@ -2677,33 +2677,30 @@ function closeRabModal() {
 function toggleRabFormFields(type) {
   const prokerGroup = document.getElementById('rab-form-proker-group');
   const satuanGroup = document.getElementById('rab-form-satuan-group');
-  const hargaGroup = document.getElementById('rab-form-harga-group');
-  const hargaSatuanGroup = document.getElementById('rab-form-hargasatuan-group');
   const anggotaGroup = document.getElementById('rab-form-anggota-group');
+  const volumeGroup = document.getElementById('rab-form-volume-group');
+  const hargaSatuanGroup = document.getElementById('rab-form-hargasatuan-group');
+  const hargaGroup = document.getElementById('rab-form-harga-group');
+  
+  if(volumeGroup) volumeGroup.style.display = 'block';
+  if(hargaSatuanGroup) hargaSatuanGroup.style.display = 'block';
+  if(hargaGroup) hargaGroup.style.display = 'block';
 
   if (type === 'Posko') {
     if(prokerGroup) prokerGroup.style.display = 'none';
     satuanGroup.style.display = 'none';
-    hargaGroup.style.display = 'block';
-    hargaSatuanGroup.style.display = 'none';
     anggotaGroup.style.display = 'block';
   } else if (type === 'Konsumsi') {
     if(prokerGroup) prokerGroup.style.display = 'none';
     satuanGroup.style.display = 'block';
-    hargaGroup.style.display = 'none';
-    hargaSatuanGroup.style.display = 'block';
     anggotaGroup.style.display = 'none';
   } else if (type === 'Transportasi') {
     if(prokerGroup) prokerGroup.style.display = 'none';
     satuanGroup.style.display = 'block';
-    hargaGroup.style.display = 'block';
-    hargaSatuanGroup.style.display = 'none';
     anggotaGroup.style.display = 'block';
   } else if (type === 'Proker') {
     if(prokerGroup) prokerGroup.style.display = 'block';
     satuanGroup.style.display = 'none';
-    hargaGroup.style.display = 'none';
-    hargaSatuanGroup.style.display = 'block';
     anggotaGroup.style.display = 'none';
   }
 }
