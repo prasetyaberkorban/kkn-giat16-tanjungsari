@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 // POST new RAB item
 router.post('/', async (req, res) => {
   try {
-    const { type, prokerName, kebutuhan, satuan, volume, harga, hargaSatuan, anggota } = req.body;
+    const { type, prokerName, kebutuhan, satuan, volume, harga, hargaSatuan, anggota, isAutoCalc } = req.body;
     const newItem = new Rab({
       type,
       prokerName,
@@ -25,7 +25,8 @@ router.post('/', async (req, res) => {
       volume: volume || 1,
       harga: harga || 0,
       hargaSatuan: hargaSatuan || 0,
-      anggota: anggota || 11
+      anggota: anggota || 11,
+      isAutoCalc: isAutoCalc !== undefined ? isAutoCalc : true
     });
     await newItem.save();
     res.status(201).json({ message: 'RAB berhasil ditambahkan', item: newItem });
@@ -38,10 +39,11 @@ router.post('/', async (req, res) => {
 // PUT update RAB item
 router.put('/:id', async (req, res) => {
   try {
-    const { type, prokerName, kebutuhan, satuan, volume, harga, hargaSatuan, anggota } = req.body;
-    const updatedItem = await Rab.findByIdAndUpdate(req.params.id, {
-      type, prokerName, kebutuhan, satuan, volume, harga, hargaSatuan, anggota
-    }, { new: true });
+    const { type, prokerName, kebutuhan, satuan, volume, harga, hargaSatuan, anggota, isAutoCalc } = req.body;
+    const updateData = { type, prokerName, kebutuhan, satuan, volume, harga, hargaSatuan, anggota };
+    if (isAutoCalc !== undefined) updateData.isAutoCalc = isAutoCalc;
+
+    const updatedItem = await Rab.findByIdAndUpdate(req.params.id, updateData, { new: true });
     res.json({ message: 'RAB berhasil diperbarui', item: updatedItem });
   } catch (err) {
     console.error('Error updating RAB:', err);
