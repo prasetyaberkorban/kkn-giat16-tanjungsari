@@ -6,6 +6,7 @@ const connectDB = require('./src/config/db');
 const apiRoutes = require('./src/routes/api');
 const rabRoutes = require('./src/routes/rab');
 const cashflowRoutes = require('./src/routes/cashflow');
+const rabSettingRoutes = require('./src/routes/rabsetting');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', apiRoutes);
 app.use('/api/rab', rabRoutes);
 app.use('/api/cashflow', cashflowRoutes);
+app.use('/api/rabsetting', rabSettingRoutes);
 
 // Route fallback untuk frontend (Single Page feel)
 app.get('/absensi', (req, res) => {
