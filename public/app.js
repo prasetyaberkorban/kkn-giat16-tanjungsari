@@ -3088,22 +3088,7 @@ function renderCashflow(container) {
   `;
 }
 
-function openCashflowModal() {
-  const modal = document.getElementById('cashflow-modal');
-  if (!modal) return;
 
-  document.getElementById('cashflow-form-id').value = '';
-  document.getElementById('cashflow-form').reset();
-  
-  // Set default date to today
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, '0');
-  const dd = String(today.getDate()).padStart(2, '0');
-  document.getElementById('cashflow-form-tanggal').value = `${yyyy}-${mm}-${dd}`;
-
-  modal.classList.add('active');
-}
 
 function closeCashflowModal() {
   const modal = document.getElementById('cashflow-modal');
