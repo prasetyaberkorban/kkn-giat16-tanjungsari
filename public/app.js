@@ -2800,6 +2800,25 @@ async function deleteRabItem(id) {
     alert('Terjadi kesalahan koneksi.');
   }
 }
+
+async function toggleRabAutoCalc(id, currentStatus) {
+  try {
+    const res = await fetch(`/api/rab/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isAutoCalc: !currentStatus })
+    });
+
+    if (res.ok) {
+      await fetchRab();
+      renderRab();
+    } else {
+      alert('Gagal mengubah mode kalkulasi RAB.');
+    }
+  } catch (err) {
+    alert('Terjadi kesalahan koneksi.');
+  }
+}
 // ==========================================
 // GOOGLE SHEETS EXPORT
 // ==========================================
