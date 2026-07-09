@@ -620,8 +620,8 @@
       </p>
 
       <!-- RAB Category Selector & Add Button -->
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
-        <div class="goods-categories" id="rab-type-filters" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0;">
+      <div style="display: flex; gap: 0.5rem; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div class="week-selector" id="rab-type-selector">
           <button class="week-btn active" onclick="switchRabType('Posko')">RAB Posko</button>
           <button class="week-btn" onclick="switchRabType('Konsumsi')">RAB Konsumsi</button>
           <button class="week-btn" onclick="switchRabType('Transportasi')">RAB Transportasi</button>
@@ -629,9 +629,17 @@
           <button class="week-btn" onclick="switchRabType('Ringkasan')">Ringkasan Total</button>
           <button class="week-btn" onclick="switchRabType('Cashflow')">Cashflow</button>
         </div>
-        <button class="btn" id="add-rab-btn" onclick="openAddRabModal()" style="padding: 0.55rem 1.25rem; width: auto; font-size: 0.9rem; background: var(--color-success); border-color: var(--color-success); margin: 0;">
-          ➕ Tambah Item
-        </button>
+        <div id="action-buttons-container" style="display: flex; gap: 0.5rem;">
+          <button class="btn" id="add-rab-btn" onclick="openAddRabModal()" style="padding: 0.55rem 1.25rem; width: auto; font-size: 0.9rem; background: var(--color-success); border-color: var(--color-success); margin: 0;">
+            ➕ Tambah Item
+          </button>
+          <button class="btn" id="add-pemasukan-btn" onclick="openCashflowModal('Pemasukan')" style="display: none; padding: 0.55rem 1.25rem; width: auto; font-size: 0.9rem; background: var(--color-success); border-color: var(--color-success); margin: 0;">
+            ➕ Pemasukan
+          </button>
+          <button class="btn" id="add-pengeluaran-btn" onclick="openCashflowModal('Pengeluaran')" style="display: none; padding: 0.55rem 1.25rem; width: auto; font-size: 0.9rem; background: var(--color-danger); border-color: var(--color-danger); margin: 0;">
+            ➖ Pengeluaran
+          </button>
+        </div>
       </div>
 
       <!-- Dynamic Table Container -->
