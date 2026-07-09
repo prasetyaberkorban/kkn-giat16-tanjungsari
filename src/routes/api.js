@@ -9,6 +9,7 @@ const { appendAttendanceToSheet, exportAllDataToSheets } = require('../services/
 const Joblist = require('../models/Joblist');
 const ContentList = require('../models/ContentList');
 const ProgramKerja = require('../models/ProgramKerja');
+const Cashflow = require('../models/Cashflow');
 const QrSetting = require('../models/QrSetting');
 const Rab = require('../models/Rab');
 
@@ -881,7 +882,8 @@ const performSheetsExport = async () => {
       goods: await Goods.find({}),
       joblist: await Joblist.find({}),
       contentlist: await ContentList.find({}),
-      programkerja: await ProgramKerja.find({})
+      programkerja: await ProgramKerja.find({}),
+      cashflow: await Cashflow.find({}).sort({ tanggal: 1 })
     };
     const result = await exportAllDataToSheets(allData);
     return result;

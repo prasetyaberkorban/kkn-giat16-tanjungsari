@@ -130,7 +130,40 @@ const exportAllDataToSheets = async (allData) => {
   const ringkasanProkerRows = Object.keys(prokerGroups).map(k => [k, prokerGroups[k]]);
 
   // Pemetaan Data yang ingin di-export beserta judul Header-nya
+  
+  let totalSaldoCashflow = 0;
+  const cashflowRows = (allData.cashflow || []).map(c => {
+    let pemasukan = '';
+    let pengeluaran = '';
+    if (c.jenis === 'Pemasukan') {
+      pemasukan = c.nominal || 0;
+      totalSaldoCashflow += c.nominal || 0;
+    } else {
+      pengeluaran = c.nominal || 0;
+      totalSaldoCashflow -= c.nominal || 0;
+    }
+    return [
+      c._id.toString(),
+      c.tanggal || '-',
+      c.jenis || '-',
+      c.kategori || '-',
+      c.deskripsi || '-',
+      c.hargaSatuan || 0,
+      c.jumlahBarang || 0,
+      pemasukan,
+      pengeluaran,
+      totalSaldoCashflow,
+      new Date(c.createdAt).toLocaleString('id-ID')
+    ];
+  });
+  cashflowRows.push(['', '', '', '', '', '', 'TOTAL SALDO AKHIR', '', '', totalSaldoCashflow, '']);
+
   const exportsConfig = [
+    {
+      title: 'Cashflow',
+      headers: ['ID', 'Tanggal', 'Jenis', 'Kategori', 'Deskripsi', 'Harga Satuan', 'Jumlah Barang', 'Pemasukan', 'Pengeluaran', 'Saldo', 'Tanggal Dibuat'],
+      rows: cashflowRows
+    },
     {
       title: 'Ringkasan RAB',
       headers: ['JENIS RAB / PROKER', 'TOTAL'],
