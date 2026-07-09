@@ -2278,7 +2278,7 @@ function switchRabType(type) {
   currentRabType = type;
   
   // Set active class on filter buttons
-  const container = document.getElementById('rab-type-filters');
+  const container = document.getElementById('rab-type-selector');
   if (container) {
     const buttons = container.querySelectorAll('.week-btn');
     buttons.forEach(btn => {
@@ -3101,7 +3101,7 @@ async function handleSaveCashflow(e) {
 
     if (res.ok) {
       closeCashflowModal();
-      await fetchCashflow();
+      await fetchRab();
       renderRab(); // renderRab calls renderCashflow if currentRabType === 'Cashflow'
     } else {
       const data = await res.json();
@@ -3118,7 +3118,7 @@ async function deleteCashflowItem(id) {
   try {
     const res = await fetch(`/api/cashflow/${id}`, { method: 'DELETE' });
     if (res.ok) {
-      await fetchCashflow();
+      await fetchRab();
       renderRab();
     } else {
       alert('Gagal menghapus cashflow.');
@@ -3133,5 +3133,5 @@ async function deleteCashflowItem(id) {
 const _originalFetchRab = fetchRab;
 fetchRab = async function() {
   await _originalFetchRab();
-  await fetchCashflow();
+  await fetchRab();
 };
