@@ -3095,8 +3095,7 @@ function renderCashflow(container) {
   `;
 
   container.innerHTML = subTabsHtml + `
-    <table class="premium-table" id="cashflow-table">`;
-
+    <table class="premium-table" id="cashflow-table">
       <thead>
         <tr>
           <th style="width: 60px;">No</th>
