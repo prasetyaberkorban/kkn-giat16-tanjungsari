@@ -2145,7 +2145,8 @@ function switchRabType(type) {
           (type === 'Konsumsi' && btn.innerText === 'RAB Konsumsi') ||
           (type === 'Transportasi' && btn.innerText === 'RAB Transportasi') ||
           (type === 'Proker' && btn.innerText === 'RAB Proker') ||
-          (type === 'Ringkasan' && btn.innerText === 'Ringkasan Total')) {
+          (type === 'Ringkasan' && btn.innerText === 'Ringkasan Total') ||
+          (type === 'Cashflow' && btn.innerText === 'Cashflow')) {
         btn.classList.add('active');
       } else {
         btn.classList.remove('active');
@@ -2156,7 +2157,11 @@ function switchRabType(type) {
   // Tampilkan/sembunyikan tombol tambah item
   const addBtn = document.getElementById('add-rab-btn');
   if (addBtn) {
-    addBtn.style.display = type === 'Ringkasan' ? 'none' : 'block';
+    if (type === 'Ringkasan') {
+      addBtn.style.display = 'none';
+    } else {
+      addBtn.style.display = 'block';
+    }
   }
   
   renderRab();
