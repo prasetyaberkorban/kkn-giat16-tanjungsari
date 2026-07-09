@@ -16,11 +16,14 @@ router.get('/', async (req, res) => {
 // POST new cashflow item
 router.post('/', async (req, res) => {
   try {
-    const { tanggal, keterangan, jenis, nominal } = req.body;
+    const { tanggal, kategori, deskripsi, jenis, hargaSatuan, jumlahBarang, nominal } = req.body;
     const newItem = new Cashflow({
       tanggal,
-      keterangan,
+      kategori,
+      deskripsi,
       jenis,
+      hargaSatuan: parseInt(hargaSatuan) || 0,
+      jumlahBarang: parseInt(jumlahBarang) || 0,
       nominal: parseInt(nominal) || 0
     });
     await newItem.save();
