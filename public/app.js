@@ -8,7 +8,7 @@ const TEAMS = {
 
 const TASKS = [
   'Masak & Belanja',
-  'Cuci Piring',
+  'Cuci Alat Alat Masak',
   'Bersih-Bersih Posko',
   'Libur'
 ];
@@ -538,7 +538,7 @@ async function switchWeek(weekNum) {
       row.innerHTML = `
         <td>${dayName}</td>
         <td style="color: var(--color-accent);">${tasksMap['Masak & Belanja'] || '-'}</td>
-        <td style="color: var(--color-primary);">${tasksMap['Cuci Piring'] || '-'}</td>
+        <td style="color: var(--color-primary);">${tasksMap['Cuci Alat Alat Masak'] || '-'}</td>
         <td style="color: var(--color-secondary);">${tasksMap['Bersih-Bersih Posko'] || '-'}</td>
         <td style="color: var(--text-secondary);">${tasksMap['Libur'] || '-'}</td>
       `;

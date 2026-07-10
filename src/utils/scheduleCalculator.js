@@ -8,20 +8,20 @@ const TEAMS = {
 
 const TASKS = [
   'Masak & Belanja',  // Indeks 0
-  'Cuci Piring',      // Indeks 1
+  'Cuci Alat Alat Masak',      // Indeks 1
   'Bersih-Bersih Posko', // Indeks 2
   'Libur'             // Indeks 3
 ];
 
 // Jadwal tetap berdasarkan hari
 const FIXED_SCHEDULE_BY_DAY = {
-  'Senin':  { 'Masak & Belanja': 'TIM A', 'Cuci Piring': 'TIM B', 'Bersih-Bersih Posko': 'TIM C', 'Libur': 'TIM D' },
-  'Selasa': { 'Masak & Belanja': 'TIM B', 'Cuci Piring': 'TIM C', 'Bersih-Bersih Posko': 'TIM D', 'Libur': 'TIM A' },
-  'Rabu':   { 'Masak & Belanja': 'TIM C', 'Cuci Piring': 'TIM D', 'Bersih-Bersih Posko': 'TIM A', 'Libur': 'TIM B' },
-  'Kamis':  { 'Masak & Belanja': 'TIM D', 'Cuci Piring': 'TIM A', 'Bersih-Bersih Posko': 'TIM B', 'Libur': 'TIM C' },
-  'Jumat':  { 'Masak & Belanja': 'TIM A', 'Cuci Piring': 'TIM B', 'Bersih-Bersih Posko': 'TIM C', 'Libur': 'TIM D' },
-  'Sabtu':  { 'Masak & Belanja': 'TIM B', 'Cuci Piring': 'TIM C', 'Bersih-Bersih Posko': 'TIM D', 'Libur': 'TIM A' },
-  'Minggu': { 'Masak & Belanja': 'TIM C', 'Cuci Piring': 'TIM D', 'Bersih-Bersih Posko': 'TIM A', 'Libur': 'TIM B' }
+  'Senin':  { 'Masak & Belanja': 'TIM A', 'Cuci Alat Alat Masak': 'TIM B', 'Bersih-Bersih Posko': 'TIM C', 'Libur': 'TIM D' },
+  'Selasa': { 'Masak & Belanja': 'TIM B', 'Cuci Alat Alat Masak': 'TIM C', 'Bersih-Bersih Posko': 'TIM D', 'Libur': 'TIM A' },
+  'Rabu':   { 'Masak & Belanja': 'TIM C', 'Cuci Alat Alat Masak': 'TIM D', 'Bersih-Bersih Posko': 'TIM A', 'Libur': 'TIM B' },
+  'Kamis':  { 'Masak & Belanja': 'TIM D', 'Cuci Alat Alat Masak': 'TIM A', 'Bersih-Bersih Posko': 'TIM B', 'Libur': 'TIM C' },
+  'Jumat':  { 'Masak & Belanja': 'TIM A', 'Cuci Alat Alat Masak': 'TIM B', 'Bersih-Bersih Posko': 'TIM C', 'Libur': 'TIM D' },
+  'Sabtu':  { 'Masak & Belanja': 'TIM B', 'Cuci Alat Alat Masak': 'TIM C', 'Bersih-Bersih Posko': 'TIM D', 'Libur': 'TIM A' },
+  'Minggu': { 'Masak & Belanja': 'TIM C', 'Cuci Alat Alat Masak': 'TIM D', 'Bersih-Bersih Posko': 'TIM A', 'Libur': 'TIM B' }
 };
 
 // Epoch tanggal acuan: Kamis, 9 Juli 2026 (WIB / GMT+7)
