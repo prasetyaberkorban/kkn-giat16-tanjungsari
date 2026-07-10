@@ -3,7 +3,7 @@
 /* ================= THEME TOGGLE (GLOBAL) ================= */
 async function initGlobalTheme() {
   try {
-    const res = await fetch('/api/admin/theme');
+    const res = await fetch('/api/theme');
     const data = await res.json();
     if (data.success) {
       if (data.theme === 'theme-viens') {
