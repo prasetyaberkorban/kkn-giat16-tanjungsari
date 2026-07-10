@@ -1,3 +1,24 @@
+
+/* ================= THEME TOGGLE ================= */
+(function() {
+  const savedTheme = localStorage.getItem('app-theme') || 'theme-viens';
+  if (savedTheme === 'theme-viens') {
+    document.body.classList.add('theme-viens');
+  } else {
+    document.body.classList.remove('theme-viens');
+  }
+})();
+
+window.toggleTheme = function() {
+  if (document.body.classList.contains('theme-viens')) {
+    document.body.classList.remove('theme-viens');
+    localStorage.setItem('app-theme', 'theme-default');
+  } else {
+    document.body.classList.add('theme-viens');
+    localStorage.setItem('app-theme', 'theme-viens');
+  }
+};
+
 // Data Anggota & Tim
 const TEAMS = {
   'TIM A': ['Zii', 'Mey', 'Hani'],
