@@ -65,8 +65,9 @@ function calculateSchedule(dateStr) {
 
   // Dapatkan nama hari dalam bahasa Indonesia
   const daysIndonesian = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-  const targetDate = new Date(`${dateStr}T00:00:00+07:00`);
-  const dayNameIndo = daysIndonesian[targetDate.getDay()];
+  // Gunakan getUTCDay() pada jam 12 siang UTC agar aman dari perbedaan zona waktu server (Heroku vs Lokal)
+  const targetDate = new Date(`${dateStr}T12:00:00Z`);
+  const dayNameIndo = daysIndonesian[targetDate.getUTCDay()];
 
   // 1. Hitung Tugas Harian Tim (Fix per Hari)
   const dailySchedule = {};
