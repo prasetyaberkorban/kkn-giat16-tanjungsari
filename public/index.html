@@ -154,9 +154,12 @@
               </select>
             </div>
 
+            
             <div class="qr-container" id="qrcode">
               <!-- Render QR code di sini -->
             </div>
+            <button id="download-qr-btn" class="submit-btn" style="margin-top: 1rem; width: auto; display: inline-block; padding: 0.5rem 1rem;" onclick="downloadQrCode()">Unduh QR Code</button>
+
             <p style="margin-top: 1rem;">Tampilkan QR ini ke anggota untuk memindai formulir absensi mobile.</p>
           </div>
         </div>
@@ -1098,7 +1101,46 @@
     </div>
   </div>
 
-  <script src="/app.js?v=1783585215306"></script>
+  <script src="/app.js?v=1783680645243"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <!-- MODAL MANUAL ATTENDANCE -->
+  <div class="modal-overlay" id="manual-attendance-modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2 class="modal-title">Kehadiran Manual</h2>
+        <button class="modal-close" onclick="closeManualAttendanceModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="manual-attendance-form">
+          <label style="display: block; color: var(--text-secondary); margin-bottom: 0.25rem;">Nama Anggota:</label>
+          <select id="manual-attendance-name" class="input-control" required>
+            <option value="" disabled selected>Pilih Anggota</option>
+            <option value="Tian">Tian</option>
+            <option value="Naila">Naila</option>
+            <option value="Valen">Valen</option>
+            <option value="Mey">Mey</option>
+            <option value="Fay">Fay</option>
+            <option value="Ananda">Ananda</option>
+            <option value="Hani">Hani</option>
+            <option value="Firzan">Firzan</option>
+            <option value="Cio">Cio</option>
+            <option value="Nanda">Nanda</option>
+            <option value="Zii">Zii</option>
+          </select>
+          
+          <label style="display: block; color: var(--text-secondary); margin-top: 1rem; margin-bottom: 0.25rem;">Status:</label>
+          <select id="manual-attendance-status" class="input-control" required>
+            <option value="Hadir">Hadir</option>
+            <option value="Izin">Izin</option>
+            <option value="Sakit">Sakit</option>
+          </select>
+
+          <button type="submit" class="submit-btn" style="margin-top: 1.5rem;">Simpan Kehadiran</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

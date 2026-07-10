@@ -130,6 +130,55 @@ router.get('/attendance/today', async (req, res) => {
  * @route   POST /api/attendance
  * @desc    Melakukan absensi kehadiran
  */
+
+/**
+ * @route   POST /api/attendance/manual
+ * @desc    Admin menambah absensi manual
+ */
+router.post('/attendance/manual', async (req, res) => {
+  const { name, status } = req.body;
+  if (!name) return res.status(400).json({ error: 'Nama harus diisi.' });
+  
+  try {
+    const date = getTodayDateIndo();
+    const time = getNowTimeIndo();
+    const schedule = await getScheduleForDate(date);
+    
+    // Temukan tim anggota ini
+    let userTeam = '-';
+    for (const [tName, members] of Object.entries(TEAMS)) {
+      if (members.includes(name)) {
+        userTeam = tName;
+        break;
+      }
+    }
+
+    const teamSchedule = schedule.dailySchedule[userTeam];
+    const task = teamSchedule ? teamSchedule.task : 'Libur';
+
+    const attendance = new Attendance({
+      name,
+      division: memberDivisions[name] || '-',
+      team: userTeam,
+      date,
+      time,
+      dayName: schedule.dayName,
+      task,
+      status: status || 'Hadir'
+    });
+
+    const savedAttendance = await attendance.save();
+    appendAttendanceToSheet(savedAttendance);
+
+    res.status(201).json({ message: 'Kehadiran manual berhasil disimpan!', data: savedAttendance });
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({ error: 'Anggota tersebut sudah diabsen hari ini.' });
+    }
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.post('/attendance', async (req, res) => {
   const { name } = req.body;
   const qrParam = req.body.qr || req.query.qr;

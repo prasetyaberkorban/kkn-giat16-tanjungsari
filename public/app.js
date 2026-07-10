@@ -3212,3 +3212,72 @@ async function deleteCashflowItem(id) {
     alert('Terjadi kesalahan jaringan.');
   }
 }
+
+
+/* ================= MANUAL ATTENDANCE & QR DOWNLOAD ================= */
+window.downloadQrCode = function() {
+  const qrImg = document.querySelector('#qrcode img');
+  if (qrImg && qrImg.src) {
+    const a = document.createElement('a');
+    a.href = qrImg.src;
+    a.download = `QR-Absensi-GIAT16.png`;
+    a.click();
+  } else {
+    const canvas = document.querySelector('#qrcode canvas');
+    if (canvas) {
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = `QR-Absensi-GIAT16.png`;
+      a.click();
+    } else {
+      alert('QR Code belum siap atau gagal dirender.');
+    }
+  }
+};
+
+window.openManualAttendanceModal = function() {
+  const modal = document.getElementById('manual-attendance-modal');
+  if(modal) modal.classList.add('active');
+};
+
+window.closeManualAttendanceModal = function() {
+  const modal = document.getElementById('manual-attendance-modal');
+  if(modal) modal.classList.remove('active');
+};
+
+// Handle submit manual attendance
+const manualForm = document.getElementById('manual-attendance-form');
+if (manualForm) {
+  manualForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('manual-attendance-name').value;
+    const status = document.getElementById('manual-attendance-status').value;
+    
+    try {
+      const btn = manualForm.querySelector('button[type="submit"]');
+      btn.innerHTML = 'Menyimpan...';
+      btn.disabled = true;
+
+      const res = await fetch('/api/attendance/manual', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, status })
+      });
+      
+      const data = await res.json();
+      btn.innerHTML = 'Simpan Kehadiran';
+      btn.disabled = false;
+
+      if (res.ok) {
+        alert('Kehadiran manual berhasil disimpan!');
+        closeManualAttendanceModal();
+        fetchAttendanceData(currentAttendanceFilter); // Refresh data
+      } else {
+        alert('Gagal: ' + data.error);
+      }
+    } catch (err) {
+      alert('Terjadi kesalahan koneksi.');
+      console.error(err);
+    }
+  });
+}
