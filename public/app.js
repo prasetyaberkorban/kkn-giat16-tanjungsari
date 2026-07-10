@@ -9,9 +9,8 @@ function renderBelumAbsen(logs) {
     return;
   }
   
-  const todayDateStr = new Date().toLocaleDateString('id-ID', {
-    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-  });
+  // Gunakan format yang sama dengan backend/tabel (YYYY-MM-DD)
+  const todayDateStr = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
   
   // Collect all unique names from TEAMS
   const allNames = [];
@@ -492,7 +491,7 @@ function filterAttendanceView(mode) {
 }
 
 function renderAttendanceTable() {
-  if (typeof attendanceData !== "undefined") renderBelumAbsen(attendanceData);
+  if (typeof allAttendanceData !== "undefined") renderBelumAbsen(allAttendanceData);
   const tbody = document.getElementById('full-attendance-table-body');
   if (!tbody) return;
 
