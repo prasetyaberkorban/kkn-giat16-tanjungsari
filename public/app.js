@@ -3287,3 +3287,74 @@ if (manualForm) {
     }
   });
 }
+
+
+/* ================= EDIT ATTENDANCE ================= */
+window.openEditAttendanceModal = function(id, name, date, time, status) {
+  const idEl = document.getElementById('edit-attendance-id');
+  if (!idEl) {
+    console.error('Modal edit attendance tidak ditemukan di DOM!');
+    alert('Maaf, modal edit tidak ditemukan. Silakan refresh halaman.');
+    return;
+  }
+  
+  idEl.value = id;
+  document.getElementById('edit-attendance-name').value = name;
+  document.getElementById('edit-attendance-date').value = date;
+  document.getElementById('edit-attendance-time').value = time;
+  document.getElementById('edit-attendance-status').value = status;
+  
+  const modal = document.getElementById('edit-attendance-modal');
+  if (modal) modal.classList.add('active');
+};
+
+window.closeEditAttendanceModal = function() {
+  const modal = document.getElementById('edit-attendance-modal');
+  if (modal) modal.classList.remove('active');
+};
+
+// Bind form submission for edit
+setTimeout(() => {
+  const editAttendanceForm = document.getElementById('edit-attendance-form');
+  if (editAttendanceForm) {
+    // Hindari duplicate listener dengan mengganti clone
+    const newForm = editAttendanceForm.cloneNode(true);
+    editAttendanceForm.parentNode.replaceChild(newForm, editAttendanceForm);
+    
+    newForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('edit-attendance-id').value;
+      const date = document.getElementById('edit-attendance-date').value;
+      const time = document.getElementById('edit-attendance-time').value;
+      const status = document.getElementById('edit-attendance-status').value;
+      
+      try {
+        const btn = newForm.querySelector('button[type="submit"]');
+        btn.innerHTML = 'Menyimpan...';
+        btn.disabled = true;
+
+        const res = await fetch('/api/attendance/' + id, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ date, time, status })
+        });
+        
+        const data = await res.json();
+        btn.innerHTML = 'Simpan Perubahan';
+        btn.disabled = false;
+
+        if (res.ok) {
+          alert('Data kehadiran berhasil diperbarui!');
+          closeEditAttendanceModal();
+          if (typeof fetchFullAttendance === 'function') fetchFullAttendance();
+          if (typeof fetchAttendanceData === 'function' && typeof currentAttendanceFilter !== 'undefined') fetchAttendanceData(currentAttendanceFilter);
+        } else {
+          alert('Gagal: ' + data.error);
+        }
+      } catch (err) {
+        alert('Terjadi kesalahan koneksi.');
+        console.error(err);
+      }
+    });
+  }
+}, 1000);
