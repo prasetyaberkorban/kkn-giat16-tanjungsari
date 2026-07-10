@@ -1,4 +1,43 @@
 
+function renderBelumAbsen(logs) {
+  const container = document.getElementById('belum-absen-container');
+  const listEl = document.getElementById('belum-absen-list');
+  if (!container || !listEl) return;
+  
+  if (currentAttendanceFilter !== 'today') {
+    container.style.display = 'none';
+    return;
+  }
+  
+  const todayDateStr = new Date().toLocaleDateString('id-ID', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+  });
+  
+  // Collect all unique names from TEAMS
+  const allNames = [];
+  Object.values(TEAMS).forEach(members => {
+    allNames.push(...members);
+  });
+  
+  // Extract names who have attended today
+  const attendedNames = logs
+    .filter(log => log.date === todayDateStr)
+    .map(log => log.name.trim().toLowerCase());
+  
+  // Filter missing
+  const missingNames = allNames.filter(name => !attendedNames.includes(name.trim().toLowerCase()));
+  
+  container.style.display = 'block';
+  if (missingNames.length > 0) {
+    listEl.innerHTML = missingNames.map(name => 
+      `<span style="background: rgba(255, 255, 255, 0.1); padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: 500; font-size: 0.95rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 1px solid rgba(239, 68, 68, 0.4);">${name}</span>`
+    ).join('');
+  } else {
+    listEl.innerHTML = `<span style="color: var(--color-success); font-weight: 600;">🎉 Semua anggota sudah absen hari ini!</span>`;
+  }
+}
+
+
 /* ================= THEME TOGGLE ================= */
 /* ================= THEME TOGGLE (GLOBAL) ================= */
 async function initGlobalTheme() {
@@ -453,6 +492,7 @@ function filterAttendanceView(mode) {
 }
 
 function renderAttendanceTable() {
+  if (typeof attendanceData !== "undefined") renderBelumAbsen(attendanceData);
   const tbody = document.getElementById('full-attendance-table-body');
   if (!tbody) return;
 
