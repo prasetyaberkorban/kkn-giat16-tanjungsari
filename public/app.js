@@ -273,7 +273,7 @@ async function fetchDashboardData() {
 
     // Update piket kamar mandi
     const bathroomBadge = document.getElementById('bathroom-team-badge');
-    bathroomBadge.innerText = data.bathroomPiket.team;
+    bathroomBadge.innerHTML = `<div style="font-weight: 800; font-size: 1.25rem;">${data.bathroomPiket.team}</div><div style="font-size: 0.8rem; margin-top: 4px; line-height: 1.2;">(${data.bathroomPiket.members.join(', ')})</div>`;
     bathroomBadge.title = `Anggota: ${data.bathroomPiket.members.join(', ')}`;
 
     // Render QR Code (jika Admin login)
