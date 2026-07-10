@@ -997,4 +997,35 @@ cron.schedule('0 6,18 * * *', async () => {
   timezone: "Asia/Jakarta"
 });
 
+
+// Get Global Theme
+router.get('/theme', async (req, res) => {
+  try {
+    let setting = await QrSetting.findOne();
+    if (!setting) {
+      setting = new QrSetting();
+      await setting.save();
+    }
+    res.json({ success: true, theme: setting.theme || 'theme-viens' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// Update Global Theme
+router.post('/theme', async (req, res) => {
+  try {
+    const { theme } = req.body;
+    let setting = await QrSetting.findOne();
+    if (!setting) {
+      setting = new QrSetting();
+    }
+    setting.theme = theme;
+    await setting.save();
+    res.json({ success: true, theme: setting.theme });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 module.exports = router;
