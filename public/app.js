@@ -450,7 +450,10 @@ function renderAttendanceTable() {
 
     let actionCell = '';
     if (isAdmin) {
-      actionCell = `<td style="text-align: center;"><button class="delete-btn" style="background: none; border: none; color: var(--color-error); cursor: pointer; font-size: 1.1rem; padding: 0.25rem;" onclick="deleteAttendanceItem('${item._id}')" title="Hapus Absensi">🗑️</button></td>`;
+      actionCell = `<td style="text-align: center; white-space: nowrap;">
+        <button class="edit-btn" style="background: none; border: none; color: var(--color-primary); cursor: pointer; font-size: 1.1rem; padding: 0.25rem;" onclick="openEditAttendanceModal('${item._id}', '${item.name}', '${item.date}', '${item.time}', '${item.status}')" title="Edit Absensi">✏️</button>
+        <button class="delete-btn" style="background: none; border: none; color: var(--color-error); cursor: pointer; font-size: 1.1rem; padding: 0.25rem;" onclick="deleteAttendanceItem('${item._id}')" title="Hapus Absensi">🗑️</button>
+      </td>`;
     }
 
     row.innerHTML = `
