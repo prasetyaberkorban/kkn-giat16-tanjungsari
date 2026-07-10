@@ -157,11 +157,13 @@ function updateAdminUI() {
   const triggerBtn = document.getElementById('admin-login-trigger');
   const qrSection = document.getElementById('admin-qr-section');
   const adminInfo = document.getElementById('sidebar-admin-info');
+  const adminOnlyElements = document.querySelectorAll('.admin-only');
 
   if (isAdmin) {
     triggerBtn.innerText = '🔓 Logout Admin';
     triggerBtn.classList.add('logged-in');
     qrSection.style.display = 'block';
+    adminOnlyElements.forEach(el => el.style.display = 'block');
     adminInfo.innerHTML = `
       <span style="font-size: 0.85rem; color: var(--color-success); font-weight: bold;">Role: Administrator</span>
       <span style="font-size: 0.75rem; color: var(--text-secondary);">Akses QR Code & Fitur Aktif</span>
@@ -171,6 +173,7 @@ function updateAdminUI() {
     triggerBtn.innerText = '🔐 Login Admin';
     triggerBtn.classList.remove('logged-in');
     qrSection.style.display = 'none';
+    adminOnlyElements.forEach(el => el.style.display = 'none');
     adminInfo.innerHTML = `
       <span style="font-size: 0.85rem; color: var(--text-secondary);">Role: Tamu</span>
     `;
