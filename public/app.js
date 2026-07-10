@@ -197,7 +197,7 @@ function updateAdminUI() {
 
   const exportButtons = document.querySelectorAll('.export-tab-btn');
   exportButtons.forEach(btn => {
-    btn.style.display = isAdmin ? 'inline-block' : 'none';
+    btn.style.display = 'inline-block';
   });
 
   // Tampilkan/sembunyikan tombol tambah barang

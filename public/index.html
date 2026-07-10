@@ -78,7 +78,7 @@
         <span class="menu-icon">💰</span> Anggaran (RAB)
       </li>
     </ul>
-    <div id="sidebar-export-wrapper" style="display: none; padding: 1rem; border-top: 1px solid var(--border-color); margin-top: 0.5rem; flex-direction: column; gap: 0.5rem;">
+    <div id="sidebar-export-wrapper" style="display: flex; padding: 1rem; border-top: 1px solid var(--border-color); margin-top: 0.5rem; flex-direction: column; gap: 0.5rem;">
       <button class="btn" onclick="exportAllToExcel()" style="background: var(--color-success); border-color: var(--color-success); margin: 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.85rem; padding: 0.65rem;">
         📥 Export Excel (Semua)
       </button>
@@ -184,9 +184,14 @@
       <div class="card">
         <h2 class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
           <span>📋 Riwayat Kehadiran Anggota</span>
-          <button class="btn export-tab-btn" onclick="exportTabToExcel('daftar-hadir')" style="display: none; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
-            📥 Export Tab Ini
-          </button>
+          <div style="display: flex; gap: 0.5rem;">
+            <button onclick="openManualAttendanceModal()" class="admin-only" style="display: inline-block; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: var(--color-accent); color: #fff; border: none; border-radius: 6px; cursor: pointer;">
+              + Tambah Manual
+            </button>
+            <button class="btn export-tab-btn" onclick="exportTabToExcel('daftar-hadir')" style="display: inline-block; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
+              📥 Export Tab Ini
+            </button>
+          </div>
         </h2>
 
         <!-- Filter Absensi: Hari Ini / Riwayat Lengkap -->
@@ -195,9 +200,7 @@
             <button class="week-btn active" onclick="filterAttendanceView('today')">Hari Ini</button>
             <button class="week-btn" onclick="filterAttendanceView('all')">Semua Riwayat</button>
           </div>
-          <div id="attendance-admin-actions" class="admin-only" style="display: none;">
-            <button onclick="openManualAttendanceModal()" class="submit-btn" style="padding: 0.4rem 0.8rem; background: var(--color-accent); color: #fff; border: none; border-radius: 0.5rem; cursor: pointer; font-size: 0.85rem; font-weight: 500;">+ Tambah Kehadiran Manual</button>
-          </div>
+
         </div>
 
         <div class="table-container">
@@ -231,7 +234,7 @@
       <div class="card">
         <h2 class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
           <span>🗓️ Jadwal Rotasi Mingguan</span>
-          <button class="btn export-tab-btn" onclick="exportTabToExcel('jadwal-mingguan')" style="display: none; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
+          <button class="btn export-tab-btn" onclick="exportTabToExcel('jadwal-mingguan')" style="display: inline-block; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
             📥 Export Tab Ini
           </button>
         </h2>
@@ -279,7 +282,7 @@
       <div class="card">
         <h2 class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
           <span>☑️ Checklist Tugas Hari Ini</span>
-          <button class="btn export-tab-btn" onclick="exportTabToExcel('checklist-tugas')" style="display: none; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
+          <button class="btn export-tab-btn" onclick="exportTabToExcel('checklist-tugas')" style="display: inline-block; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
             📥 Export Tab Ini
           </button>
         </h2>
@@ -301,7 +304,7 @@
       <div class="card">
         <h2 class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
           <span>📦 Daftar Barang Bawaan</span>
-          <button class="btn export-tab-btn" onclick="exportTabToExcel('barang-bawaan')" style="display: none; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
+          <button class="btn export-tab-btn" onclick="exportTabToExcel('barang-bawaan')" style="display: inline-block; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
             📥 Export Tab Ini
           </button>
         </h2>
@@ -362,7 +365,7 @@
       <div class="card">
         <h2 class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
           <span>💼 Jobdesk & Struktur Organisasi</span>
-          <button class="btn export-tab-btn" onclick="exportTabToExcel('jobdesk')" style="display: none; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
+          <button class="btn export-tab-btn" onclick="exportTabToExcel('jobdesk')" style="display: inline-block; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
             📥 Export Tab Ini
           </button>
         </h2>
@@ -495,7 +498,7 @@
     <div class="card">
       <h2 class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
         <span>📋 Daftar Pekerjaan Divisi (Joblist)</span>
-        <button class="btn export-tab-btn" onclick="exportTabToExcel('joblist')" style="display: none; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
+        <button class="btn export-tab-btn" onclick="exportTabToExcel('joblist')" style="display: inline-block; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
           📥 Export Tab Ini
         </button>
       </h2>
@@ -548,7 +551,7 @@
     <div class="card">
       <h2 class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
         <span>🎬 List Konten Media Sosial</span>
-        <button class="btn export-tab-btn" onclick="exportTabToExcel('contentlist')" style="display: none; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
+        <button class="btn export-tab-btn" onclick="exportTabToExcel('contentlist')" style="display: inline-block; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
           📥 Export Tab Ini
         </button>
       </h2>
@@ -587,7 +590,7 @@
     <div class="card">
       <h2 class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
         <span>🚀 Program Kerja KKN</span>
-        <button class="btn export-tab-btn" onclick="exportTabToExcel('programkerja')" style="display: none; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
+        <button class="btn export-tab-btn" onclick="exportTabToExcel('programkerja')" style="display: inline-block; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
           📥 Export Tab Ini
         </button>
       </h2>
@@ -634,7 +637,7 @@
     <div class="card">
       <h2 class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
         <span>💰 Rencana Anggaran Biaya (RAB)</span>
-        <button class="btn export-tab-btn" onclick="exportTabToExcel('rab')" style="display: none; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
+        <button class="btn export-tab-btn" onclick="exportTabToExcel('rab')" style="display: inline-block; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
           📥 Export Tab Ini
         </button>
       </h2>
@@ -1116,7 +1119,7 @@
     </div>
   </div>
 
-  <script src="/app.js?v=1783690318631"></script>
+  <script src="/app.js?v=1783690913416"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
   <!-- MODAL MANUAL ATTENDANCE -->
