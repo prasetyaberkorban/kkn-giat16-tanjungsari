@@ -1,21 +1,46 @@
 
 /* ================= THEME TOGGLE ================= */
-(function() {
-  const savedTheme = localStorage.getItem('app-theme') || 'theme-viens';
-  if (savedTheme === 'theme-viens') {
+/* ================= THEME TOGGLE (GLOBAL) ================= */
+async function initGlobalTheme() {
+  try {
+    const res = await fetch('/api/admin/theme');
+    const data = await res.json();
+    if (data.success) {
+      if (data.theme === 'theme-viens') {
+        document.body.classList.add('theme-viens');
+      } else {
+        document.body.classList.remove('theme-viens');
+      }
+    }
+  } catch (err) {
+    console.error('Failed to fetch global theme', err);
+    // fallback
+    if (localStorage.getItem('app-theme') === 'theme-viens') {
+      document.body.classList.add('theme-viens');
+    }
+  }
+}
+initGlobalTheme();
+
+window.toggleGlobalTheme = async function() {
+  const isViens = document.body.classList.contains('theme-viens');
+  const newTheme = isViens ? 'theme-default' : 'theme-viens';
+  
+  if (newTheme === 'theme-viens') {
     document.body.classList.add('theme-viens');
   } else {
     document.body.classList.remove('theme-viens');
   }
-})();
-
-window.toggleTheme = function() {
-  if (document.body.classList.contains('theme-viens')) {
-    document.body.classList.remove('theme-viens');
-    localStorage.setItem('app-theme', 'theme-default');
-  } else {
-    document.body.classList.add('theme-viens');
-    localStorage.setItem('app-theme', 'theme-viens');
+  
+  // Save to DB
+  try {
+    await fetch('/api/admin/theme', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme: newTheme })
+    });
+  } catch (err) {
+    console.error('Failed to save global theme', err);
   }
 };
 
