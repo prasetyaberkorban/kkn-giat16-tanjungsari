@@ -3377,12 +3377,12 @@ async function loadShortlink() {
 }
 
 function updateShortlinkPreview(val) {
-  const preview = document.getElementById('shortlink-preview');
-  if (preview) {
+  const previewInput = document.getElementById('shortlink-preview-input');
+  if (previewInput) {
     if (!val) {
-      preview.innerText = 'Belum diatur';
+      previewInput.value = 'Belum diatur';
     } else {
-      preview.innerText = window.location.origin + '/' + val;
+      previewInput.value = window.location.origin + '/' + val;
     }
   }
 }
@@ -3407,10 +3407,20 @@ window.handleShortlinkSave = async function() {
 };
 
 window.copyShortlink = function() {
-  const val = document.getElementById('shortlink-input').value.trim();
-  if (!val) return alert('Link pendek belum diatur!');
-  const fullUrl = window.location.origin + '/' + val;
-  navigator.clipboard.writeText(fullUrl).then(() => {
-    alert('Link berhasil disalin!\n' + fullUrl);
-  }).catch(() => alert('Gagal menyalin. Silakan copy manual: ' + fullUrl));
+  const previewInput = document.getElementById('shortlink-preview-input');
+  if (!previewInput || previewInput.value === 'Belum diatur' || previewInput.value === '-') {
+    return;
+  }
+  const btn = document.getElementById('copy-shortlink-btn');
+  navigator.clipboard.writeText(previewInput.value).then(() => {
+    const originalText = btn.innerText;
+    btn.innerText = 'Copied!';
+    btn.style.background = 'var(--color-success)';
+    setTimeout(() => {
+      btn.innerText = originalText;
+      btn.style.background = 'var(--color-primary)';
+    }, 2000);
+  }).catch(() => {
+    // Silently fail or you could alert here if needed
+  });
 };
