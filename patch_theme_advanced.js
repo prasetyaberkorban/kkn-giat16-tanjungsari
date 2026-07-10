@@ -29,20 +29,24 @@ body.theme-viens {
 }
 
 body.theme-viens::before {
+  content: '';
   width: 100vw;
   height: 100vh;
   top: 0; left: 0;
   position: fixed;
   background: radial-gradient(ellipse at 10% 20%, rgba(217, 38, 169, 0.3) 0%, transparent 60%);
+  z-index: -1;
 }
 
 body.theme-viens::after {
+  content: '';
   width: 100vw;
   height: 100vh;
   bottom: 0; right: 0;
   top: auto; left: auto;
   position: fixed;
   background: radial-gradient(ellipse at 90% 80%, rgba(139, 43, 226, 0.25) 0%, transparent 60%);
+  z-index: -1;
 }
 
 /* Card Overrides for Viens Theme */
@@ -92,6 +96,7 @@ body.theme-viens .admin-login-btn {
 
 body.theme-viens .admin-login-btn:hover {
   box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
 }
 `;
 
@@ -108,9 +113,9 @@ const updateHtmlCssVersion = (filePath) => {
   let html = fs.readFileSync(filePath, 'utf8');
   const timestamp = Date.now();
   if (html.includes('href="/style.css?v=')) {
-    html = html.replace(/href="\/style\.css\?v=\d+"/, \`href="/style.css?v=\${timestamp}"\`);
+    html = html.replace(/href="\/style\.css\?v=\d+"/, `href="/style.css?v=${timestamp}"`);
   } else {
-    html = html.replace(/href="\/style\.css"/, \`href="/style.css?v=\${timestamp}"\`);
+    html = html.replace(/href="\/style\.css"/, `href="/style.css?v=${timestamp}"`);
   }
   fs.writeFileSync(filePath, html);
 };
