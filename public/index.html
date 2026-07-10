@@ -167,26 +167,6 @@
       </div>
     </div>
 
-    <!-- ================= TAB: DAFTAR HADIR ================= -->
-    <div id="tab-daftar-hadir" class="tab-content">
-      <div class="card">
-        <h2 class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-          <span>📋 Riwayat Kehadiran Anggota</span>
-          <button class="btn export-tab-btn" onclick="exportTabToExcel('daftar-hadir')" style="display: none; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
-            📥 Export Tab Ini
-          </button>
-        </h2>
-
-        <!-- Filter Absensi: Hari Ini / Riwayat Lengkap -->
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
-          <div class="goods-categories" id="attendance-filter-tabs" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0;">
-            <button class="week-btn active" onclick="filterAttendanceView('today')">Hari Ini</button>
-            <button class="week-btn" onclick="filterAttendanceView('all')">Semua Riwayat</button>
-          </div>
-        </div>
-
-        <div class="table-container">
-          <table class="premium-table">
             <thead>
               <tr>
                 <th>Nama</th>
