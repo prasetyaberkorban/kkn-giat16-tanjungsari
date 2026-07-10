@@ -3358,3 +3358,59 @@ setTimeout(() => {
     });
   }
 }, 1000);
+
+
+/* ================= SHORTLINK ================= */
+async function loadShortlink() {
+  try {
+    const res = await fetch('/api/shortlink');
+    const data = await res.json();
+    const input = document.getElementById('shortlink-input');
+    const preview = document.getElementById('shortlink-preview');
+    if (input) {
+      input.value = data.shortlink || '';
+      updateShortlinkPreview(data.shortlink);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function updateShortlinkPreview(val) {
+  const preview = document.getElementById('shortlink-preview');
+  if (preview) {
+    if (!val) {
+      preview.innerText = 'Belum diatur';
+    } else {
+      preview.innerText = window.location.origin + '/' + val;
+    }
+  }
+}
+
+window.handleShortlinkSave = async function() {
+  const val = document.getElementById('shortlink-input').value.trim().replace(/[^a-zA-Z0-9-]/g, '');
+  document.getElementById('shortlink-input').value = val;
+  try {
+    const res = await fetch('/api/shortlink', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ shortlink: val })
+    });
+    if (res.ok) {
+      updateShortlinkPreview(val);
+    } else {
+      alert('Gagal menyimpan shortlink');
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+window.copyShortlink = function() {
+  const val = document.getElementById('shortlink-input').value.trim();
+  if (!val) return alert('Link pendek belum diatur!');
+  const fullUrl = window.location.origin + '/' + val;
+  navigator.clipboard.writeText(fullUrl).then(() => {
+    alert('Link berhasil disalin!\n' + fullUrl);
+  }).catch(() => alert('Gagal menyalin. Silakan copy manual: ' + fullUrl));
+};

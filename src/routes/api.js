@@ -830,6 +830,36 @@ router.post('/qr-setting', async (req, res) => {
   }
 });
 
+
+// GET: Ambil setting shortlink
+router.get('/shortlink', async (req, res) => {
+  try {
+    let setting = await QrSetting.findOne({ key: 'active_shortlink' });
+    if (!setting) {
+      setting = new QrSetting({ key: 'active_shortlink', stringValue: '' });
+      await setting.save();
+    }
+    res.json({ shortlink: setting.stringValue || '' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST: Ubah setting shortlink
+router.post('/shortlink', async (req, res) => {
+  const { shortlink } = req.body;
+  try {
+    const updated = await QrSetting.findOneAndUpdate(
+      { key: 'active_shortlink' },
+      { stringValue: shortlink },
+      { new: true, upsert: true }
+    );
+    res.json({ message: 'Shortlink berhasil diperbarui!', shortlink: updated.stringValue });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 const DEFAULT_RAB = [
   // RAB Posko
   { type: 'Posko', kebutuhan: 'Vest + Lanyard KKN', volume: 11, harga: 1320000, anggota: 11 },

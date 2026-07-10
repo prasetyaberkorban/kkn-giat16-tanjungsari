@@ -35,6 +35,27 @@ app.use('/api/rab', rabRoutes);
 app.use('/api/cashflow', cashflowRoutes);
 app.use('/api/rabsetting', rabSettingRoutes);
 
+
+// Intercept shortlink untuk absensi
+app.get('/:short', async (req, res, next) => {
+  const short = req.params.short;
+  if (['api', 'absensi', 'css', 'js', 'favicon.ico', 'images'].includes(short)) return next();
+  try {
+    const QrSetting = require('./src/models/QrSetting');
+    const linkSetting = await QrSetting.findOne({ key: 'active_shortlink' });
+    if (linkSetting && linkSetting.stringValue && linkSetting.stringValue.trim() !== '') {
+      if (linkSetting.stringValue === short) {
+        const qrSetting = await QrSetting.findOne({ key: 'active_qr' });
+        const qrVal = qrSetting ? (qrSetting.value || 1) : 1;
+        return res.redirect(`/absensi.html?qr=${qrVal}`);
+      }
+    }
+  } catch (err) {
+    console.error(err);
+  }
+  next();
+});
+
 // Route fallback untuk frontend (Single Page feel)
 app.get('/absensi', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'absensi.html'));

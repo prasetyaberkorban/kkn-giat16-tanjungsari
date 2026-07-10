@@ -159,6 +159,16 @@
               <!-- Render QR code di sini -->
             </div>
             <button id="download-qr-btn" class="submit-btn" style="margin-top: 1rem; width: auto; display: inline-block; padding: 0.5rem 1rem;" onclick="downloadQrCode()">Unduh QR Code</button>
+            
+            <div class="form-group" style="text-align: left; margin: 1.25rem 0; width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+              <label style="display: block; color: var(--text-secondary); margin-bottom: 0.35rem; font-size: 0.85rem; font-weight: 600;">LINK PENDEK (OPSIONAL):</label>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <input type="text" id="shortlink-input" class="select-control" style="background: rgba(255, 255, 255, 0.05); padding: 0.6rem 0.85rem; font-size: 0.9rem; flex: 1;" placeholder="Misal: absen-hari-ini" onchange="handleShortlinkSave()">
+                <button class="btn" style="background: var(--color-primary); border: none; margin: 0; padding: 0.6rem 1rem;" onclick="copyShortlink()">Copy Link</button>
+              </div>
+              <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">Anggota dapat absen dengan membuka: <span id="shortlink-preview" style="color: var(--color-accent); font-weight: 600;">-</span></p>
+            </div>
+
             <p style="margin-top: 1rem;">Tampilkan QR ini ke anggota untuk memindai formulir absensi mobile.</p>
           </div>
         </div>

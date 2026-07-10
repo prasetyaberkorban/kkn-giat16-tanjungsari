@@ -7,6 +7,7 @@ const QrSettingSchema = new mongoose.Schema({
     unique: true,
     default: 'active_qr'
   },
+  stringValue: { type: String, default: '' },
   value: {
     type: Number,
     required: true,
