@@ -4,10 +4,7 @@ function renderBelumAbsen(logs) {
   const listEl = document.getElementById('belum-absen-list');
   if (!container || !listEl) return;
   
-  if (currentAttendanceFilter !== 'today') {
-    container.style.display = 'none';
-    return;
-  }
+  
   
   // Gunakan format yang sama dengan backend/tabel (YYYY-MM-DD)
   const todayDateStr = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
@@ -465,6 +462,7 @@ async function fetchFullAttendance() {
   try {
     const res = await fetch('/api/attendance/all');
     allAttendanceData = await res.json();
+    if (typeof renderBelumAbsen === 'function') renderBelumAbsen(allAttendanceData);
     renderAttendanceTable();
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="${isAdmin ? 8 : 7}" style="text-align: center; color: var(--color-error); padding: 2rem;">Gagal mengambil riwayat absensi dari server.</td></tr>`;
