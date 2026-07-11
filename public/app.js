@@ -3507,3 +3507,15 @@ window.copyShortlink = function() {
     // Silently fail or you could alert here if needed
   });
 };
+
+
+async function fetchAndRenderBelumAbsen() {
+  try {
+    const res = await fetch('/api/attendance/all');
+    allAttendanceData = await res.json();
+    if (typeof renderBelumAbsen === 'function') renderBelumAbsen(allAttendanceData);
+  } catch (err) {
+    console.error("Gagal load absensi untuk dashboard", err);
+  }
+}
+document.addEventListener('DOMContentLoaded', fetchAndRenderBelumAbsen);
