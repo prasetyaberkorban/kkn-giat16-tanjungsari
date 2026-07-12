@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
         type,
         size: f.size ? formatBytes(parseInt(f.size)) : "--",
         date: f.modifiedTime ? new Date(f.modifiedTime).toLocaleDateString() : "--",
-        thumbnail: f.thumbnailLink ? `/api/drive/thumbnail?url=${encodeURIComponent(f.thumbnailLink)}` : null,
+        thumbnail: f.thumbnailLink ? `/gdrive/api/drive/thumbnail?url=${encodeURIComponent(f.thumbnailLink)}` : null,
         webViewLink: f.webViewLink,
         downloadLink: f.webContentLink
       };
