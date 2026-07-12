@@ -26,6 +26,7 @@ export default function DriveDashboard() {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploadStatus, setUploadStatus] = useState<"idle" | "uploading" | "done">("idle");
+  const [activeXhr, setActiveXhr] = useState<XMLHttpRequest | null>(null);
   const [uploadProgress, setUploadProgress] = useState({
     percentage: 0, loadedBytes: 0, totalBytes: 0, speedBps: 0, etaSeconds: 0, uploadedFileNames: [] as string[]
   });
@@ -174,6 +175,7 @@ export default function DriveDashboard() {
       
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
+        setActiveXhr(xhr);
         xhr.open("POST", "/gdrive/api/drive/upload");
 
         xhr.upload.onprogress = (e) => {
@@ -681,7 +683,8 @@ export default function DriveDashboard() {
                     ))}
                   </div>
                   <div className="flex justify-end gap-3">
-                    <button onClick={() => setIsUploadModalOpen(false)} className="px-5 py-2.5 rounded-xl text-gray-400 bg-white/5 hover:bg-white/10 font-semibold transition-all text-sm border border-white/5">Cancel</button>
+                    <button onClick={() => fileInputRef.current?.click()} className="px-5 py-2.5 rounded-xl text-gray-400 bg-white/5 hover:bg-white/10 font-semibold transition-all text-sm border border-white/5">Add More</button>
+                    <button onClick={() => { setIsUploadModalOpen(false); setSelectedFiles([]); }} className="px-5 py-2.5 rounded-xl text-gray-400 bg-white/5 hover:bg-white/10 font-semibold transition-all text-sm border border-white/5">Cancel</button>
                     <button onClick={startUpload} className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-orange-400 text-white font-bold shadow-lg shadow-orange-500/20 transition-all text-sm border border-transparent">
                       Start Upload
                     </button>
@@ -691,11 +694,14 @@ export default function DriveDashboard() {
 
               {uploadStatus === "uploading" && (
                 <div className="py-4">
-                  <div className="flex justify-between text-sm mb-3">
-                    <span className="font-bold text-orange-400">{uploadProgress.percentage}%</span>
-                    <span className="text-gray-400 text-xs sm:text-sm font-medium">
-                      {formatBytes(uploadProgress.loadedBytes)} / {formatBytes(uploadProgress.totalBytes)}
-                    </span>
+                  <div className="flex justify-between text-sm mb-3 items-center">
+                    <div>
+                      <span className="font-bold text-orange-400">{uploadProgress.percentage}%</span>
+                      <span className="text-gray-400 text-xs sm:text-sm font-medium ml-2">
+                        {formatBytes(uploadProgress.loadedBytes)} / {formatBytes(uploadProgress.totalBytes)}
+                      </span>
+                    </div>
+                    <button onClick={() => { activeXhr?.abort(); setUploadStatus("idle"); }} className="px-3 py-1 rounded-lg text-white bg-red-500/80 hover:bg-red-500 text-xs font-bold transition-all">Cancel</button>
                   </div>
                   
                   {/* Progress Bar */}
