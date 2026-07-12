@@ -53,7 +53,7 @@ export default function DriveDashboard() {
   const fetchFiles = async (folderId: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/drive?folderId=${folderId}`);
+      const res = await fetch(`/gdrive/api/drive?folderId=${folderId}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to fetch");
       setFiles(data.files || []);
@@ -68,7 +68,7 @@ export default function DriveDashboard() {
   const fetchTrash = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/drive/trash`);
+      const res = await fetch(`/gdrive/api/drive/trash`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to fetch trash");
       setFiles(data.files || []);
@@ -105,7 +105,7 @@ export default function DriveDashboard() {
     
     setIsDeleting(true);
     try {
-      const res = await fetch(`/api/drive/delete?fileId=${fileToDelete.id}`, {
+      const res = await fetch(`/gdrive/api/drive/delete?fileId=${fileToDelete.id}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -127,7 +127,7 @@ export default function DriveDashboard() {
     
     setIsCreatingFolder(true);
     try {
-      const res = await fetch('/api/drive/folder', {
+      const res = await fetch('/gdrive/api/drive/folder', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ folderName: newFolderName.trim(), parentId: activeFolderId })
@@ -174,7 +174,7 @@ export default function DriveDashboard() {
       
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/api/drive/upload");
+        xhr.open("POST", "/gdrive/api/drive/upload");
 
         xhr.upload.onprogress = (e) => {
           if (e.lengthComputable) {
