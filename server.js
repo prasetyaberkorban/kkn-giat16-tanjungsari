@@ -39,12 +39,13 @@ nextProcess.stdout.on('data', (data) => console.log('[Next.js]:', data.toString(
 nextProcess.stderr.on('data', (data) => console.error('[Next.js Error]:', data.toString().trim()));
 
 // 2. Setup Proxy Middleware
-app.use('/gdrive', createProxyMiddleware({ 
+// Menggunakan app.all dengan wildcard agar Express TIDAK memotong req.url (stripping path)
+app.all('/gdrive*', createProxyMiddleware({ 
   target: 'http://localhost:3001', 
   changeOrigin: true,
-  ws: true // proxy websockets for Next.js HMR
+  ws: true 
 }));
-app.use('/_next', createProxyMiddleware({ 
+app.all('/_next*', createProxyMiddleware({ 
   target: 'http://localhost:3001', 
   changeOrigin: true,
   ws: true 
