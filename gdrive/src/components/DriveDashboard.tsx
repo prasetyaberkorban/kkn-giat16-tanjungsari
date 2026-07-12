@@ -254,6 +254,9 @@ export default function DriveDashboard() {
       {/* Top Navbar */}
       <nav className="glass bg-black/40 rounded-2xl p-4 mb-6 sm:mb-8 flex justify-between items-center shadow-2xl gap-2 sm:gap-4 border-b border-white/10 backdrop-blur-3xl">
         <div className="flex items-center gap-3">
+          <a href="https://kkngiat16tanjungsari.foerta.tech/" className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all border border-white/10 text-gray-300 hover:text-white shadow-inner shrink-0" title="Kembali ke Dashboard">
+            <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+          </a>
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/5 flex items-center justify-center shadow-inner shrink-0 border border-white/10 p-1">
             <img src="https://cdn.discordapp.com/attachments/1195930707059548290/1525783780172894308/logo_kkn-removebg-preview.png?ex=6a54a460&is=6a5352e0&hm=a3ce55361aac5ad9c375d8848de0b20af5de720f7d5859b9dbbd73de39d3ac13&" alt="Logo KKN" className="w-full h-full object-contain drop-shadow-lg" />
           </div>
