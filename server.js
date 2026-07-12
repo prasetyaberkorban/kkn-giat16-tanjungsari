@@ -21,6 +21,11 @@ app.use(express.urlencoded({ extended: true }));
 // ================= GDRIVE NEXT.JS INTEGRATION =================
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const { spawn } = require('child_process');
+const multer = require('multer');
+const os = require('os');
+const fsModule = require('fs');
+const { google } = require('googleapis');
+
 
 // 1. Spawn Next.js server on port 3001
 const isProd = process.env.NODE_ENV === 'production';
@@ -37,6 +42,46 @@ const nextProcess = spawn(nextCmd, nextArgs, {
 
 nextProcess.stdout.on('data', (data) => console.log('[Next.js]:', data.toString().trim()));
 nextProcess.stderr.on('data', (data) => console.error('[Next.js Error]:', data.toString().trim()));
+
+
+// ================= GDRIVE UPLOAD INTERCEPTOR (BYPASS NEXT.JS RAM LIMIT) =================
+const upload = multer({ dest: os.tmpdir() });
+app.post('/gdrive/api/drive/upload', upload.single('file'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file provided' });
+  const folderId = req.body.folderId;
+  if (!folderId) return res.status(400).json({ error: 'Folder ID is required' });
+
+  try {
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      "https://developers.google.com/oauthplayground"
+    );
+    oauth2Client.setCredentials({ refresh_token: process.env.GOOGLE_REFRESH_TOKEN });
+    const drive = google.drive({ version: 'v3', auth: oauth2Client });
+
+    const fileMetadata = { name: req.file.originalname, parents: [folderId] };
+    const media = {
+      mimeType: req.file.mimetype,
+      body: fsModule.createReadStream(req.file.path)
+    };
+
+    const response = await drive.files.create({
+      requestBody: fileMetadata,
+      media: media,
+      fields: "id, name",
+    });
+
+    // Cleanup temp file immediately
+    fsModule.unlinkSync(req.file.path);
+    return res.json({ success: true, file: response.data });
+  } catch (err) {
+    console.error("Express Drive Upload Error:", err);
+    if (fsModule.existsSync(req.file.path)) fsModule.unlinkSync(req.file.path);
+    return res.status(500).json({ error: err.message });
+  }
+});
+// ========================================================================================
 
 // 2. Setup Proxy Middleware
 // Menggunakan app.all dengan wildcard agar Express TIDAK memotong req.url (stripping path)
