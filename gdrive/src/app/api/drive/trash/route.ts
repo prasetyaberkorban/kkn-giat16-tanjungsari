@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
         size: formatBytes(file.size),
         downloadLink: file.webContentLink,
         webViewLink: file.webViewLink,
-        thumbnail: file.thumbnailLink ? `/api/drive/thumbnail?url=${encodeURIComponent(file.thumbnailLink)}` : null,
+        thumbnail: file.thumbnailLink ? `/gdrive/api/drive/thumbnail?url=${encodeURIComponent(file.thumbnailLink)}` : null,
       };
     }) || [];
 
