@@ -31,6 +31,7 @@ console.log('Starting Next.js GDrive on port 3001...');
 const nextProcess = spawn(nextCmd, nextArgs, { 
   cwd: path.join(__dirname, 'gdrive'),
   env: { ...process.env, PORT: '3001' },
+  shell: true,
   stdio: 'pipe'
 });
 
