@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-900: #1e3a8a;
+  
+  --color-background: #09090b; /* Very dark nearly black */
+  --color-foreground: #f8fafc;
+  --color-surface: rgba(26, 26, 36, 0.4); /* Darker glass */
+  --color-surface-hover: rgba(40, 40, 50, 0.6);
+  --color-border: rgba(255, 255, 255, 0.08);
+}
+
+@utility glass {
+  background-color: var(--color-surface);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+@utility glass-hover {
+  background-color: var(--color-surface-hover);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+@utility custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+:root {
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Neon Glowing Background Orbs */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(236, 72, 153, 0.15) 0%, transparent 35%),   /* Pink top left */
+    radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 35%),   /* Blue top right */
+    radial-gradient(circle at 50% 80%, rgba(249, 115, 22, 0.15) 0%, transparent 40%),   /* Orange bottom center */
+    radial-gradient(circle at 30% 60%, rgba(139, 92, 246, 0.12) 0%, transparent 40%);   /* Purple middle left */
+  z-index: -1;
+  filter: blur(60px); /* Massive blur to blend them into the dark background */
+}
