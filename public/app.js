@@ -1,4 +1,35 @@
 
+window.showToast = function(message) {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    document.body.appendChild(container);
+  }
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  
+  // Deteksi error/gagal dari teks
+  const msgLower = message.toLowerCase();
+  const isError = msgLower.includes('gagal') || msgLower.includes('kesalahan') || msgLower.includes('putus') || msgLower.includes('error');
+  
+  toast.style.borderLeftColor = isError ? 'var(--color-error)' : 'var(--color-success)';
+  
+  // Icon simpel
+  const icon = isError ? '❌ ' : '✅ ';
+  toast.innerText = icon + message;
+  
+  container.appendChild(toast);
+  
+  // Cleanup DOM
+  setTimeout(() => {
+    if (toast.parentNode) {
+      toast.parentNode.removeChild(toast);
+    }
+  }, 5000); // Tepat 5 detik
+};
+
+
 function renderBelumAbsen(logs) {
   const container = document.getElementById('belum-absen-container');
   const listEl = document.getElementById('belum-absen-list');
@@ -444,11 +475,11 @@ async function handleActiveQrChange(val) {
       activeQrCodeType = data.activeQr;
       generateQrCode(todayScheduleData ? todayScheduleData.localIp : null);
     } else {
-      alert(data.error || 'Gagal mengubah QR Code aktif.');
+      showToast(data.error || 'Gagal mengubah QR Code aktif.');
     }
   } catch (err) {
     console.error('Gagal memperbarui QR Code aktif:', err);
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -768,11 +799,11 @@ async function toggleTaskCompletion(name, task, checkboxElement) {
     if (!res.ok) {
       // Jika gagal, kembalikan posisi checklist ke semula di UI
       checkboxElement.checked = !completed;
-      alert('Gagal menyinkronkan status tugas ke server.');
+      showToast('Gagal menyinkronkan status tugas ke server.');
     }
   } catch (err) {
     checkboxElement.checked = !completed;
-    alert('Koneksi terputus. Gagal menyinkronkan status tugas.');
+    showToast('Koneksi terputus. Gagal menyinkronkan status tugas.');
   }
 }
 
@@ -1135,10 +1166,10 @@ async function handleAddGoods(e) {
       await fetchGoods();
       renderGoods();
     } else {
-      alert(data.error || 'Gagal menyimpan barang.');
+      showToast(data.error || 'Gagal menyimpan barang.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -1156,10 +1187,10 @@ async function deleteGoodsItem(id) {
       await fetchGoods();
       renderGoods();
     } else {
-      alert(data.error || 'Gagal menghapus barang.');
+      showToast(data.error || 'Gagal menghapus barang.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -1302,17 +1333,17 @@ async function handleSaveScheduleOverride(e) {
     });
 
     if (res.ok) {
-      alert('Jadwal berhasil disesuaikan!');
+      showToast('Jadwal berhasil disesuaikan!');
       closeScheduleModal();
       // Segarkan tampilan
       fetchDashboardData();
       switchWeek(currentViewingWeek);
     } else {
       const err = await res.json();
-      alert(err.error || 'Gagal menyimpan penyesuaian jadwal.');
+      showToast(err.error || 'Gagal menyimpan penyesuaian jadwal.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -1326,16 +1357,16 @@ async function handleResetScheduleOverride() {
     });
 
     if (res.ok) {
-      alert('Jadwal dikembalikan ke pengaturan default!');
+      showToast('Jadwal dikembalikan ke pengaturan default!');
       closeScheduleModal();
       // Segarkan tampilan
       fetchDashboardData();
       switchWeek(currentViewingWeek);
     } else {
-      alert('Gagal mereset jadwal.');
+      showToast('Gagal mereset jadwal.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -1349,11 +1380,11 @@ async function updateAttendanceStatus(id, newStatus) {
 
     if (!res.ok) {
       const data = await res.json();
-      alert(data.error || 'Gagal memperbarui status absensi.');
+      showToast(data.error || 'Gagal memperbarui status absensi.');
       fetchFullAttendance(); // reload to reset dropdown
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
     fetchFullAttendance();
   }
 }
@@ -1369,10 +1400,10 @@ async function deleteAttendanceItem(id) {
     if (res.ok) {
       fetchFullAttendance();
     } else {
-      alert('Gagal menghapus data absensi.');
+      showToast('Gagal menghapus data absensi.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -1574,10 +1605,10 @@ async function handleSaveJoblist(e) {
       renderJoblist();
     } else {
       const err = await res.json();
-      alert(err.error || 'Gagal menyimpan pekerjaan.');
+      showToast(err.error || 'Gagal menyimpan pekerjaan.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -1605,10 +1636,10 @@ async function updateJoblistStatus(id, newStatus) {
       await fetchJoblist();
       renderJoblist();
     } else {
-      alert('Gagal memperbarui status pekerjaan.');
+      showToast('Gagal memperbarui status pekerjaan.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -1624,10 +1655,10 @@ async function deleteJoblistItem(id) {
       await fetchJoblist();
       renderJoblist();
     } else {
-      alert('Gagal menghapus pekerjaan.');
+      showToast('Gagal menghapus pekerjaan.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -1800,7 +1831,7 @@ async function exportAllToExcel() {
     XLSX.writeFile(wb, 'Laporan_Semua_Data_Posko_Tanjung_Sari.xlsx');
   } catch (err) {
     console.error('Export gagal:', err);
-    alert('Terjadi kesalahan saat mengunduh berkas Excel.');
+    showToast('Terjadi kesalahan saat mengunduh berkas Excel.');
   }
 }
 
@@ -1906,7 +1937,7 @@ async function exportTabToExcel(tabId) {
         XLSX.utils.book_append_sheet(wb, ws, `Jadwal Minggu ${currentViewingWeek}`);
         filename = `Laporan_Jadwal_Piket_Minggu_${currentViewingWeek}.xlsx`;
       } else {
-        alert('Tabel jadwal tidak ditemukan.');
+        showToast('Tabel jadwal tidak ditemukan.');
         return;
       }
     }
@@ -2010,7 +2041,7 @@ async function exportTabToExcel(tabId) {
     XLSX.writeFile(wb, filename);
   } catch (err) {
     console.error('Export gagal:', err);
-    alert('Terjadi kesalahan saat mengunduh data tab ini.');
+    showToast('Terjadi kesalahan saat mengunduh data tab ini.');
   }
 }
 
@@ -2146,10 +2177,10 @@ async function handleSaveContent(e) {
       renderContentList();
     } else {
       const err = await res.json();
-      alert(err.error || 'Gagal menyimpan rencana konten.');
+      showToast(err.error || 'Gagal menyimpan rencana konten.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -2175,10 +2206,10 @@ async function updateContentStatus(id, newStatus) {
       await fetchContentList();
       renderContentList();
     } else {
-      alert('Gagal memperbarui status checklist.');
+      showToast('Gagal memperbarui status checklist.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -2194,10 +2225,10 @@ async function deleteContentItem(id) {
       await fetchContentList();
       renderContentList();
     } else {
-      alert('Gagal menghapus rencana konten.');
+      showToast('Gagal menghapus rencana konten.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -2350,10 +2381,10 @@ async function handleSaveProker(e) {
       renderProgramKerja();
     } else {
       const err = await res.json();
-      alert(err.error || 'Gagal menyimpan program kerja.');
+      showToast(err.error || 'Gagal menyimpan program kerja.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -2369,10 +2400,10 @@ async function deleteProkerItem(id) {
       await fetchProgramKerja();
       renderProgramKerja();
     } else {
-      alert('Gagal menghapus program kerja.');
+      showToast('Gagal menghapus program kerja.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -2439,9 +2470,9 @@ async function saveUangSisa(type) {
     });
     rabSettingData[type] = uangSisa;
     renderRab();
-    // alert('Uang Sisa berhasil disimpan!');
+    // showToast('Uang Sisa berhasil disimpan!');
   } catch (err) {
-    alert('Gagal menyimpan Uang Sisa');
+    showToast('Gagal menyimpan Uang Sisa');
   }
 }
 
@@ -3047,10 +3078,10 @@ async function handleSaveRab(e) {
       renderRab();
     } else {
       const err = await res.json();
-      alert(err.error || 'Gagal menyimpan data RAB.');
+      showToast(err.error || 'Gagal menyimpan data RAB.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -3066,10 +3097,10 @@ async function deleteRabItem(id) {
       await fetchRab();
       renderRab();
     } else {
-      alert('Gagal menghapus item RAB.');
+      showToast('Gagal menghapus item RAB.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 
@@ -3085,10 +3116,10 @@ async function toggleRabAutoCalc(id, currentStatus) {
       await fetchRab();
       renderRab();
     } else {
-      alert('Gagal mengubah mode kalkulasi RAB.');
+      showToast('Gagal mengubah mode kalkulasi RAB.');
     }
   } catch (err) {
-    alert('Terjadi kesalahan koneksi.');
+    showToast('Terjadi kesalahan koneksi.');
   }
 }
 // ==========================================
@@ -3113,13 +3144,13 @@ async function syncToGoogleSheets() {
     const result = await response.json();
     
     if (response.ok) {
-      alert('✅ Sukses: ' + result.message);
+      showToast('✅ Sukses: ' + result.message);
     } else {
-      alert('❌ Gagal: ' + (result.error || 'Terjadi kesalahan'));
+      showToast('❌ Gagal: ' + (result.error || 'Terjadi kesalahan'));
     }
   } catch (error) {
     console.error('Error syncing to sheets:', error);
-    alert('❌ Terjadi kesalahan jaringan saat sync data.');
+    showToast('❌ Terjadi kesalahan jaringan saat sync data.');
   } finally {
     btn.innerHTML = originalText;
     btn.disabled = false;
@@ -3278,11 +3309,11 @@ async function handleSaveCashflow(e) {
       renderRab(); // renderRab calls renderCashflow if currentRabType === 'Cashflow'
     } else {
       const data = await res.json();
-      alert('Gagal menyimpan cashflow: ' + (data.error || 'Unknown error'));
+      showToast('Gagal menyimpan cashflow: ' + (data.error || 'Unknown error'));
     }
   } catch (err) {
     console.error(err);
-    alert('Terjadi kesalahan jaringan.');
+    showToast('Terjadi kesalahan jaringan.');
   }
 }
 
@@ -3294,11 +3325,11 @@ async function deleteCashflowItem(id) {
       await fetchRab();
       renderRab();
     } else {
-      alert('Gagal menghapus cashflow.');
+      showToast('Gagal menghapus cashflow.');
     }
   } catch (err) {
     console.error(err);
-    alert('Terjadi kesalahan jaringan.');
+    showToast('Terjadi kesalahan jaringan.');
   }
 }
 
@@ -3319,7 +3350,7 @@ window.downloadQrCode = function() {
       a.download = `QR-Absensi-GIAT16.png`;
       a.click();
     } else {
-      alert('QR Code belum siap atau gagal dirender.');
+      showToast('QR Code belum siap atau gagal dirender.');
     }
   }
 };
@@ -3358,14 +3389,14 @@ if (manualForm) {
       btn.disabled = false;
 
       if (res.ok) {
-        alert('Kehadiran manual berhasil disimpan!');
+        showToast('Kehadiran manual berhasil disimpan!');
         closeManualAttendanceModal();
         fetchAttendanceData(currentAttendanceFilter); // Refresh data
       } else {
-        alert('Gagal: ' + data.error);
+        showToast('Gagal: ' + data.error);
       }
     } catch (err) {
-      alert('Terjadi kesalahan koneksi.');
+      showToast('Terjadi kesalahan koneksi.');
       console.error(err);
     }
   });
@@ -3377,7 +3408,7 @@ window.openEditAttendanceModal = function(id, name, date, time, status) {
   const idEl = document.getElementById('edit-attendance-id');
   if (!idEl) {
     console.error('Modal edit attendance tidak ditemukan di DOM!');
-    alert('Maaf, modal edit tidak ditemukan. Silakan refresh halaman.');
+    showToast('Maaf, modal edit tidak ditemukan. Silakan refresh halaman.');
     return;
   }
   
@@ -3427,15 +3458,15 @@ setTimeout(() => {
         btn.disabled = false;
 
         if (res.ok) {
-          alert('Data kehadiran berhasil diperbarui!');
+          showToast('Data kehadiran berhasil diperbarui!');
           closeEditAttendanceModal();
           if (typeof fetchFullAttendance === 'function') fetchFullAttendance();
           if (typeof fetchAttendanceData === 'function' && typeof currentAttendanceFilter !== 'undefined') fetchAttendanceData(currentAttendanceFilter);
         } else {
-          alert('Gagal: ' + data.error);
+          showToast('Gagal: ' + data.error);
         }
       } catch (err) {
-        alert('Terjadi kesalahan koneksi.');
+        showToast('Terjadi kesalahan koneksi.');
         console.error(err);
       }
     });
@@ -3482,7 +3513,7 @@ window.handleShortlinkSave = async function() {
     if (res.ok) {
       updateShortlinkPreview(val);
     } else {
-      alert('Gagal menyimpan shortlink');
+      showToast('Gagal menyimpan shortlink');
     }
   } catch (err) {
     console.error(err);
