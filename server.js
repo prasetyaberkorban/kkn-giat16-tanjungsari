@@ -18,6 +18,39 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// ================= GDRIVE NEXT.JS INTEGRATION =================
+const { createProxyMiddleware } = require('http-proxy-middleware');
+const { spawn } = require('child_process');
+
+// 1. Spawn Next.js server on port 3001
+const isProd = process.env.NODE_ENV === 'production';
+const nextCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+const nextArgs = ['run', isProd ? 'start' : 'dev', '--', '-p', '3001'];
+
+console.log('Starting Next.js GDrive on port 3001...');
+const nextProcess = spawn(nextCmd, nextArgs, { 
+  cwd: path.join(__dirname, 'gdrive'),
+  env: { ...process.env, PORT: '3001' },
+  stdio: 'pipe'
+});
+
+nextProcess.stdout.on('data', (data) => console.log('[Next.js]:', data.toString().trim()));
+nextProcess.stderr.on('data', (data) => console.error('[Next.js Error]:', data.toString().trim()));
+
+// 2. Setup Proxy Middleware
+app.use('/gdrive', createProxyMiddleware({ 
+  target: 'http://localhost:3001', 
+  changeOrigin: true,
+  ws: true // proxy websockets for Next.js HMR
+}));
+app.use('/_next', createProxyMiddleware({ 
+  target: 'http://localhost:3001', 
+  changeOrigin: true,
+  ws: true 
+}));
+// ==============================================================
+
+
 // Menyajikan file statis dari folder public
 app.use(express.static(path.join(__dirname, 'public'), {
   setHeaders: (res, filePath) => {

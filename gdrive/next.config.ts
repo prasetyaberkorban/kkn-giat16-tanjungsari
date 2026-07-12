@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
     appIsrStatus: false,
     buildActivity: false,
   },
+  basePath: "/gdrive",
 };
 
 export default nextConfig;
