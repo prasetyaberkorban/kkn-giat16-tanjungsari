@@ -260,7 +260,7 @@ export default function DriveDashboard() {
             <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
           </a>
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/5 flex items-center justify-center shadow-inner shrink-0 border border-white/10 p-1">
-            <img src="https://cdn.discordapp.com/attachments/1195930707059548290/1525783780172894308/logo_kkn-removebg-preview.png?ex=6a54a460&is=6a5352e0&hm=a3ce55361aac5ad9c375d8848de0b20af5de720f7d5859b9dbbd73de39d3ac13&" alt="Logo KKN" className="w-full h-full object-contain drop-shadow-lg" />
+            <img src="https://s6.imgcdn.dev/YFrPQM.png" alt="Logo KKN" className="w-full h-full object-contain drop-shadow-lg" />
           </div>
           <h1 className="text-sm sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 drop-shadow-md tracking-wide">
             Drive KKN GIAT 16 DESA TANJUNGSARI
