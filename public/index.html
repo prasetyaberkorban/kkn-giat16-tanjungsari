@@ -57,8 +57,8 @@
       <li class="menu-item" onclick="switchTab('jadwal-mingguan')">
         <span class="menu-icon">🗓️</span> Jadwal Mingguan
       </li>
-      <li class="menu-item" onclick="switchTab('checklist-tugas')">
-        <span class="menu-icon">☑️</span> Checklist Tugas
+      <li class="menu-item" onclick="switchTab('piket-tpq')">
+        <span class="menu-icon">🕌</span> Piket TPQ
       </li>
       <li class="menu-item" onclick="switchTab('barang-bawaan')">
         <span class="menu-icon">📦</span> Barang Bawaan
@@ -138,6 +138,19 @@
                 Sedang mengambil jadwal piket...
               </div>
             </div>
+          <!-- Card Piket TPQ -->
+          <div class="card tpq-card" style="margin-top: 1.5rem; background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2);">
+            <div class="bathroom-content">
+              <div class="bathroom-info">
+                <h3 style="color: #10b981;">🕌 Piket TPQ Hari Ini</h3>
+                <p>Jadwal mengajar TPQ untuk hari ini.</p>
+              </div>
+              <div class="bathroom-badge" id="tpq-today-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
+                -
+              </div>
+            </div>
+          </div>
+
           </div>
 
           <!-- Card Piket Kamar Mandi -->
@@ -259,62 +272,39 @@
           </button>
         </h2>
         <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
-          Pilih minggu untuk melihat rotasi tugas harian dan jadwal piket kamar mandi.
+          Berikut adalah jadwal Piket TPQ mingguan. Jadwal ini juga akan otomatis muncul di halaman Dashboard sesuai dengan harinya.
         </p>
-        
-        <!-- Paginator / Minggu Switcher (Navigasi Tak Terbatas) -->
-        <div class="week-switcher" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-          <button class="week-btn" onclick="adjustWeek(-1)">◀ Prev</button>
-          <span id="current-week-display" style="font-size: 1.2rem; font-weight: 700; color: #fff; min-width: 100px; text-align: center;">Minggu 1</span>
-          <button class="week-btn" onclick="adjustWeek(1)">Next ▶</button>
-          <button id="admin-schedule-adjust-btn" class="btn" onclick="openScheduleOverrideModal()" style="display: none; padding: 0.5rem 1rem; width: auto; font-size: 0.85rem; margin: 0; background: var(--color-primary); border-color: var(--color-primary); margin-left: auto;">
-            ⚙️ Sesuaikan Jadwal
-          </button>
-        </div>
-
-        <!-- Info Jadwal Kamar Mandi untuk Minggu terpilih -->
-        <div class="weekly-bathroom-info" id="weekly-bathroom-info">
-          Piket Kamar Mandi: <strong id="weekly-bathroom-team">TIM ...</strong> (<span id="weekly-bathroom-members">...</span>)
-        </div>
-
-        <!-- Tabel Jadwal Rotasi Harian Seminggu -->
-        <div class="table-container" style="margin-top: 1rem;">
-          <table class="premium-table rotation-table">
+        <div style="margin-top: 1rem; overflow-x: auto;">
+          <table class="schedule-table">
             <thead>
               <tr>
                 <th>Hari</th>
-                <th>Masak & Belanja</th>
-                <th>Cuci Piring</th>
-                <th>Bersih-Bersih Posko</th>
-                <th>Piket Balai Desa</th>
+                <th>Petugas Piket TPQ</th>
               </tr>
             </thead>
-            <tbody id="rotation-table-body">
-              <!-- Diisi dinamis -->
+            <tbody>
+              <tr>
+                <td style="font-weight: bold; color: var(--color-primary);">Senin</td>
+                <td>Mey, Fay, Zii</td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold; color: var(--color-primary);">Selasa</td>
+                <td>Naila, Cio, Valen</td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold; color: var(--color-primary);">Rabu</td>
+                <td>Ananda, Tian, Hani</td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold; color: var(--color-primary);">Kamis</td>
+                <td>Firzan, Zahra</td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold; color: var(--text-secondary);">Jumat - Minggu</td>
+                <td style="color: var(--text-secondary);">Libur</td>
+              </tr>
             </tbody>
           </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= TAB: CHECKLIST TUGAS ================= -->
-    <div id="tab-checklist-tugas" class="tab-content">
-      <div class="card">
-        <h2 class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-          <span>☑️ Checklist Tugas Hari Ini</span>
-          <button class="btn export-tab-btn" onclick="exportTabToExcel('checklist-tugas')" style="display: inline-block; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
-            📥 Export Tab Ini
-          </button>
-        </h2>
-        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
-          Beri tanda centang jika Anda telah selesai melaksanakan tugas piket (tugas harian atau kamar mandi) hari ini. Data akan disinkronkan ke server secara otomatis.
-        </p>
-        
-        <div class="checklist-container" id="checklist-container">
-          <!-- Diisi dinamis -->
-          <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
-            Mengambil checklist tugas...
-          </div>
         </div>
       </div>
     </div>

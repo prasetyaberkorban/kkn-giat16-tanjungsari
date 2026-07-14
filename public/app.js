@@ -3550,3 +3550,22 @@ async function fetchAndRenderBelumAbsen() {
   }
 }
 document.addEventListener('DOMContentLoaded', fetchAndRenderBelumAbsen);
+
+
+function updateTpqDashboard(dayName) {
+  const tpqSchedule = {
+    'Senin': 'Mey, Fay, Zii',
+    'Selasa': 'Naila, Cio, Valen',
+    'Rabu': 'Ananda, Tian, Hani',
+    'Kamis': 'Firzan, Zahra'
+  };
+  
+  const tpqBadge = document.getElementById('tpq-today-badge');
+  if (tpqBadge) {
+    if (tpqSchedule[dayName]) {
+      tpqBadge.innerHTML = tpqSchedule[dayName];
+    } else {
+      tpqBadge.innerHTML = 'Libur';
+    }
+  }
+}
