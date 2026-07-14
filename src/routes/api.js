@@ -154,7 +154,7 @@ router.post('/attendance/manual', async (req, res) => {
     }
 
     const teamSchedule = schedule.dailySchedule[userTeam];
-    const task = teamSchedule ? teamSchedule.task : 'Libur';
+    const task = teamSchedule ? teamSchedule.task : 'Piket Balai Desa';
 
     const attendance = new Attendance({
       name,
@@ -224,9 +224,9 @@ router.post('/attendance', async (req, res) => {
     const dayName = schedule.dayName;
     
     // Dapatkan tugas spesifik untuk tim user hari ini
-    // (Jika timnya tidak ada di jadwal harian hari ini, default ke 'Libur')
+    // (Jika timnya tidak ada di jadwal harian hari ini, default ke 'Piket Balai Desa')
     const teamSchedule = schedule.dailySchedule[userTeam];
-    const task = teamSchedule ? teamSchedule.task : 'Libur';
+    const task = teamSchedule ? teamSchedule.task : 'Piket Balai Desa';
 
     // Dapatkan waktu absensi saat ini (WIB)
     const time = getNowTimeIndo();

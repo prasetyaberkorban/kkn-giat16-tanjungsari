@@ -10,18 +10,18 @@ const TASKS = [
   'Masak & Belanja',  // Indeks 0
   'Cuci Alat Alat Masak',      // Indeks 1
   'Bersih-Bersih Posko', // Indeks 2
-  'Libur'             // Indeks 3
+  'Piket Balai Desa'             // Indeks 3
 ];
 
 // Jadwal tetap berdasarkan hari
 const FIXED_SCHEDULE_BY_DAY = {
-  'Senin':  { 'Masak & Belanja': 'TIM A', 'Cuci Alat Alat Masak': 'TIM B', 'Bersih-Bersih Posko': 'TIM C', 'Libur': 'TIM D' },
-  'Selasa': { 'Masak & Belanja': 'TIM B', 'Cuci Alat Alat Masak': 'TIM C', 'Bersih-Bersih Posko': 'TIM D', 'Libur': 'TIM A' },
-  'Rabu':   { 'Masak & Belanja': 'TIM C', 'Cuci Alat Alat Masak': 'TIM D', 'Bersih-Bersih Posko': 'TIM A', 'Libur': 'TIM B' },
-  'Kamis':  { 'Masak & Belanja': 'TIM D', 'Cuci Alat Alat Masak': 'TIM A', 'Bersih-Bersih Posko': 'TIM B', 'Libur': 'TIM C' },
-  'Jumat':  { 'Masak & Belanja': 'TIM A', 'Cuci Alat Alat Masak': 'TIM B', 'Bersih-Bersih Posko': 'TIM C', 'Libur': 'TIM D' },
-  'Sabtu':  { 'Masak & Belanja': 'TIM B', 'Cuci Alat Alat Masak': 'TIM C', 'Bersih-Bersih Posko': 'TIM D', 'Libur': 'TIM A' },
-  'Minggu': { 'Masak & Belanja': 'TIM C', 'Cuci Alat Alat Masak': 'TIM D', 'Bersih-Bersih Posko': 'TIM A', 'Libur': 'TIM B' }
+  'Senin':  { 'Masak & Belanja': 'TIM A', 'Cuci Alat Alat Masak': 'TIM B', 'Bersih-Bersih Posko': 'TIM C', 'Piket Balai Desa': 'TIM D' },
+  'Selasa': { 'Masak & Belanja': 'TIM B', 'Cuci Alat Alat Masak': 'TIM C', 'Bersih-Bersih Posko': 'TIM D', 'Piket Balai Desa': 'TIM A' },
+  'Rabu':   { 'Masak & Belanja': 'TIM C', 'Cuci Alat Alat Masak': 'TIM D', 'Bersih-Bersih Posko': 'TIM A', 'Piket Balai Desa': 'TIM B' },
+  'Kamis':  { 'Masak & Belanja': 'TIM D', 'Cuci Alat Alat Masak': 'TIM A', 'Bersih-Bersih Posko': 'TIM B', 'Piket Balai Desa': 'TIM C' },
+  'Jumat':  { 'Masak & Belanja': 'TIM A', 'Cuci Alat Alat Masak': 'TIM B', 'Bersih-Bersih Posko': 'TIM C', 'Piket Balai Desa': 'TIM D' },
+  'Sabtu':  { 'Masak & Belanja': 'TIM B', 'Cuci Alat Alat Masak': 'TIM C', 'Bersih-Bersih Posko': 'TIM D', 'Piket Balai Desa': 'TIM A' },
+  'Minggu': { 'Masak & Belanja': 'TIM C', 'Cuci Alat Alat Masak': 'TIM D', 'Bersih-Bersih Posko': 'TIM A', 'Piket Balai Desa': 'TIM B' }
 };
 
 // Epoch tanggal acuan: Kamis, 9 Juli 2026 (WIB / GMT+7)
@@ -83,7 +83,7 @@ function calculateSchedule(dateStr) {
 
   Object.keys(TEAMS).forEach(teamName => {
     dailySchedule[teamName] = {
-      task: teamToTask[teamName] || 'Libur',
+      task: teamToTask[teamName] || 'Piket Balai Desa',
       members: TEAMS[teamName]
     };
   });

@@ -122,7 +122,7 @@ const TASKS = [
   'Masak & Belanja',
   'Cuci Alat Alat Masak',
   'Bersih-Bersih Posko',
-  'Libur'
+  'Piket Balai Desa'
 ];
 
 // Offset tim untuk rotasi 4-harian (Kamis, 9 Juli 2026 = Day 0)
@@ -660,7 +660,7 @@ async function switchWeek(weekNum) {
         <td style="color: var(--color-accent);">${tasksMap['Masak & Belanja'] || '-'}</td>
         <td style="color: var(--color-primary);">${tasksMap['Cuci Alat Alat Masak'] || '-'}</td>
         <td style="color: var(--color-secondary);">${tasksMap['Bersih-Bersih Posko'] || '-'}</td>
-        <td style="color: var(--text-secondary);">${tasksMap['Libur'] || '-'}</td>
+        <td style="color: var(--text-secondary);">${tasksMap['Piket Balai Desa'] || '-'}</td>
       `;
       tbody.appendChild(row);
     });
@@ -701,7 +701,7 @@ async function fetchChecklistTugas() {
     // 1. Tugas Harian
     Object.entries(todayScheduleData.dailySchedule).forEach(([teamName, info]) => {
       // Lewati tim yang hari ini libur
-      if (info.task !== 'Libur') {
+      if (info.task !== 'Piket Balai Desa') {
         info.members.forEach(name => {
           activeTasks.push({
             name,
