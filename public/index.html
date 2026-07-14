@@ -57,8 +57,8 @@
       <li class="menu-item" onclick="switchTab('jadwal-mingguan')">
         <span class="menu-icon">🗓️</span> Jadwal Mingguan
       </li>
-      <li class="menu-item" onclick="switchTab('checklist-tugas')">
-        <span class="menu-icon">☑️</span> Checklist Tugas
+      <li class="menu-item" onclick="switchTab('piket-tpq')">
+        <span class="menu-icon">🕌</span> Piket TPQ
       </li>
       <li class="menu-item" onclick="switchTab('barang-bawaan')">
         <span class="menu-icon">📦</span> Barang Bawaan
@@ -138,6 +138,19 @@
                 Sedang mengambil jadwal piket...
               </div>
             </div>
+          <!-- Card Piket TPQ -->
+          <div class="card tpq-card" style="margin-top: 1.5rem; background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2);">
+            <div class="bathroom-content">
+              <div class="bathroom-info">
+                <h3 style="color: #10b981;">🕌 Piket TPQ Hari Ini</h3>
+                <p>Jadwal mengajar TPQ untuk hari ini.</p>
+              </div>
+              <div class="bathroom-badge" id="tpq-today-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
+                -
+              </div>
+            </div>
+          </div>
+
           </div>
 
           <!-- Card Piket Kamar Mandi -->
