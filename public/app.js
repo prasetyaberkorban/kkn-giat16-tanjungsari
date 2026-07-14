@@ -360,6 +360,9 @@ async function fetchDashboardData() {
 
     todayScheduleData = data;
 
+    // Update TPQ Dashboard
+    updateTpqDashboard(data.dayName);
+
     // Update tanggal di header
     const dateBadge = document.getElementById('current-date-badge');
     dateBadge.innerHTML = `<span>📅</span> ${data.dayName}, ${formatDateIndo(data.date)}`;
