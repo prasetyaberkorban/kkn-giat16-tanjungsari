@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GIAT 16 - DESA TANJUNGSARI</title>
   <meta name="description" content="Dashboard monitoring jadwal piket harian dan absensi kehadiran UNNES GIAT 16 Desa Tanjung Sari.">
-  <link rel="stylesheet" href="/style.css?v=239">
+  <link rel="stylesheet" href="/style.css?v=240">
   <!-- Load QRCode.js secara lokal -->
   <script src="/qrcode.min.js"></script>
   <!-- Load SheetJS for Excel Exports -->
@@ -310,24 +310,46 @@
       </div>
     </div>
 
-    <!-- ================= TAB: CHECKLIST TUGAS ================= -->
-    <div id="tab-checklist-tugas" class="tab-content">
+        <!-- ================= TAB: PIKET TPQ ================= -->
+    <div id="tab-piket-tpq" class="tab-content">
       <div class="card">
         <h2 class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-          <span>☑️ Checklist Tugas Hari Ini</span>
-          <button class="btn export-tab-btn" onclick="exportTabToExcel('checklist-tugas')" style="display: inline-block; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
+          <span>🕌 Piket TPQ Hari Ini</span>
+          <button class="btn export-tab-btn" onclick="exportTabToExcel('piket-tpq')" style="display: inline-block; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); margin: 0; width: auto;">
             📥 Export Tab Ini
           </button>
         </h2>
         <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
-          Beri tanda centang jika Anda telah selesai melaksanakan tugas piket (tugas harian atau kamar mandi) hari ini. Data akan disinkronkan ke server secara otomatis.
+          Berikut adalah jadwal Piket TPQ mingguan. Jadwal ini juga akan otomatis muncul di halaman Dashboard sesuai dengan harinya.
         </p>
         
-        <div class="checklist-container" id="checklist-container">
-          <!-- Diisi dinamis -->
-          <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
-            Mengambil checklist tugas...
-          </div>
+        <div class="table-container" style="margin-top: 1rem;">
+          <table class="premium-table rotation-table">
+            <thead>
+              <tr>
+                <th style="width: 30%;">Hari</th>
+                <th>Nama Anggota Tim</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Senin</strong></td>
+                <td>Mey, Fay, Zii</td>
+              </tr>
+              <tr>
+                <td><strong>Selasa</strong></td>
+                <td>Naila, Cio, Valen</td>
+              </tr>
+              <tr>
+                <td><strong>Rabu</strong></td>
+                <td>Ananda, Tian, Hani</td>
+              </tr>
+              <tr>
+                <td><strong>Kamis</strong></td>
+                <td>Firzan, Zahra</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -712,7 +734,7 @@
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v239</span></p>
+    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v240</span></p>
   </footer>
 
 
@@ -1232,7 +1254,7 @@
     </div>
   </div>
 
-<script src="/app.js?v=239"></script>
+<script src="/app.js?v=240"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 </html>
