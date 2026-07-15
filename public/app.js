@@ -361,7 +361,7 @@ async function fetchDashboardData() {
     todayScheduleData = data;
 
     // Update TPQ Dashboard
-    updateTpqDashboard(data.dayName);
+    updateTpqDashboard(data.dayName, data.tpqSchedule);
 
     // Update tanggal di header
     const dateBadge = document.getElementById('current-date-badge');
@@ -3555,13 +3555,8 @@ async function fetchAndRenderBelumAbsen() {
 document.addEventListener('DOMContentLoaded', fetchAndRenderBelumAbsen);
 
 
-function updateTpqDashboard(dayName) {
-  const tpqSchedule = {
-    'Senin': 'Mey, Fay, Zii',
-    'Selasa': 'Naila, Cio, Valen',
-    'Rabu': 'Ananda, Tian, Hani',
-    'Kamis': 'Firzan, Zahra'
-  };
+function updateTpqDashboard(dayName, scheduleObj) {
+  const tpqSchedule = scheduleObj || {};
   
   const tpqBadge = document.getElementById('tpq-today-badge');
   if (tpqBadge) {
@@ -3571,4 +3566,30 @@ function updateTpqDashboard(dayName) {
       tpqBadge.innerHTML = 'Piket Balai Desa';
     }
   }
+}
+
+
+function renderTpqTable(tpqSchedule) {
+  const tbody = document.getElementById('tpq-table-body');
+  if (!tbody) return;
+  
+  if (!tpqSchedule) {
+    tbody.innerHTML = '<tr><td colspan="2" style="text-align: center;">Jadwal tidak tersedia</td></tr>';
+    return;
+  }
+  
+  let html = '';
+  const days = ['Senin', 'Selasa', 'Rabu', 'Kamis'];
+  days.forEach(day => {
+    if (tpqSchedule[day]) {
+      html += `
+        <tr>
+          <td><strong>${day}</strong></td>
+          <td>${tpqSchedule[day]}</td>
+        </tr>
+      `;
+    }
+  });
+  
+  tbody.innerHTML = html;
 }

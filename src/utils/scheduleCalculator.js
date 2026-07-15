@@ -100,8 +100,39 @@ function calculateSchedule(dateStr) {
   const bathroomTeamList = ['TIM A', 'TIM B', 'TIM C', 'TIM D'];
   const bathroomPiketTeam = bathroomTeamList[weekIndex];
 
+  // 3. Hitung Jadwal Piket TPQ (Dinamis)
+  const tpqEpoch = new Date('2026-07-13T00:00:00+07:00');
+  const targetDateTpq = new Date(`${dateStr}T00:00:00+07:00`);
+  const diffTimeTpq = targetDateTpq.getTime() - tpqEpoch.getTime();
+  const diffDaysTpq = Math.round(diffTimeTpq / (1000 * 60 * 60 * 24));
+  const tpqWeekIndex = Math.max(0, Math.floor(diffDaysTpq / 7)); 
+
+  const groups = [
+    'Mey, Fay, Zii',
+    'Naila, Cio, Valen',
+    'Ananda, Tian, Hani'
+  ];
+  // Firzan and Zahra backwards rotation
+  const fz_seq = ['Firzan', 'Zahra', ''];
+
+  const tpqSchedule = {};
+  const days = ['Senin', 'Selasa', 'Rabu'];
+  
+  for (let i = 0; i < 3; i++) {
+    const mainGroupIndex = (i - (tpqWeekIndex % 3) + 3) % 3;
+    const fzIndex = (i + (tpqWeekIndex % 3)) % 3;
+    
+    let members = groups[mainGroupIndex];
+    if (fz_seq[fzIndex]) {
+      members += ', ' + fz_seq[fzIndex];
+    }
+    tpqSchedule[days[i]] = members;
+  }
+  tpqSchedule['Kamis'] = 'Semuanya';
+
   return {
     date: dateStr,
+    tpqSchedule,
     dayName: dayNameIndo,
     daysSinceEpoch,
     weeksSinceEpoch: weeksSinceEpoch + 1, // Agar mulai dari minggu ke-1
