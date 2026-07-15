@@ -100,7 +100,7 @@ window.toggleGlobalTheme = async function() {
   
   // Save to DB
   try {
-    await fetch('/api/admin/theme', {
+    await fetch('/api/theme', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ theme: newTheme })
@@ -599,9 +599,9 @@ function adjustWeek(amount) {
   if (currentViewingWeek < 1) currentViewingWeek = 1;
   
   const display = document.getElementById('current-week-display');
-  if (display) {
-    display.innerText = `Minggu ${currentViewingWeek}`;
-  }
+  const displayTpq = document.getElementById('tpq-week-display');
+  if (display) display.innerText = `Minggu ${currentViewingWeek}`;
+  if (displayTpq) displayTpq.innerText = `Minggu ${currentViewingWeek}`;
   switchWeek(currentViewingWeek);
 }
 
