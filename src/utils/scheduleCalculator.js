@@ -105,7 +105,8 @@ function calculateSchedule(dateStr) {
   const targetDateTpq = new Date(`${dateStr}T00:00:00+07:00`);
   const diffTimeTpq = targetDateTpq.getTime() - tpqEpoch.getTime();
   const diffDaysTpq = Math.round(diffTimeTpq / (1000 * 60 * 60 * 24));
-  const tpqWeekIndex = Math.max(0, Math.floor(diffDaysTpq / 7)); 
+  const tpqWeekIndex = Math.floor(diffDaysTpq / 7); 
+  const mod = (n, m) => ((n % m) + m) % m;
 
   const groups = [
     'Mey, Fay, Zii',
@@ -119,8 +120,8 @@ function calculateSchedule(dateStr) {
   const days = ['Senin', 'Selasa', 'Rabu'];
   
   for (let i = 0; i < 3; i++) {
-    const mainGroupIndex = (i - (tpqWeekIndex % 3) + 3) % 3;
-    const fzIndex = (i + (tpqWeekIndex % 3)) % 3;
+    const mainGroupIndex = mod(i - mod(tpqWeekIndex, 3), 3);
+    const fzIndex = mod(i + mod(tpqWeekIndex, 3), 3);
     
     let members = groups[mainGroupIndex];
     if (fz_seq[fzIndex]) {
