@@ -362,6 +362,11 @@ async function fetchDashboardData() {
 
     // Update TPQ Dashboard
     updateTpqDashboard(data.dayName, data.tpqSchedule);
+    
+    // Render TPQ Table (untuk tab Piket TPQ)
+    if (typeof renderTpqTable === 'function') {
+      renderTpqTable(data.tpqSchedule);
+    }
 
     // Update tanggal di header
     const dateBadge = document.getElementById('current-date-badge');
@@ -647,6 +652,11 @@ async function switchWeek(weekNum) {
     const bathroomMembersEl = document.getElementById('weekly-bathroom-members');
     if (bathroomTeamEl) bathroomTeamEl.innerText = activeBathroomTeam;
     if (bathroomMembersEl) bathroomMembersEl.innerText = TEAMS[activeBathroomTeam].join(', ');
+    
+    // Update TPQ Table for this week
+    if (kamisResult && kamisResult.schedule.tpqSchedule && typeof renderTpqTable === 'function') {
+      renderTpqTable(kamisResult.schedule.tpqSchedule);
+    }
 
     tbody.innerHTML = '';
     results.forEach(({ dayName, schedule }) => {
