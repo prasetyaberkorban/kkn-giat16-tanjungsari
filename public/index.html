@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GIAT 16 - DESA TANJUNGSARI</title>
   <meta name="description" content="Dashboard monitoring jadwal piket harian dan absensi kehadiran UNNES GIAT 16 Desa Tanjung Sari.">
-  <link rel="stylesheet" href="/style.css?v=242">
+  <link rel="stylesheet" href="/style.css?v=243">
   <!-- Load QRCode.js secara lokal -->
   <script src="/qrcode.min.js"></script>
   <!-- Load SheetJS for Excel Exports -->
@@ -322,6 +322,13 @@
         <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
           Berikut adalah jadwal Piket TPQ mingguan. Jadwal ini juga akan otomatis muncul di halaman Dashboard sesuai dengan harinya.
         </p>
+
+        <!-- Paginator / Minggu Switcher -->
+        <div class="week-switcher" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+          <button class="week-btn" onclick="adjustWeek(-1)">⬅️ Prev</button>
+          <span id="tpq-week-display" style="font-size: 1.2rem; font-weight: 700; color: #fff; min-width: 100px; text-align: center;">Minggu 1</span>
+          <button class="week-btn" onclick="adjustWeek(1)">Next ➡️</button>
+        </div>
         
         <div class="table-container" style="margin-top: 1rem;">
           <table class="premium-table rotation-table">
@@ -719,7 +726,7 @@
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v242</span></p>
+    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v243</span></p>
   </footer>
 
 
@@ -1239,7 +1246,7 @@
     </div>
   </div>
 
-<script src="/app.js?v=242"></script>
+<script src="/app.js?v=243"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 </html>
