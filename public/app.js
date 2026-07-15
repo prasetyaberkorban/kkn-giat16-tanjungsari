@@ -3589,16 +3589,16 @@ function renderTpqTable(tpqSchedule) {
   }
   
   let html = '';
-  const days = ['Senin', 'Selasa', 'Rabu', 'Kamis'];
+  const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
   days.forEach(day => {
-    if (tpqSchedule[day]) {
-      html += `
-        <tr>
-          <td><strong>${day}</strong></td>
-          <td>${tpqSchedule[day]}</td>
-        </tr>
-      `;
-    }
+    const members = tpqSchedule[day] || '-';
+    const cellColor = members !== '-' ? 'var(--color-primary)' : 'var(--text-secondary)';
+    html += `
+      <tr>
+        <td>${day}</td>
+        <td style="color: ${cellColor};">${members}</td>
+      </tr>
+    `;
   });
   
   tbody.innerHTML = html;
