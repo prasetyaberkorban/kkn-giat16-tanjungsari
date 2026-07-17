@@ -3570,10 +3570,10 @@ function updateTpqDashboard(dayName, scheduleObj) {
   
   const tpqBadge = document.getElementById('tpq-today-badge');
   if (tpqBadge) {
-    if (tpqSchedule[dayName]) {
+    if (tpqSchedule[dayName] && tpqSchedule[dayName] !== '-') {
       tpqBadge.innerHTML = tpqSchedule[dayName];
     } else {
-      tpqBadge.innerHTML = 'Piket Balai Desa';
+      tpqBadge.innerHTML = 'Libur (Tidak Ada Jadwal)';
     }
   }
 }
