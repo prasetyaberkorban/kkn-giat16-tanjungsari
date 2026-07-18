@@ -20,8 +20,8 @@ const FIXED_SCHEDULE_BY_DAY = {
   'Rabu':   { 'Masak & Belanja': 'TIM C', 'Cuci Alat Alat Masak': 'TIM D', 'Bersih-Bersih Posko': 'TIM A', 'Piket Balai Desa': 'TIM B' },
   'Kamis':  { 'Masak & Belanja': 'TIM D', 'Cuci Alat Alat Masak': 'TIM A', 'Bersih-Bersih Posko': 'TIM B', 'Piket Balai Desa': 'TIM C' },
   'Jumat':  { 'Masak & Belanja': 'TIM A', 'Cuci Alat Alat Masak': 'TIM B', 'Bersih-Bersih Posko': 'TIM C', 'Piket Balai Desa': 'TIM D' },
-  'Sabtu':  { 'Masak & Belanja': 'TIM B', 'Cuci Alat Alat Masak': 'TIM C', 'Bersih-Bersih Posko': 'TIM D', 'Piket Balai Desa': 'TIM A' },
-  'Minggu': { 'Masak & Belanja': 'TIM C', 'Cuci Alat Alat Masak': 'TIM D', 'Bersih-Bersih Posko': 'TIM A', 'Piket Balai Desa': 'TIM B' }
+  'Sabtu':  { 'Masak & Belanja': 'TIM B', 'Cuci Alat Alat Masak': 'TIM C', 'Bersih-Bersih Posko': 'TIM D' },
+  'Minggu': { 'Masak & Belanja': 'TIM C', 'Cuci Alat Alat Masak': 'TIM D', 'Bersih-Bersih Posko': 'TIM A' }
 };
 
 // Epoch tanggal acuan: Kamis, 9 Juli 2026 (WIB / GMT+7)

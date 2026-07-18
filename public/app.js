@@ -673,7 +673,7 @@ async function switchWeek(weekNum) {
         <td style="color: var(--color-accent);">${tasksMap['Masak & Belanja'] || '-'}</td>
         <td style="color: var(--color-primary);">${tasksMap['Cuci Alat Alat Masak'] || '-'}</td>
         <td style="color: var(--color-secondary);">${tasksMap['Bersih-Bersih Posko'] || '-'}</td>
-        <td style="color: var(--text-secondary);">${tasksMap['Piket Balai Desa'] || '-'}</td>
+        <td style="color: var(--text-secondary);">${tasksMap['Piket Balai Desa'] || (['Sabtu', 'Minggu'].includes(dayName) ? 'Libur' : '-')}</td>
       `;
       tbody.appendChild(row);
     });
