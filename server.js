@@ -53,11 +53,11 @@ app.post('/gdrive/api/drive/upload', upload.single('file'), async (req, res) => 
 
   try {
     const oauth2Client = new google.auth.OAuth2(
-      process.env.GOOGLE_CLIENT_ID,
-      process.env.GOOGLE_CLIENT_SECRET,
+      (process.env.GOOGLE_CLIENT_ID || '').trim(),
+      (process.env.GOOGLE_CLIENT_SECRET || '').trim(),
       "https://developers.google.com/oauthplayground"
     );
-    oauth2Client.setCredentials({ refresh_token: process.env.GOOGLE_REFRESH_TOKEN });
+    oauth2Client.setCredentials({ refresh_token: (process.env.GOOGLE_REFRESH_TOKEN || '').trim() });
     const drive = google.drive({ version: 'v3', auth: oauth2Client });
 
     const fileMetadata = { name: req.file.originalname, parents: [folderId] };
