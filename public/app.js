@@ -146,6 +146,12 @@ let currentAttendanceFilter = 'today';
 let allAttendanceData = [];
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize labels
+  const wDisplay = document.getElementById('current-week-display');
+  const tDisplay = document.getElementById('tpq-week-display');
+  if (wDisplay) wDisplay.innerText = `Minggu ${currentViewingWeek}`;
+  if (tDisplay) tDisplay.innerText = `Minggu ${currentViewingWeek}`;
+
   // 1. Cek Sesi Admin
   updateAdminUI();
 
@@ -199,12 +205,12 @@ function switchTab(tabId) {
   } else if (tabId === 'daftar-hadir') {
     fetchFullAttendance();
   } else if (tabId === 'jadwal-mingguan') {
-    // Gunakan minggu aktif dari database hari ini jika tersedia, jika tidak default ke 1
-    const activeWeek = (todayScheduleData && todayScheduleData.weeksSinceEpoch) ? todayScheduleData.weeksSinceEpoch : 1;
-    currentViewingWeek = activeWeek;
-    
     const weekDisplay = document.getElementById('current-week-display');
     if (weekDisplay) weekDisplay.innerText = `Minggu ${currentViewingWeek}`;
+    switchWeek(currentViewingWeek);
+  } else if (tabId === 'piket-tpq') {
+    const tpqDisplay = document.getElementById('tpq-week-display');
+    if (tpqDisplay) tpqDisplay.innerText = `Minggu ${currentViewingWeek}`;
     switchWeek(currentViewingWeek);
   } else if (tabId === 'checklist-tugas') {
     fetchChecklistTugas();
