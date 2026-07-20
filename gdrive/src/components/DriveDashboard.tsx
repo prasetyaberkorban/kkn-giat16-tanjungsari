@@ -666,7 +666,7 @@ export default function DriveDashboard() {
 
             <div className="p-5 sm:p-8 pb-8 sm:pb-8">
               <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 drop-shadow-md">
-                {uploadStatus === "idle" ? "Upload Files" : uploadStatus === "uploading" ? "Uploading..." : "Upload Complete"}
+                {uploadStatus === "idle" ? "Upload Files" : uploadStatus === "uploading" ? (uploadProgress.percentage === 100 ? "Saving to Cloud..." : "Uploading...") : "Upload Complete"}
               </h3>
               
               {uploadStatus === "idle" && (
