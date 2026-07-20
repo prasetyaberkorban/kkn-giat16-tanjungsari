@@ -9,7 +9,19 @@ function getGoogleSheetsClient() {
     return null;
   }
 
-  const formattedPrivateKey = privateKey.replace(/\\n/g, '\n');
+  let formattedPrivateKey = privateKey.trim();
+  if (formattedPrivateKey.startsWith('"') && formattedPrivateKey.endsWith('"')) {
+    formattedPrivateKey = formattedPrivateKey.slice(1, -1);
+  } else if (formattedPrivateKey.startsWith("'") && formattedPrivateKey.endsWith("'")) {
+    formattedPrivateKey = formattedPrivateKey.slice(1, -1);
+  }
+  formattedPrivateKey = formattedPrivateKey.replace(/\\n/g, '\n');
+  
+  // Memastikan ada newline setelah BEGIN dan sebelum END jika mereka gabung dengan base64
+  if (!formattedPrivateKey.includes('-----\n')) {
+    formattedPrivateKey = formattedPrivateKey.replace('-----BEGIN PRIVATE KEY-----', '-----BEGIN PRIVATE KEY-----\n');
+    formattedPrivateKey = formattedPrivateKey.replace('-----END PRIVATE KEY-----', '\n-----END PRIVATE KEY-----');
+  }
   const auth = new google.auth.JWT(
     clientEmail,
     null,
