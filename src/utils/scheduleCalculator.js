@@ -101,7 +101,7 @@ function calculateSchedule(dateStr) {
   const bathroomPiketTeam = bathroomTeamList[weekIndex];
 
   // 3. Hitung Jadwal Piket TPQ (Dinamis)
-  const tpqEpoch = new Date('2026-07-06T00:00:00+07:00');
+  const tpqEpoch = new Date('2026-07-13T00:00:00+07:00');
   const targetDateTpq = new Date(`${dateStr}T00:00:00+07:00`);
   const diffTimeTpq = targetDateTpq.getTime() - tpqEpoch.getTime();
   const diffDaysTpq = Math.round(diffTimeTpq / (1000 * 60 * 60 * 24));
@@ -120,8 +120,8 @@ function calculateSchedule(dateStr) {
   const days = ['Senin', 'Selasa', 'Rabu'];
   
   for (let i = 0; i < 3; i++) {
-    const mainGroupIndex = mod(i - mod(tpqWeekIndex, 3), 3);
-    const fzIndex = mod(i + mod(tpqWeekIndex, 3), 3);
+    const mainGroupIndex = mod(i + tpqWeekIndex, 3);
+    const fzIndex = mod(i + tpqWeekIndex + Math.floor(tpqWeekIndex / 3), 3);
     
     let members = groups[mainGroupIndex];
     if (fz_seq[fzIndex]) {

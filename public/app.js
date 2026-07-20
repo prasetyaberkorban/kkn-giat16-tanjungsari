@@ -135,7 +135,12 @@ const TEAM_OFFSETS = {
 
 let currentTab = 'dashboard';
 let todayScheduleData = null;
-let currentViewingWeek = 1;
+const jktNow = new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
+const dNow = new Date(jktNow);
+const uiEpoch = new Date('2026-07-16T00:00:00+07:00');
+const diffDaysUI = Math.round((dNow - uiEpoch) / (1000 * 60 * 60 * 24));
+let currentViewingWeek = Math.floor((diffDaysUI + 3) / 7) + 1;
+if (currentViewingWeek < 1) currentViewingWeek = 1;
 let activeQrCodeType = 1;
 let currentAttendanceFilter = 'today';
 let allAttendanceData = [];
@@ -628,7 +633,7 @@ async function switchWeek(weekNum) {
   try {
     const promises = Object.entries(dayOffsets).map(async ([dayName, offset]) => {
       const daysSinceEpoch = (weekNum - 1) * 7 + offset;
-      const epochDate = new Date('2026-07-09T00:00:00+07:00');
+      const epochDate = new Date('2026-07-16T00:00:00+07:00');
       epochDate.setDate(epochDate.getDate() + daysSinceEpoch);
       const yyyy = epochDate.getFullYear();
       const mm = String(epochDate.getMonth() + 1).padStart(2, '0');
