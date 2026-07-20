@@ -45,7 +45,8 @@ nextProcess.stderr.on('data', (data) => console.error('[Next.js Error]:', data.t
 
 
 // ================= GDRIVE UPLOAD INTERCEPTOR (BYPASS NEXT.JS RAM LIMIT) =================
-const upload = multer({ dest: os.tmpdir() });
+const { Readable } = require('stream');
+const upload = multer({ storage: multer.memoryStorage() });
 app.post('/gdrive/api/drive/upload', upload.single('file'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file provided' });
   const folderId = req.body.folderId;
@@ -63,7 +64,7 @@ app.post('/gdrive/api/drive/upload', upload.single('file'), async (req, res) => 
     const fileMetadata = { name: req.file.originalname, parents: [folderId] };
     const media = {
       mimeType: req.file.mimetype,
-      body: fsModule.createReadStream(req.file.path)
+      body: Readable.from(req.file.buffer)
     };
 
     const response = await drive.files.create({
@@ -72,12 +73,11 @@ app.post('/gdrive/api/drive/upload', upload.single('file'), async (req, res) => 
       fields: "id, name",
     });
 
-    // Cleanup temp file immediately
-    fsModule.unlinkSync(req.file.path);
+    // No temp file to clean up (using memory storage)
     return res.json({ success: true, file: response.data });
   } catch (err) {
     console.error("Express Drive Upload Error:", err);
-    if (fsModule.existsSync(req.file.path)) fsModule.unlinkSync(req.file.path);
+    // No temp file to clean up (using memory storage)
     return res.status(500).json({ error: err.message });
   }
 });
