@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ================= GDRIVE NEXT.JS INTEGRATION =================
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const { createProxyMiddleware, fixRequestBody } = require('http-proxy-middleware');
 const { spawn } = require('child_process');
 const multer = require('multer');
 const os = require('os');
@@ -88,12 +88,18 @@ app.post('/gdrive/api/drive/upload', upload.single('file'), async (req, res) => 
 app.all('/gdrive*', createProxyMiddleware({ 
   target: 'http://localhost:3001', 
   changeOrigin: true,
-  ws: true 
+  ws: true,
+  on: {
+    proxyReq: fixRequestBody
+  }
 }));
 app.all('/_next*', createProxyMiddleware({ 
   target: 'http://localhost:3001', 
   changeOrigin: true,
-  ws: true 
+  ws: true,
+  on: {
+    proxyReq: fixRequestBody
+  }
 }));
 // ==============================================================
 
