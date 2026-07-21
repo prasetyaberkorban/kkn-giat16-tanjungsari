@@ -120,8 +120,8 @@ function calculateSchedule(dateStr) {
   const days = ['Senin', 'Selasa', 'Rabu'];
   
   for (let i = 0; i < 3; i++) {
-    const mainGroupIndex = mod(i + tpqWeekIndex, 3);
-    const fzIndex = mod(i + tpqWeekIndex + Math.floor(tpqWeekIndex / 3), 3);
+    const mainGroupIndex = mod(i + (tpqWeekIndex * 2), 3);
+    const fzIndex = mod(i + (tpqWeekIndex * 2) + Math.floor(tpqWeekIndex / 3), 3);
     
     let members = groups[mainGroupIndex];
     if (fz_seq[fzIndex]) {
