@@ -1306,6 +1306,82 @@ function openCashflowModal(jenis = 'Pemasukan') {
 
 let currentOverrideMode = 'daily';
 let currentTpqWeekDates = [];
+let weeklyTpqState = {};
+let currentSelectedTpqDayIndex = 0;
+
+function handleTpqDayChange(dayIdx) {
+  currentSelectedTpqDayIndex = parseInt(dayIdx, 10);
+  const daysIndo = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+  const lbl = document.getElementById('tpq-current-day-label');
+  if (lbl) {
+    const dStr = currentTpqWeekDates[currentSelectedTpqDayIndex];
+    if (dStr) {
+      const [yy, mm, dd] = dStr.split('-');
+      lbl.innerText = `${daysIndo[currentSelectedTpqDayIndex]} (${dd}/${mm})`;
+    } else {
+      lbl.innerText = daysIndo[currentSelectedTpqDayIndex];
+    }
+  }
+  renderTpqMemberChips();
+}
+
+function renderTpqMemberChips() {
+  const container = document.getElementById('tpq-active-members-container');
+  if (!container) return;
+  const members = weeklyTpqState[currentSelectedTpqDayIndex] || ['-'];
+
+  if (members.length === 0 || (members.length === 1 && (members[0] === '-' || members[0] === 'Libur (Tidak Ada Jadwal)' || members[0] === 'Libur'))) {
+    container.innerHTML = `<span style="color: var(--text-secondary); font-style: italic; font-size: 0.9rem;">Tidak ada petugas (${members[0] || 'Kosong'})</span>`;
+    return;
+  }
+
+  container.innerHTML = members.map(name => `
+    <div class="member-chip" style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255, 255, 255, 0.12); border: 1px solid var(--color-primary); padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.85rem; color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+      <span>${name}</span>
+      <button type="button" onclick="removeTpqMember('${name.replace(/'/g, "\'")}')" style="background: none; border: none; color: #ff5555; cursor: pointer; font-weight: bold; font-size: 1.1rem; line-height: 1; padding: 0; margin-left: 2px;" title="Hapus ${name}">&times;</button>
+    </div>
+  `).join('');
+}
+
+function removeTpqMember(nameToRemove) {
+  const dayIdx = currentSelectedTpqDayIndex;
+  if (!weeklyTpqState[dayIdx]) return;
+  weeklyTpqState[dayIdx] = weeklyTpqState[dayIdx].filter(n => n !== nameToRemove);
+  if (weeklyTpqState[dayIdx].length === 0) {
+    weeklyTpqState[dayIdx] = ['-'];
+  }
+  renderTpqMemberChips();
+}
+
+function addSelectedTpqMember() {
+  const dropdown = document.getElementById('tpq-add-member-dropdown');
+  if (!dropdown) return;
+  const val = dropdown.value;
+  if (!val) {
+    showToast('Pilih nama anggota dari dropdown terlebih dahulu!');
+    return;
+  }
+
+  const dayIdx = currentSelectedTpqDayIndex;
+  if (!weeklyTpqState[dayIdx]) weeklyTpqState[dayIdx] = [];
+
+  if (val === 'Libur (Tidak Ada Jadwal)' || val === 'Libur' || val === '-' || val === 'Semuanya') {
+    weeklyTpqState[dayIdx] = [val];
+  } else {
+    weeklyTpqState[dayIdx] = weeklyTpqState[dayIdx].filter(n => 
+      n !== 'Libur (Tidak Ada Jadwal)' && n !== 'Libur' && n !== '-' && n !== 'Semuanya'
+    );
+    if (!weeklyTpqState[dayIdx].includes(val)) {
+      weeklyTpqState[dayIdx].push(val);
+    } else {
+      showToast(`${val} sudah ada dalam jadwal hari ini!`);
+      return;
+    }
+  }
+
+  dropdown.value = '';
+  renderTpqMemberChips();
+}
 
 function openScheduleOverrideModal(mode = 'daily') {
   currentOverrideMode = mode;

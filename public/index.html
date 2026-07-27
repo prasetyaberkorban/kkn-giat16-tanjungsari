@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GIAT 16 - DESA TANJUNGSARI</title>
   <meta name="description" content="Dashboard monitoring jadwal piket harian dan absensi kehadiran UNNES GIAT 16 Desa Tanjung Sari.">
-  <link rel="stylesheet" href="/style.css?v=262">
+  <link rel="stylesheet" href="/style.css?v=263">
   <!-- Load QRCode.js secara lokal -->
   <script src="/qrcode.min.js"></script>
   <!-- Load SheetJS for Excel Exports -->
@@ -729,7 +729,7 @@
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v262</span></p>
+    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v263</span></p>
   </footer>
 
 
@@ -922,71 +922,55 @@
 
         <div id="override-section-tpq" style="border-top: 1px solid var(--border-color); margin: 1rem 0; padding-top: 1rem;">
           <h4 style="color: #fff; margin-bottom: 0.25rem; font-size: 0.95rem;">Piket TPQ Mingguan:</h4>
-          <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 1rem;">Atur jadwal mengajar TPQ untuk 1 minggu penuh (berdasarkan minggu dari tanggal terpilih di atas).</p>
+          <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 1rem;">Pilih hari dalam minggu ini untuk mengatur, menambah, atau menghapus petugas TPQ.</p>
           
-          <div class="form-group" style="text-align: left; margin-bottom: 0.75rem;">
-            <label style="color: var(--text-secondary); font-size: 0.85rem; display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-              <span>Senin</span> <span id="tpq-lbl-0" style="color: var(--color-accent); font-weight: 600;"></span>
-            </label>
-            <input type="text" id="override-tpq-0" list="tpq-suggestions" class="select-control" style="background: rgba(255, 255, 255, 0.05); width: 100%; color: #fff; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 8px;" placeholder="Petugas Senin...">
+          <div class="form-group" style="text-align: left; margin-bottom: 1rem;">
+            <label style="color: var(--text-secondary); font-size: 0.85rem; display: block; margin-bottom: 0.4rem;">Pilih Hari:</label>
+            <select id="tpq-day-selector" class="select-control" style="background: rgba(255, 255, 255, 0.08); width: 100%; color: #fff; padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 8px; font-weight: 600;" onchange="handleTpqDayChange(this.value)">
+              <option value="0">Senin</option>
+              <option value="1">Selasa</option>
+              <option value="2">Rabu</option>
+              <option value="3">Kamis</option>
+              <option value="4">Jumat</option>
+              <option value="5">Sabtu</option>
+              <option value="6">Minggu</option>
+            </select>
           </div>
 
-          <div class="form-group" style="text-align: left; margin-bottom: 0.75rem;">
-            <label style="color: var(--text-secondary); font-size: 0.85rem; display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-              <span>Selasa</span> <span id="tpq-lbl-1" style="color: var(--color-accent); font-weight: 600;"></span>
-            </label>
-            <input type="text" id="override-tpq-1" list="tpq-suggestions" class="select-control" style="background: rgba(255, 255, 255, 0.05); width: 100%; color: #fff; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 8px;" placeholder="Petugas Selasa...">
-          </div>
-
-          <div class="form-group" style="text-align: left; margin-bottom: 0.75rem;">
-            <label style="color: var(--text-secondary); font-size: 0.85rem; display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-              <span>Rabu</span> <span id="tpq-lbl-2" style="color: var(--color-accent); font-weight: 600;"></span>
-            </label>
-            <input type="text" id="override-tpq-2" list="tpq-suggestions" class="select-control" style="background: rgba(255, 255, 255, 0.05); width: 100%; color: #fff; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 8px;" placeholder="Petugas Rabu...">
-          </div>
-
-          <div class="form-group" style="text-align: left; margin-bottom: 0.75rem;">
-            <label style="color: var(--text-secondary); font-size: 0.85rem; display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-              <span>Kamis</span> <span id="tpq-lbl-3" style="color: var(--color-accent); font-weight: 600;"></span>
-            </label>
-            <input type="text" id="override-tpq-3" list="tpq-suggestions" class="select-control" style="background: rgba(255, 255, 255, 0.05); width: 100%; color: #fff; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 8px;" placeholder="Petugas Kamis...">
-          </div>
-
-          <div class="form-group" style="text-align: left; margin-bottom: 0.75rem;">
-            <label style="color: var(--text-secondary); font-size: 0.85rem; display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-              <span>Jumat</span> <span id="tpq-lbl-4" style="color: var(--color-accent); font-weight: 600;"></span>
-            </label>
-            <input type="text" id="override-tpq-4" list="tpq-suggestions" class="select-control" style="background: rgba(255, 255, 255, 0.05); width: 100%; color: #fff; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 8px;" placeholder="Petugas Jumat...">
-          </div>
-
-          <div class="form-group" style="text-align: left; margin-bottom: 0.75rem;">
-            <label style="color: var(--text-secondary); font-size: 0.85rem; display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-              <span>Sabtu</span> <span id="tpq-lbl-5" style="color: var(--color-accent); font-weight: 600;"></span>
-            </label>
-            <input type="text" id="override-tpq-5" list="tpq-suggestions" class="select-control" style="background: rgba(255, 255, 255, 0.05); width: 100%; color: #fff; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 8px;" placeholder="Petugas Sabtu...">
+          <div class="form-group" style="text-align: left; margin-bottom: 1rem; background: rgba(0, 0, 0, 0.2); padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);">
+            <label style="color: var(--text-secondary); font-size: 0.85rem; display: block; margin-bottom: 0.6rem;">Petugas Bertugas (<span id="tpq-current-day-label" style="color: var(--color-accent); font-weight: 600;">Senin</span>):</label>
+            <div id="tpq-active-members-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem; min-height: 36px; align-items: center;">
+              <!-- Dynamic chips rendered by JS -->
+            </div>
           </div>
 
           <div class="form-group" style="text-align: left; margin-bottom: 1.5rem;">
-            <label style="color: var(--text-secondary); font-size: 0.85rem; display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-              <span>Minggu</span> <span id="tpq-lbl-6" style="color: var(--color-accent); font-weight: 600;"></span>
-            </label>
-            <input type="text" id="override-tpq-6" list="tpq-suggestions" class="select-control" style="background: rgba(255, 255, 255, 0.05); width: 100%; color: #fff; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 8px;" placeholder="Petugas Minggu...">
+            <label style="color: var(--text-secondary); font-size: 0.85rem; display: block; margin-bottom: 0.4rem;">➕ Tambah Petugas ke Hari Ini:</label>
+            <div style="display: flex; gap: 0.5rem;">
+              <select id="tpq-add-member-dropdown" class="select-control" style="background: rgba(255, 255, 255, 0.08); flex: 1; color: #fff; padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 8px;">
+                <option value="">-- Pilih Anggota KKN --</option>
+                <optgroup label="Anggota KKN">
+                  <option value="Mey">Mey</option>
+                  <option value="Fay">Fay</option>
+                  <option value="Zii">Zii</option>
+                  <option value="Firzan">Firzan</option>
+                  <option value="Zahra">Zahra</option>
+                  <option value="Naila">Naila</option>
+                  <option value="Cio">Cio</option>
+                  <option value="Valen">Valen</option>
+                  <option value="Ananda">Ananda</option>
+                  <option value="Tian">Tian</option>
+                  <option value="Hani">Hani</option>
+                </optgroup>
+                <optgroup label="Opsi Khusus">
+                  <option value="Semuanya">Semuanya (11 Orang)</option>
+                  <option value="Libur (Tidak Ada Jadwal)">Libur (Tidak Ada Jadwal)</option>
+                  <option value="-">- (Kosong)</option>
+                </optgroup>
+              </select>
+              <button type="button" class="btn" style="background: var(--color-primary); border-color: var(--color-primary); padding: 0 1.2rem; margin: 0; font-weight: 600; width: auto;" onclick="addSelectedTpqMember()">Tambah</button>
+            </div>
           </div>
-
-          <datalist id="tpq-suggestions">
-            <option value="Mey, Fay, Zii">
-            <option value="Mey, Fay, Zii, Firzan">
-            <option value="Mey, Fay, Zii, Zahra">
-            <option value="Naila, Cio, Valen">
-            <option value="Naila, Cio, Valen, Firzan">
-            <option value="Naila, Cio, Valen, Zahra">
-            <option value="Ananda, Tian, Hani">
-            <option value="Ananda, Tian, Hani, Firzan">
-            <option value="Ananda, Tian, Hani, Zahra">
-            <option value="Semuanya">
-            <option value="Libur (Tidak Ada Jadwal)">
-            <option value="-">
-          </datalist>
         </div>
 
         <div style="display: flex; gap: 0.5rem;">
@@ -1318,7 +1302,7 @@
     </div>
   </div>
 
-<script src="/app.js?v=262"></script>
+<script src="/app.js?v=263"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 </html>
