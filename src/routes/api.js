@@ -541,6 +541,58 @@ router.delete('/schedule/override/:date', async (req, res) => {
   }
 });
 
+// POST: Simpan override TPQ mingguan sekaligus
+router.post('/schedule/override-weekly-tpq', async (req, res) => {
+  const { weekOverrides } = req.body;
+  if (!Array.isArray(weekOverrides)) {
+    return res.status(400).json({ error: 'Data mingguan tidak valid.' });
+  }
+
+  try {
+    for (const item of weekOverrides) {
+      if (item.date) {
+        if (item.tpqPiket === undefined || item.tpqPiket === null || item.tpqPiket === '') {
+          const existing = await ScheduleOverride.findOne({ date: item.date });
+          if (existing) {
+            existing.tpqPiket = null;
+            await existing.save();
+          }
+        } else {
+          await ScheduleOverride.findOneAndUpdate(
+            { date: item.date },
+            { tpqPiket: item.tpqPiket },
+            { upsert: true, new: true }
+          );
+        }
+      }
+    }
+    res.json({ message: 'Jadwal TPQ mingguan berhasil disesuaikan!' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST: Reset override TPQ mingguan
+router.post('/schedule/override-weekly-tpq/reset', async (req, res) => {
+  const { dates } = req.body;
+  if (!Array.isArray(dates)) {
+    return res.status(400).json({ error: 'Tanggal tidak valid.' });
+  }
+
+  try {
+    for (const date of dates) {
+      const existing = await ScheduleOverride.findOne({ date });
+      if (existing) {
+        existing.tpqPiket = null;
+        await existing.save();
+      }
+    }
+    res.json({ message: 'Jadwal TPQ mingguan berhasil dikembalikan ke default!' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 /* ================= MANAJEMEN RIWAYAT DAFTAR HADIR (ADMIN ONLY) ================= */
 
 // PUT: Perbarui status atau data riwayat kehadiran anggota

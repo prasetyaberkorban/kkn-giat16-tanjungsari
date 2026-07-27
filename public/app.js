@@ -1304,7 +1304,11 @@ function openCashflowModal(jenis = 'Pemasukan') {
   modal.classList.add('active');
 }
 
+let currentOverrideMode = 'daily';
+let currentTpqWeekDates = [];
+
 function openScheduleOverrideModal(mode = 'daily') {
+  currentOverrideMode = mode;
   const modal = document.getElementById('override-schedule-modal');
   if (!modal) return;
 
@@ -1422,6 +1426,29 @@ async function handleSaveScheduleOverride(e) {
 }
 
 async function handleResetScheduleOverride() {
+  if (typeof currentOverrideMode !== 'undefined' && currentOverrideMode === 'tpq') {
+    if (!currentTpqWeekDates || currentTpqWeekDates.length !== 7) return;
+    if (!confirm('Apakah Anda yakin ingin mengembalikan seluruh jadwal TPQ minggu ini ke pengaturan default?')) return;
+
+    try {
+      const res = await fetch('/api/schedule/override-weekly-tpq/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dates: currentTpqWeekDates })
+      });
+      if (res.ok) {
+        showToast('Jadwal TPQ mingguan berhasil dikembalikan ke default!');
+        closeScheduleModal();
+        fetchDashboardData();
+        switchWeek(currentViewingWeek);
+      } else {
+        showToast('Gagal mereset jadwal TPQ.');
+      }
+    } catch (err) {
+      showToast('Terjadi kesalahan koneksi.');
+    }
+    return;
+  }
   const date = document.getElementById('override-date').value;
   if (!confirm(`Apakah Anda yakin ingin mengembalikan jadwal tanggal ${date} ke pengaturan default?`)) return;
 
