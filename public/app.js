@@ -1304,9 +1304,26 @@ function openCashflowModal(jenis = 'Pemasukan') {
   modal.classList.add('active');
 }
 
-function openScheduleOverrideModal() {
+function openScheduleOverrideModal(mode = 'daily') {
   const modal = document.getElementById('override-schedule-modal');
   if (!modal) return;
+
+  const secDaily = document.getElementById('override-section-daily');
+  const secBathroom = document.getElementById('override-section-bathroom');
+  const secTpq = document.getElementById('override-section-tpq');
+  const modalTitle = document.getElementById('override-modal-title');
+
+  if (mode === 'tpq') {
+    if (secDaily) secDaily.style.display = 'none';
+    if (secBathroom) secBathroom.style.display = 'none';
+    if (secTpq) secTpq.style.display = 'block';
+    if (modalTitle) modalTitle.innerHTML = '&#9881; Sesuaikan Jadwal TPQ';
+  } else {
+    if (secDaily) secDaily.style.display = 'block';
+    if (secBathroom) secBathroom.style.display = 'block';
+    if (secTpq) secTpq.style.display = 'none';
+    if (modalTitle) modalTitle.innerHTML = '&#9881; Sesuaikan Jadwal Harian';
+  }
 
   // Set default date to today or epoch
   const today = new Date();
