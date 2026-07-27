@@ -45,6 +45,11 @@ async function getScheduleForDate(date) {
         schedule.bathroomPiket.team = override.bathroomPiketTeam;
         schedule.bathroomPiket.members = TEAMS[override.bathroomPiketTeam] || [];
       }
+      if (override.tpqPiket !== undefined && override.tpqPiket !== null && override.tpqPiket !== '') {
+        if (schedule.dayName && schedule.tpqSchedule) {
+          schedule.tpqSchedule[schedule.dayName] = override.tpqPiket;
+        }
+      }
     }
   } catch (err) {
     console.error('Error fetching schedule override:', err);
@@ -500,7 +505,7 @@ router.get('/schedule/override/:date', async (req, res) => {
   const { date } = req.params;
   try {
     const override = await ScheduleOverride.findOne({ date });
-    res.json(override || { date, dailySchedule: {}, bathroomPiketTeam: '' });
+    res.json(override || { date, dailySchedule: {}, bathroomPiketTeam: '', tpqPiket: null });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -508,7 +513,7 @@ router.get('/schedule/override/:date', async (req, res) => {
 
 // POST: Simpan atau perbarui override jadwal
 router.post('/schedule/override', async (req, res) => {
-  const { date, dailySchedule, bathroomPiketTeam } = req.body;
+  const { date, dailySchedule, bathroomPiketTeam, tpqPiket } = req.body;
   if (!date) {
     return res.status(400).json({ error: 'Tanggal wajib diisi.' });
   }
@@ -516,7 +521,7 @@ router.post('/schedule/override', async (req, res) => {
   try {
     const override = await ScheduleOverride.findOneAndUpdate(
       { date },
-      { dailySchedule, bathroomPiketTeam },
+      { dailySchedule, bathroomPiketTeam, tpqPiket },
       { upsert: true, new: true }
     );
     res.json({ message: 'Jadwal berhasil disesuaikan!', data: override });

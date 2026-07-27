@@ -13,6 +13,10 @@ const ScheduleOverrideSchema = new mongoose.Schema({
   bathroomPiketTeam: {
     type: String,
     default: ''
+  },
+  tpqPiket: {
+    type: String,
+    default: null
   }
 }, { timestamps: true });
 

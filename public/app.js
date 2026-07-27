@@ -330,9 +330,12 @@ function updateAdminUI() {
   }
 
   // Tampilkan/sembunyikan tombol sesuaikan jadwal
+  document.querySelectorAll('.admin-schedule-adjust-btn').forEach(btn => {
+    btn.style.display = isAdmin ? 'inline-block' : 'none';
+  });
   const scheduleAdjustBtn = document.getElementById('admin-schedule-adjust-btn');
   if (scheduleAdjustBtn) {
-    scheduleAdjustBtn.style.display = isAdmin ? 'block' : 'none';
+    scheduleAdjustBtn.style.display = isAdmin ? 'inline-block' : 'none';
   }
 
   // Tampilkan/sembunyikan header kolom Aksi di tabel absensi
@@ -664,9 +667,22 @@ async function switchWeek(weekNum) {
     if (bathroomTeamEl) bathroomTeamEl.innerText = activeBathroomTeam;
     if (bathroomMembersEl) bathroomMembersEl.innerText = TEAMS[activeBathroomTeam].join(', ');
     
-    // Update TPQ Table for this week
-    if (kamisResult && kamisResult.schedule.tpqSchedule && typeof renderTpqTable === 'function') {
-      renderTpqTable(kamisResult.schedule.tpqSchedule);
+    // Update TPQ Table for this week (merging daily tpqSchedule so date overrides work)
+    const weeklyTpqSchedule = {};
+    results.forEach(({ dayName, schedule }) => {
+      if (schedule && schedule.tpqSchedule) {
+        if (schedule.tpqSchedule[dayName] !== undefined) {
+          weeklyTpqSchedule[dayName] = schedule.tpqSchedule[dayName];
+        }
+        Object.keys(schedule.tpqSchedule).forEach(k => {
+          if (weeklyTpqSchedule[k] === undefined) {
+            weeklyTpqSchedule[k] = schedule.tpqSchedule[k];
+          }
+        });
+      }
+    });
+    if (typeof renderTpqTable === 'function') {
+      renderTpqTable(weeklyTpqSchedule);
     }
 
     tbody.innerHTML = '';
@@ -1331,6 +1347,22 @@ async function loadOverrideDataForDate(date) {
 
     // Set bathroom piket
     document.getElementById('override-bathroom-team').value = data.bathroomPiketTeam || '';
+    
+    // Set TPQ piket
+    const tpqInput = document.getElementById('override-tpq-members');
+    if (tpqInput) {
+      const targetDate = new Date(`${date}T12:00:00Z`);
+      const daysIndo = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+      const dayName = daysIndo[targetDate.getUTCDay()];
+      
+      if (data.tpqPiket !== undefined && data.tpqPiket !== null && data.tpqPiket !== '') {
+        tpqInput.value = data.tpqPiket;
+      } else if (defaultSchedule.tpqSchedule && defaultSchedule.tpqSchedule[dayName]) {
+        tpqInput.value = defaultSchedule.tpqSchedule[dayName];
+      } else {
+        tpqInput.value = '';
+      }
+    }
   } catch (err) {
     console.error('Gagal mengambil data jadwal override:', err);
   }
@@ -1348,12 +1380,13 @@ async function handleSaveScheduleOverride(e) {
   };
 
   const bathroomPiketTeam = document.getElementById('override-bathroom-team').value;
+  const tpqPiket = document.getElementById('override-tpq-members')?.value || '';
 
   try {
     const res = await fetch('/api/schedule/override', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ date, dailySchedule, bathroomPiketTeam })
+      body: JSON.stringify({ date, dailySchedule, bathroomPiketTeam, tpqPiket })
     });
 
     if (res.ok) {

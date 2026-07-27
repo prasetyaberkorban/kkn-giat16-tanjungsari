@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GIAT 16 - DESA TANJUNGSARI</title>
   <meta name="description" content="Dashboard monitoring jadwal piket harian dan absensi kehadiran UNNES GIAT 16 Desa Tanjung Sari.">
-  <link rel="stylesheet" href="/style.css?v=259">
+  <link rel="stylesheet" href="/style.css?v=260">
   <!-- Load QRCode.js secara lokal -->
   <script src="/qrcode.min.js"></script>
   <!-- Load SheetJS for Excel Exports -->
@@ -280,7 +280,7 @@
           <button class="week-btn" onclick="adjustWeek(-1)">◀ Prev</button>
           <span id="current-week-display" style="font-size: 1.2rem; font-weight: 700; color: #fff; min-width: 100px; text-align: center;">Minggu 1</span>
           <button class="week-btn" onclick="adjustWeek(1)">Next ▶</button>
-          <button id="admin-schedule-adjust-btn" class="btn" onclick="openScheduleOverrideModal()" style="display: none; padding: 0.5rem 1rem; width: auto; font-size: 0.85rem; margin: 0; background: var(--color-primary); border-color: var(--color-primary); margin-left: auto;">
+          <button id="admin-schedule-adjust-btn" class="btn admin-schedule-adjust-btn" onclick="openScheduleOverrideModal()" style="display: none; padding: 0.5rem 1rem; width: auto; font-size: 0.85rem; margin: 0; background: var(--color-primary); border-color: var(--color-primary); margin-left: auto;">
             ⚙️ Sesuaikan Jadwal
           </button>
         </div>
@@ -327,7 +327,10 @@
         <div class="week-switcher" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
           <button class="week-btn" onclick="adjustWeek(-1)">⬅️ Prev</button>
           <span id="tpq-week-display" style="font-size: 1.2rem; font-weight: 700; color: #fff; min-width: 100px; text-align: center;">Minggu 1</span>
-          <button class="week-btn" onclick="adjustWeek(1)">Next ➡️</button>
+          <button class="week-btn" onclick="adjustWeek(1)">Next ??</button>
+          <button class="btn admin-schedule-adjust-btn" onclick="openScheduleOverrideModal()" style="display: none; padding: 0.5rem 1rem; width: auto; font-size: 0.85rem; margin: 0; background: var(--color-primary); border-color: var(--color-primary); margin-left: auto;">
+            ?? Sesuaikan Jadwal
+          </button>
         </div>
         
         <div class="table-container" style="margin-top: 1rem;">
@@ -726,7 +729,7 @@
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v259</span></p>
+    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v260</span></p>
   </footer>
 
 
@@ -914,6 +917,28 @@
               <option value="TIM C">TIM C</option>
               <option value="TIM D">TIM D</option>
             </select>
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-color); margin: 1rem 0; padding-top: 1rem;">
+          <h4 style="color: #fff; margin-bottom: 0.75rem; font-size: 0.95rem;">Piket TPQ Hari Ini:</h4>
+          <div class="form-group" style="text-align: left; margin-bottom: 1.5rem;">
+            <label style="color: var(--text-secondary); font-size: 0.9rem; display: block; margin-bottom: 0.5rem;">Petugas Mengajar TPQ:</label>
+            <input type="text" id="override-tpq-members" list="tpq-suggestions" class="select-control" style="background: rgba(255, 255, 255, 0.05); width: 100%; color: #fff; padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 8px;" placeholder="Pilih atau ketik nama petugas... (kosongkan untuk default)">
+            <datalist id="tpq-suggestions">
+              <option value="Mey, Fay, Zii">
+              <option value="Mey, Fay, Zii, Firzan">
+              <option value="Mey, Fay, Zii, Zahra">
+              <option value="Naila, Cio, Valen">
+              <option value="Naila, Cio, Valen, Firzan">
+              <option value="Naila, Cio, Valen, Zahra">
+              <option value="Ananda, Tian, Hani">
+              <option value="Ananda, Tian, Hani, Firzan">
+              <option value="Ananda, Tian, Hani, Zahra">
+              <option value="Semuanya">
+              <option value="Libur (Tidak Ada Jadwal)">
+              <option value="-">
+            </datalist>
           </div>
         </div>
 
@@ -1246,7 +1271,7 @@
     </div>
   </div>
 
-<script src="/app.js?v=259"></script>
+<script src="/app.js?v=260"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 </html>
