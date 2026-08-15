@@ -3902,7 +3902,7 @@ function renderPaymentTable() {
       let imageUrl = log.proofUrl;
       if (imageUrl.includes('drive.google.com/file/d/')) {
         const fileId = imageUrl.split('/d/')[1].split('/')[0];
-        imageUrl = `https://drive.google.com/uc?id=${fileId}`;
+        imageUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
       }
       
       actionHtml = `<div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center;">
@@ -4101,5 +4101,78 @@ function toggleProof(id) {
     } else {
       row.style.display = 'none';
     }
+  }
+}
+
+
+/* ================= QRIS LOGIC ================= */
+async function fetchQris() {
+  try {
+    const res = await fetch('/api/settings/qris');
+    const data = await res.json();
+    const section = document.getElementById('qris-section');
+    const img = document.getElementById('qris-image');
+    const dlBtn = document.getElementById('qris-download-btn');
+    
+    if (data.url) {
+      let imageUrl = data.url;
+      if (imageUrl.includes('drive.google.com/file/d/')) {
+        const fileId = imageUrl.split('/d/')[1].split('/')[0];
+        imageUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+      }
+      img.src = imageUrl;
+      dlBtn.href = data.url; // Use original view URL for download link
+      section.style.display = 'block';
+    } else {
+      section.style.display = 'none';
+    }
+  } catch (err) {
+    console.error('Failed to fetch QRIS:', err);
+  }
+}
+
+async function handleQrisSelected() {
+  const fileInput = document.getElementById('qris-file-input');
+  if (!fileInput.files || fileInput.files.length === 0) return;
+  
+  const statusEl = document.getElementById('qris-upload-status');
+  statusEl.innerText = 'Mengupload QRIS...';
+  
+  try {
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folderId', GDRIVE_PAYMENT_FOLDER_ID);
+    formData.append('autoCreateDateFolder', 'false');
+
+    const uploadRes = await fetch('/gdrive/api/drive/upload', {
+      method: 'POST',
+      body: formData
+    });
+
+    const uploadData = await uploadRes.json();
+    if (!uploadRes.ok || !uploadData.success) {
+      throw new Error(uploadData.error || 'Gagal upload ke Google Drive');
+    }
+
+    const proofUrl = `https://drive.google.com/file/d/${uploadData.file.id}/view`;
+
+    // Save to AppSettings
+    const saveRes = await fetch('/api/settings/qris', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: proofUrl })
+    });
+
+    if (saveRes.ok) {
+      statusEl.innerText = 'QRIS berhasil diperbarui!';
+      fetchQris();
+      setTimeout(() => { statusEl.innerText = ''; }, 3000);
+    } else {
+      throw new Error('Gagal menyimpan URL QRIS');
+    }
+  } catch (err) {
+    console.error(err);
+    statusEl.innerText = 'Gagal upload QRIS.';
   }
 }
