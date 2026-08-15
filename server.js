@@ -61,7 +61,34 @@ app.post('/gdrive/api/drive/upload', upload.single('file'), async (req, res) => 
     oauth2Client.setCredentials({ refresh_token: (process.env.GOOGLE_REFRESH_TOKEN || '').trim() });
     const drive = google.drive({ version: 'v3', auth: oauth2Client });
 
-    const fileMetadata = { name: req.file.originalname, parents: [folderId] };
+    let targetFolderId = folderId;
+    if (req.body.autoCreateDateFolder === 'true') {
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const dateStr = `${yyyy}-${mm}-${dd}`;
+
+      const q = `name='${dateStr}' and mimeType='application/vnd.google-apps.folder' and '${folderId}' in parents and trashed=false`;
+      const searchRes = await drive.files.list({ q, fields: 'files(id, name)' });
+      
+      if (searchRes.data.files && searchRes.data.files.length > 0) {
+        targetFolderId = searchRes.data.files[0].id;
+      } else {
+        const folderMeta = {
+          name: dateStr,
+          mimeType: 'application/vnd.google-apps.folder',
+          parents: [folderId]
+        };
+        const createRes = await drive.files.create({
+          requestBody: folderMeta,
+          fields: 'id'
+        });
+        targetFolderId = createRes.data.id;
+      }
+    }
+
+    const fileMetadata = { name: req.file.originalname, parents: [targetFolderId] };
     const media = {
       mimeType: req.file.mimetype,
       body: Readable.from(req.file.buffer)

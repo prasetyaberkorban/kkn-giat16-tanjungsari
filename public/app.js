@@ -3842,3 +3842,145 @@ function renderTpqTable(tpqSchedule) {
   
   tbody.innerHTML = html;
 }
+
+
+// ==========================================
+// PAYMENT / IURAN KAS FUNCTIONS
+// ==========================================
+let currentPaymentLogs = [];
+const ALL_MEMBERS = ['Mey', 'Fay', 'Zii', 'Firzan', 'Zahra', 'Naila', 'Cio', 'Valen', 'Ananda', 'Tian', 'Hani'];
+const GDRIVE_PAYMENT_FOLDER_ID = '1oHMsJIkRS9j-owjZi5BWyi4Vwf5d69sV';
+
+async function fetchPaymentData() {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  const todayStr = `${yyyy}-${mm}-${dd}`;
+
+  const lbl = document.getElementById('payment-current-date-label');
+  if (lbl) {
+    const daysIndo = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    lbl.innerText = `${daysIndo[today.getDay()]}, ${dd}/${mm}/${yyyy}`;
+  }
+
+  try {
+    const res = await fetch(`/api/payment/${todayStr}`);
+    currentPaymentLogs = await res.json();
+    renderPaymentTable();
+  } catch (err) {
+    console.error('Failed to fetch payment data:', err);
+  }
+}
+
+function renderPaymentTable() {
+  const tbody = document.getElementById('payment-table-body');
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+  
+  ALL_MEMBERS.forEach((member, index) => {
+    const log = currentPaymentLogs.find(p => p.memberName === member);
+    const tr = document.createElement('tr');
+    
+    let statusHtml = '';
+    let actionHtml = '';
+
+    if (log) {
+      statusHtml = '<span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 0.35rem 0.65rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">✅ Sudah Bayar</span>';
+      actionHtml = `<a href="${log.proofUrl}" target="_blank" class="btn" style="background: transparent; border: 1px solid var(--color-accent); color: var(--color-accent); padding: 0.25rem 0.75rem; font-size: 0.8rem; text-decoration: none;">🖼️ Lihat Bukti</a>`;
+    } else {
+      statusHtml = '<span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 0.35rem 0.65rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">❌ Belum Bayar</span>';
+      actionHtml = `<button class="btn" style="background: var(--color-primary); border-color: var(--color-primary); padding: 0.25rem 0.75rem; font-size: 0.85rem; margin: 0;" onclick="openPaymentUploadModal('${member}')">📤 Upload</button>`;
+    }
+
+    tr.innerHTML = `
+      <td>${index + 1}</td>
+      <td style="font-weight: 600;">${member}</td>
+      <td style="text-align: center;">${statusHtml}</td>
+      <td style="text-align: center;">${actionHtml}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function openPaymentUploadModal(memberName) {
+  document.getElementById('payment-member-name').value = memberName;
+  document.getElementById('payment-member-display').innerText = memberName;
+  const modal = document.getElementById('payment-upload-modal');
+  if (modal) modal.classList.add('active');
+}
+
+function closePaymentUploadModal() {
+  const modal = document.getElementById('payment-upload-modal');
+  if (modal) modal.classList.remove('active');
+  document.getElementById('payment-upload-form').reset();
+}
+
+async function handlePaymentUpload(e) {
+  e.preventDefault();
+  const fileInput = document.getElementById('payment-file-input');
+  const memberName = document.getElementById('payment-member-name').value;
+  
+  if (!fileInput.files || fileInput.files.length === 0) {
+    showToast('Pilih file bukti pembayaran terlebih dahulu!');
+    return;
+  }
+
+  const btn = document.getElementById('btn-submit-payment');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:spin 1s linear infinite;"></span> Uploading...';
+  btn.disabled = true;
+
+  try {
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folderId', GDRIVE_PAYMENT_FOLDER_ID);
+    formData.append('autoCreateDateFolder', 'true');
+
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+    formData.append('date', todayStr);
+
+    // 1. Upload to GDrive
+    const uploadRes = await fetch('/gdrive/api/drive/upload', {
+      method: 'POST',
+      body: formData
+    });
+
+    const uploadData = await uploadRes.json();
+    if (!uploadRes.ok || !uploadData.success) {
+      throw new Error(uploadData.error || 'Gagal upload ke Google Drive');
+    }
+
+    const proofUrl = `https://drive.google.com/file/d/${uploadData.file.id}/view`;
+
+    // 2. Save to PaymentLog
+    const saveRes = await fetch('/api/payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        date: todayStr,
+        memberName,
+        proofUrl
+      })
+    });
+
+    if (!saveRes.ok) throw new Error('Gagal menyimpan log pembayaran');
+
+    showToast(`Berhasil! Bukti pembayaran ${memberName} sudah tersimpan.`);
+    closePaymentUploadModal();
+    fetchPaymentData();
+  } catch (err) {
+    console.error(err);
+    showToast(err.message || 'Terjadi kesalahan saat upload.');
+  } finally {
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }
+}
+// ==========================================

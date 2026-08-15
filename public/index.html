@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GIAT 16 - DESA TANJUNGSARI</title>
   <meta name="description" content="Dashboard monitoring jadwal piket harian dan absensi kehadiran UNNES GIAT 16 Desa Tanjung Sari.">
-  <link rel="stylesheet" href="/style.css?v=264">
+  <link rel="stylesheet" href="/style.css?v=265">
   <!-- Load QRCode.js secara lokal -->
   <script src="/qrcode.min.js"></script>
   <!-- Load SheetJS for Excel Exports -->
@@ -725,11 +725,72 @@
     </div>
   </div>
 
+
+  <!-- TAB PEMBAYARAN IURAN -->
+  <div id="tab-pembayaran" class="tab-content" style="display: none;">
+    <div class="card premium-card slide-up">
+      <div class="card-header">
+        <h2 class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+          <span>💵 Pembayaran Iuran Kas (<span id="payment-current-date-label">Hari Ini</span>)</span>
+        </h2>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-info" style="margin-bottom: 1.5rem; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: 8px; padding: 1rem;">
+          <p style="margin: 0; font-size: 0.9rem; color: #93c5fd;">Silakan pilih nama Anda dan upload bukti pembayaran (transfer/cash) untuk hari ini. Daftar akan otomatis terkirim ke WhatsApp saat Anda berhasil upload.</p>
+        </div>
+
+        <div class="table-container">
+          <table class="premium-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">No</th>
+                <th>Nama Anggota</th>
+                <th style="text-align: center;">Status Pembayaran</th>
+                <th style="text-align: center;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="payment-table-body">
+              <tr>
+                <td colspan="4" style="text-align: center; color: var(--text-secondary); padding: 2rem;">
+                  Memuat data pembayaran...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Upload Pembayaran -->
+  <div class="modal-overlay" id="payment-upload-modal" onclick="closePaymentUploadModal()">
+    <div class="modal-card" onclick="event.stopPropagation()" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3 id="payment-modal-title">📤 Upload Bukti Pembayaran</h3>
+        <button class="close-modal-btn" onclick="closePaymentUploadModal()">&times;</button>
+      </div>
+      <form id="payment-upload-form" onsubmit="handlePaymentUpload(event)">
+        <input type="hidden" id="payment-member-name" value="">
+        <div class="form-group" style="margin-bottom: 1rem; text-align: left;">
+          <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Nama Anggota:</label>
+          <div id="payment-member-display" style="font-weight: 600; color: #fff; font-size: 1.1rem; padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 8px;">Nama</div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1.5rem; text-align: left;">
+          <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Pilih File Bukti (Foto/Screenshot):</label>
+          <input type="file" id="payment-file-input" accept="image/*" required class="select-control" style="width: 100%; color: #fff; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 8px;">
+        </div>
+        <button type="submit" class="btn" id="btn-submit-payment" style="width: 100%; background: var(--color-success); border-color: var(--color-success); margin: 0;">
+          Upload Sekarang
+        </button>
+      </form>
+    </div>
+  </div>
+  
 </main>
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v264</span></p>
+    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v265</span></p>
   </footer>
 
 
@@ -1302,7 +1363,7 @@
     </div>
   </div>
 
-<script src="/app.js?v=264"></script>
+<script src="/app.js?v=265"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 </html>

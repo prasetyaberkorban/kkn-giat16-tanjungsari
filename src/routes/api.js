@@ -12,6 +12,7 @@ const ProgramKerja = require('../models/ProgramKerja');
 const Cashflow = require('../models/Cashflow');
 const QrSetting = require('../models/QrSetting');
 const Rab = require('../models/Rab');
+const PaymentLog = require('../models/PaymentLog');
 
 // Pemetaan nama anggota ke divisi masing-masing
 const memberDivisions = {
@@ -1054,6 +1055,96 @@ cron.schedule('0 6,18 * * *', async () => {
   timezone: "Asia/Jakarta"
 });
 
+
+
+// ==========================================
+// KAS PEMBAYARAN & WHATSAPP
+// ==========================================
+
+const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs) => {
+  const token = process.env.FONNTE_TOKEN;
+  const target = process.env.WA_GROUP_NUMBER;
+  
+  if (!token || !target) {
+    console.log('[WA] Fonnte token or target missing, skipping WA notification.');
+    return;
+  }
+
+  const paidMembers = paymentLogs.map(p => p.memberName);
+  const dateObj = new Date(date);
+  const formattedDate = dateObj.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  let msg = `*LAPORAN IURAN KAS HARIAN*\n`;
+  msg += `Tanggal: ${formattedDate}\n\n`;
+  msg += `Berikut adalah status pembayaran iuran hari ini:\n\n`;
+
+  let totalPaid = 0;
+  allMembers.forEach((member, i) => {
+    if (paidMembers.includes(member)) {
+      msg += `${i + 1}. ${member} ✅ (Sudah Bayar)\n`;
+      totalPaid++;
+    } else {
+      msg += `${i + 1}. ${member} ❌ (Belum Bayar)\n`;
+    }
+  });
+
+  msg += `\nTotal Sudah Bayar: *${totalPaid} / ${allMembers.length} Orang*\n`;
+  msg += `\n_Pesan otomatis dikirim oleh Sistem Informasi KKN_`;
+
+  try {
+    const fetch = (await import('node-fetch')).default;
+    const response = await fetch('https://api.fonnte.com/send', {
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        target: target,
+        message: msg,
+        delay: '2'
+      })
+    });
+    
+    const result = await response.json();
+    console.log('[WA] Fonnte Response:', result);
+  } catch (error) {
+    console.error('[WA] Failed to send WhatsApp notification via Fonnte:', error);
+  }
+};
+
+router.get('/payment/:date', async (req, res) => {
+  try {
+    const { date } = req.params;
+    const logs = await PaymentLog.find({ date });
+    res.json(logs);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post('/payment', async (req, res) => {
+  try {
+    const { date, memberName, proofUrl } = req.body;
+    if (!date || !memberName || !proofUrl) {
+      return res.status(400).json({ error: 'Date, memberName, and proofUrl are required.' });
+    }
+
+    const log = new PaymentLog({ date, memberName, proofUrl });
+    await log.save();
+
+    // Trigger WA Notification (Async)
+    const allMembers = ['Mey', 'Fay', 'Zii', 'Firzan', 'Zahra', 'Naila', 'Cio', 'Valen', 'Ananda', 'Tian', 'Hani'];
+    const allLogs = await PaymentLog.find({ date });
+    
+    sendWhatsAppPaymentNotification(date, allMembers, allLogs).catch(console.error);
+
+    res.json({ success: true, data: log });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+// ==========================================
 
 // Get Global Theme
 router.get('/theme', async (req, res) => {
