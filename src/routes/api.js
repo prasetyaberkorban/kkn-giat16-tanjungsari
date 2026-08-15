@@ -1245,4 +1245,29 @@ router.post('/settings/qris', async (req, res) => {
   }
 });
 
+
+// ================= SCHEDULED TASKS (CRON) =================
+// Kirim notifikasi pembayaran ke WA setiap jam 7 pagi, 6 sore, 8 malam, dan 11 malam
+cron.schedule('0 7,18,20,23 * * *', async () => {
+  try {
+    const today = new Date();
+    // Gunakan zona waktu Indonesia (WIB)
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+
+    const allMembers = ['Mey', 'Fay', 'Zii', 'Firzan', 'Zahra', 'Naila', 'Cio', 'Valen', 'Ananda', 'Tian', 'Hani'];
+    const allLogs = await PaymentLog.find({ date: todayStr });
+    
+    console.log(`[CRON] Mengirim laporan iuran WA untuk ${todayStr}...`);
+    await sendWhatsAppPaymentNotification(todayStr, allMembers, allLogs);
+  } catch (err) {
+    console.error('[CRON Error] Gagal mengirim jadwal WA:', err);
+  }
+}, {
+  scheduled: true,
+  timezone: "Asia/Jakarta"
+});
+
 module.exports = router;
