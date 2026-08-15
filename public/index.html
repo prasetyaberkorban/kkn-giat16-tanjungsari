@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GIAT 16 - DESA TANJUNGSARI</title>
   <meta name="description" content="Dashboard monitoring jadwal piket harian dan absensi kehadiran UNNES GIAT 16 Desa Tanjung Sari.">
-  <link rel="stylesheet" href="/style.css?v=266">
+  <link rel="stylesheet" href="/style.css?v=267">
   <!-- Load QRCode.js secara lokal -->
   <script src="/qrcode.min.js"></script>
   <!-- Load SheetJS for Excel Exports -->
@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="top-bar-actions">
-      <button class="menu-toggle-btn admin-only" onclick="toggleGlobalTheme()" title="Ubah Tema" style="margin-right: 0.5rem; display: flex; align-items: center; gap: 0.35rem;">🎨 <span class="hide-mobile">Tema</span></button>
+      <button class="menu-toggle-btn" onclick="openManualAttendanceModal()" title="Absensi" style="margin-right: 0.5rem; display: flex; align-items: center; gap: 0.35rem; background: var(--color-accent); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px;">📝 <span class="hide-mobile">Absen</span></button>
       <button class="menu-toggle-btn" id="menu-toggle-btn" onclick="toggleSidebar()">
         <span>☰</span> Menu
       </button>
@@ -86,6 +86,10 @@
       <button class="btn" id="btn-sync-sheets" onclick="syncToGoogleSheets()" style="background: #10b981; border-color: #10b981; margin: 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.85rem; padding: 0.65rem;">
         🚀 Sync ke Google Sheets
       </button>
+
+<button class="btn" id="btn-pembayaran-kas" onclick="switchTab('pembayaran'); toggleSidebar();" style="background: var(--color-primary); border-color: var(--color-primary); margin: 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.85rem; padding: 0.65rem;">
+  💵 Pembayaran Iuran
+</button>
     </div>
     <div class="sidebar-footer" id="sidebar-admin-info">
       <!-- Diisi dinamis: status login admin -->
@@ -765,7 +769,7 @@
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v266</span></p>
+    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v267</span></p>
   </footer>
 
 
@@ -1338,7 +1342,7 @@
     </div>
   </div>
 
-<script src="/app.js?v=266"></script>
+<script src="/app.js?v=267"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 </html>
