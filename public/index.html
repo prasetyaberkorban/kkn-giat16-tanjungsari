@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GIAT 16 - DESA TANJUNGSARI</title>
   <meta name="description" content="Dashboard monitoring jadwal piket harian dan absensi kehadiran UNNES GIAT 16 Desa Tanjung Sari.">
-  <link rel="stylesheet" href="/style.css?v=271">
+  <link rel="stylesheet" href="/style.css?v=273">
   <!-- Load QRCode.js secara lokal -->
   <script src="/qrcode.min.js"></script>
   <!-- Load SheetJS for Excel Exports -->
@@ -78,8 +78,12 @@
       <li class="menu-item" onclick="switchTab('rab')">
         <span class="menu-icon">💰</span> Anggaran (RAB)
       </li>
-    </ul>
-    <div id="sidebar-export-wrapper" style="display: flex; padding: 1rem; border-top: 1px solid var(--border-color); margin-top: 0.5rem; flex-direction: column; gap: 0.5rem;">
+    
+        <li class="menu-item" onclick="switchTab('pembayaran')">
+          <span class="menu-icon">💵</span> Pembayaran Iuran
+        </li>
+      </ul>
+      <div id="sidebar-export-wrapper" style="display: flex; padding: 1rem; border-top: 1px solid var(--border-color); margin-top: 0.5rem; flex-direction: column; gap: 0.5rem;">
       <button class="btn" onclick="exportAllToExcel()" style="background: var(--color-success); border-color: var(--color-success); margin: 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.85rem; padding: 0.65rem;">
         📥 Export Excel (Semua)
       </button>
@@ -695,7 +699,7 @@
 
 
   <!-- TAB PEMBAYARAN IURAN -->
-  <div id="tab-pembayaran" class="tab-content" style="display: none;">
+  <div id="tab-pembayaran" class="tab-content">
     <div class="card premium-card slide-up">
       <div class="card-header">
         <h2 class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
@@ -758,7 +762,7 @@
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v271</span></p>
+    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v273</span></p>
   </footer>
 
 
@@ -1331,7 +1335,7 @@
     </div>
   </div>
 
-<script src="/app.js?v=271"></script>
+<script src="/app.js?v=273"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 </html>

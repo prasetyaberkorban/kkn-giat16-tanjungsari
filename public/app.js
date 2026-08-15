@@ -197,7 +197,10 @@ function switchTab(tabId) {
   });
 
   currentTab = tabId;
-  toggleSidebar(); // Tutup drawer
+  const sidebar = document.getElementById('sidebar-drawer');
+  if (sidebar && sidebar.classList.contains('active')) {
+    toggleSidebar();
+  }
 
   // Load data spesifik tab
   if (tabId === 'pembayaran') {
@@ -3646,7 +3649,7 @@ if (manualForm) {
         showToast('Kehadiran manual berhasil disimpan!');
         closeManualAttendanceModal();
         fetchDashboardData();
-    switchTab('jadwal-mingguan');
+    switchTab('dashboard');
       } else {
         showToast('Gagal: ' + data.error);
       }
