@@ -3894,7 +3894,13 @@ function renderPaymentTable() {
 
     if (log) {
       statusHtml = '<span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 0.35rem 0.65rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">✅ Sudah Bayar</span>';
-      actionHtml = `<a href="${log.proofUrl}" target="_blank" class="btn" style="background: transparent; border: 1px solid var(--color-accent); color: var(--color-accent); padding: 0.25rem 0.75rem; font-size: 0.8rem; text-decoration: none;">🖼️ Lihat Bukti</a>`;
+      const isAdmin = localStorage.getItem('isAdmin') === 'true';
+      const deleteBtn = isAdmin ? `<button class="btn" style="background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer;" onclick="deletePayment('${log._id}')">🗑️ Hapus</button>` : '';
+      
+      actionHtml = `<div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center;">
+        <a href="${log.proofUrl}" target="_blank" class="btn" style="background: transparent; border: 1px solid var(--color-accent); color: var(--color-accent); padding: 0.25rem 0.75rem; font-size: 0.8rem; text-decoration: none;">🖼️ Lihat Bukti</a>
+        ${deleteBtn}
+      </div>`;
     } else {
       statusHtml = '<span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 0.35rem 0.65rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">❌ Belum Bayar</span>';
       actionHtml = `<button class="btn" style="background: var(--color-primary); border-color: var(--color-primary); padding: 0.25rem 0.75rem; font-size: 0.85rem; margin: 0;" onclick="openPaymentUploadModal('${member}')">📤 Upload</button>`;
@@ -4045,5 +4051,22 @@ async function handleWaSettingSubmit(e) {
   } finally {
     btn.innerHTML = originalText;
     btn.disabled = false;
+  }
+}
+
+
+async function deletePayment(id) {
+  if (!confirm('Apakah Anda yakin ingin menghapus status pembayaran ini?')) return;
+  try {
+    const res = await fetch(`/api/payment/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      showToast('Status pembayaran berhasil dihapus.');
+      fetchPaymentData();
+    } else {
+      const data = await res.json();
+      showToast('Gagal menghapus: ' + (data.error || 'Terjadi kesalahan'));
+    }
+  } catch (err) {
+    showToast('Terjadi kesalahan koneksi saat menghapus data.');
   }
 }

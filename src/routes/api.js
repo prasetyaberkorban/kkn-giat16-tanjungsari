@@ -1064,7 +1064,9 @@ cron.schedule('0 6,18 * * *', async () => {
 
 const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs) => {
   const token = process.env.FONNTE_TOKEN;
-  const target = process.env.WA_GROUP_NUMBER;
+  const AppSetting = require('../models/AppSetting');
+  const setting = await AppSetting.findOne({ key: 'wa_payment_target' });
+  const target = (setting && setting.value && setting.value.number) ? setting.value.number : process.env.WA_GROUP_NUMBER;
   
   if (!token || !target) {
     console.log('[WA] Fonnte token or target missing, skipping WA notification.');
@@ -1200,6 +1202,18 @@ router.post('/settings/payment-wa', async (req, res) => {
     }
     await setting.save();
     res.json({ success: true, message: 'Berhasil disimpan' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+router.delete('/payment/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const log = await PaymentLog.findByIdAndDelete(id);
+    if (!log) return res.status(404).json({ error: 'Data pembayaran tidak ditemukan.' });
+    res.json({ success: true, message: 'Berhasil dihapus' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
