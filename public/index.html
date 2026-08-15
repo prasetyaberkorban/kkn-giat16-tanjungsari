@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GIAT 16 - DESA TANJUNGSARI</title>
   <meta name="description" content="Dashboard monitoring jadwal piket harian dan absensi kehadiran UNNES GIAT 16 Desa Tanjung Sari.">
-  <link rel="stylesheet" href="/style.css?v=265">
+  <link rel="stylesheet" href="/style.css?v=266">
   <!-- Load QRCode.js secara lokal -->
   <script src="/qrcode.min.js"></script>
   <!-- Load SheetJS for Excel Exports -->
@@ -167,44 +167,19 @@
           </div>
         </div>
 
-        <!-- QR Code Section (Hanya muncul jika admin sudah login) -->
-        <div class="dashboard-side-section" id="admin-qr-section" style="display: none;">
-          <div class="card qr-box">
-            <h2 class="card-title" style="border: none; margin-bottom: 0.5rem; padding-bottom: 0; align-self: flex-start;">
-              <span>📲</span> Scan QR Absen (Admin Only)
-            </h2>
-            
-            <div class="form-group" style="text-align: left; margin: 0.75rem 0 1.25rem 0; width: 100%;">
-              <label style="display: block; color: var(--text-secondary); margin-bottom: 0.35rem; font-size: 0.85rem; font-weight: 600;">PILIH QR CODE AKTIF:</label>
-              <select id="active-qr-select" class="select-control" style="background: rgba(255, 255, 255, 0.05); padding: 0.6rem 0.85rem; font-size: 0.9rem;" onchange="handleActiveQrChange(this.value)">
-                <option value="1">QR Code KKN - Kehadiran 1</option>
-                <option value="2">QR Code KKN - Kehadiran 2</option>
-                <option value="3">QR Code KKN - Kehadiran 3</option>
-                <option value="4">QR Code KKN - Kehadiran 4</option>
-              </select>
+        <!-- Attendance Action Section (Bisa diakses semua orang) -->
+          <div class="dashboard-side-section" id="attendance-action-section" style="margin-top: 1.5rem;">
+            <div class="card qr-box" style="text-align: center; padding: 2rem 1.5rem;">
+              <h2 class="card-title" style="border: none; margin-bottom: 0.5rem; padding-bottom: 0; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                <span>📝</span> Lakukan Absensi
+              </h2>
+              <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">Klik tombol di bawah ini untuk mengisi kehadiran Anda (Hadir/Izin/Sakit) hari ini.</p>
+              
+              <button class="btn submit-btn" onclick="openManualAttendanceModal()" style="width: 100%; padding: 1rem; font-size: 1.1rem; border-radius: 12px; box-shadow: var(--shadow-glow);">
+                Isi Kehadiran Sekarang
+              </button>
             </div>
-
-            
-            <div class="qr-container" id="qrcode">
-              <!-- Render QR code di sini -->
-            </div>
-            <button id="download-qr-btn" class="submit-btn" style="margin-top: 1rem; width: auto; display: inline-block; padding: 0.5rem 1rem;" onclick="downloadQrCode()">Unduh QR Code</button>
-            
-            <div class="form-group" style="text-align: left; margin: 1.25rem 0; width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
-              <label style="display: block; color: var(--text-secondary); margin-bottom: 0.35rem; font-size: 0.85rem; font-weight: 600;">KATA KUNCI LINK (OPSIONAL):</label>
-              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem;">
-                <input type="text" id="shortlink-input" class="select-control" style="background: rgba(255, 255, 255, 0.05); padding: 0.6rem 0.85rem; font-size: 0.9rem; flex: 1;" placeholder="Misal: absen-hari-ini" onchange="handleShortlinkSave()" onkeyup="handleShortlinkSave()">
-              </div>
-              <label style="display: block; color: var(--text-secondary); margin-bottom: 0.35rem; font-size: 0.85rem; font-weight: 600;">LINK HASIL GENERATE:</label>
-              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; background: rgba(0,0,0,0.2); border-radius: 6px; padding: 0.5rem; border: 1px solid rgba(255,255,255,0.1); align-items: center;">
-                <input type="text" id="shortlink-preview-input" readonly style="background: transparent; border: none; color: var(--color-accent); font-weight: 600; width: 100%; outline: none; flex: 1; font-size: 0.9rem;" value="-">
-                <button id="copy-shortlink-btn" class="btn" style="background: var(--color-primary); border: none; margin: 0; padding: 0.4rem 0.8rem; font-size: 0.85rem; border-radius: 4px; font-weight: 600;" onclick="copyShortlink()">Copy</button>
-              </div>
-            </div>
-
-            <p style="margin-top: 1rem;">Tampilkan QR ini ke anggota untuk memindai formulir absensi mobile.</p>
           </div>
-        </div>
 
       </div>
     </div>
@@ -790,7 +765,7 @@
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v265</span></p>
+    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v266</span></p>
   </footer>
 
 
@@ -1363,7 +1338,7 @@
     </div>
   </div>
 
-<script src="/app.js?v=265"></script>
+<script src="/app.js?v=266"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 </html>
