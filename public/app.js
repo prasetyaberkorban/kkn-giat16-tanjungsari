@@ -200,7 +200,9 @@ function switchTab(tabId) {
   toggleSidebar(); // Tutup drawer
 
   // Load data spesifik tab
-  if (tabId === 'dashboard') {
+  if (tabId === 'pembayaran') {
+    fetchPaymentData();
+  } else if (tabId === 'dashboard') {
     fetchDashboardData();
   } else if (tabId === 'daftar-hadir') {
     fetchFullAttendance();
@@ -285,7 +287,7 @@ function updateAdminUI() {
   if (isAdmin) {
     triggerBtn.innerText = '🔓 Logout Admin';
     triggerBtn.classList.add('logged-in');
-    qrSection.style.display = 'block';
+    if(qrSection) qrSection.style.display = 'block';
     adminOnlyElements.forEach(el => el.style.display = 'block');
     adminInfo.innerHTML = `
       <span style="font-size: 0.85rem; color: var(--color-success); font-weight: bold;">Role: Administrator</span>
@@ -295,7 +297,7 @@ function updateAdminUI() {
   } else {
     triggerBtn.innerText = '🔐 Login Admin';
     triggerBtn.classList.remove('logged-in');
-    qrSection.style.display = 'none';
+    if(qrSection) qrSection.style.display = 'none';
     adminOnlyElements.forEach(el => el.style.display = 'none');
     adminInfo.innerHTML = `
       <span style="font-size: 0.85rem; color: var(--text-secondary);">Role: Tamu</span>
@@ -3643,7 +3645,7 @@ if (manualForm) {
       if (res.ok) {
         showToast('Kehadiran manual berhasil disimpan!');
         closeManualAttendanceModal();
-        fetchAttendanceData(currentAttendanceFilter);
+        fetchDashboardData();
     switchTab('jadwal-mingguan');
       } else {
         showToast('Gagal: ' + data.error);
