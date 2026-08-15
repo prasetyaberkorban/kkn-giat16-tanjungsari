@@ -3643,7 +3643,8 @@ if (manualForm) {
       if (res.ok) {
         showToast('Kehadiran manual berhasil disimpan!');
         closeManualAttendanceModal();
-        fetchAttendanceData(currentAttendanceFilter); // Refresh data
+        fetchAttendanceData(currentAttendanceFilter);
+    switchTab('jadwal-mingguan');
       } else {
         showToast('Gagal: ' + data.error);
       }
