@@ -3990,3 +3990,60 @@ async function handlePaymentUpload(e) {
   }
 }
 // ==========================================
+
+
+/* ================= PENGATURAN WA PEMBAYARAN ================= */
+async function openWaSettingModal() {
+  document.getElementById('wa-setting-modal').classList.add('active');
+  const targetInput = document.getElementById('wa-setting-target');
+  targetInput.value = 'Memuat...';
+  targetInput.disabled = true;
+  
+  try {
+    const res = await fetch('/api/settings/payment-wa');
+    const data = await res.json();
+    targetInput.value = data.number || '';
+  } catch (err) {
+    console.error('Failed to fetch WA setting:', err);
+    targetInput.value = '';
+    showToast('Gagal memuat pengaturan WA saat ini.');
+  } finally {
+    targetInput.disabled = false;
+  }
+}
+
+function closeWaSettingModal() {
+  document.getElementById('wa-setting-modal').classList.remove('active');
+}
+
+async function handleWaSettingSubmit(e) {
+  e.preventDefault();
+  const number = document.getElementById('wa-setting-target').value.trim();
+  const btn = e.target.querySelector('button[type="submit"]');
+  const originalText = btn.innerHTML;
+  
+  btn.innerHTML = 'Menyimpan...';
+  btn.disabled = true;
+  
+  try {
+    const res = await fetch('/api/settings/payment-wa', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ number })
+    });
+    
+    if (res.ok) {
+      showToast('Pengaturan WA Pembayaran berhasil disimpan!');
+      closeWaSettingModal();
+    } else {
+      const data = await res.json();
+      showToast('Gagal: ' + (data.error || 'Terjadi kesalahan'));
+    }
+  } catch (err) {
+    console.error(err);
+    showToast('Terjadi kesalahan koneksi saat menyimpan pengaturan WA.');
+  } finally {
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }
+}

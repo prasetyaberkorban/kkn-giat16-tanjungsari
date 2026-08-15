@@ -13,6 +13,7 @@ const Cashflow = require('../models/Cashflow');
 const QrSetting = require('../models/QrSetting');
 const Rab = require('../models/Rab');
 const PaymentLog = require('../models/PaymentLog');
+const AppSetting = require('../models/AppSetting');
 
 // Pemetaan nama anggota ke divisi masing-masing
 const memberDivisions = {
@@ -1173,6 +1174,34 @@ router.post('/theme', async (req, res) => {
     res.json({ success: true, theme: setting.theme });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+
+// ================= PENGATURAN WA PEMBAYARAN =================
+router.get('/settings/payment-wa', async (req, res) => {
+  try {
+    const setting = await AppSetting.findOne({ key: 'wa_payment_target' });
+    const number = (setting && setting.value && setting.value.number) ? setting.value.number : process.env.WA_GROUP_NUMBER;
+    res.json({ number: number || '' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post('/settings/payment-wa', async (req, res) => {
+  try {
+    const { number } = req.body;
+    let setting = await AppSetting.findOne({ key: 'wa_payment_target' });
+    if (!setting) {
+      setting = new AppSetting({ key: 'wa_payment_target', value: { number } });
+    } else {
+      setting.value = { number };
+    }
+    await setting.save();
+    res.json({ success: true, message: 'Berhasil disimpan' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
