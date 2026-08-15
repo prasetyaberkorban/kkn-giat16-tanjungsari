@@ -3874,6 +3874,7 @@ async function fetchPaymentData() {
     const res = await fetch(`/api/payment/${todayStr}`);
     currentPaymentLogs = await res.json();
     renderPaymentTable();
+    fetchQris();
   } catch (err) {
     console.error('Failed to fetch payment data:', err);
   }
@@ -3897,10 +3898,29 @@ function renderPaymentTable() {
       const isAdmin = localStorage.getItem('isAdmin') === 'true';
       const deleteBtn = isAdmin ? `<button class="btn" style="background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer;" onclick="deletePayment('${log._id}')">🗑️ Hapus</button>` : '';
       
+      
+      let imageUrl = log.proofUrl;
+      if (imageUrl.includes('drive.google.com/file/d/')) {
+        const fileId = imageUrl.split('/d/')[1].split('/')[0];
+        imageUrl = `https://drive.google.com/uc?id=${fileId}`;
+      }
+      
       actionHtml = `<div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center;">
-        <a href="${log.proofUrl}" target="_blank" class="btn" style="background: transparent; border: 1px solid var(--color-accent); color: var(--color-accent); padding: 0.25rem 0.75rem; font-size: 0.8rem; text-decoration: none;">🖼️ Lihat Bukti</a>
+        <button class="btn" onclick="toggleProof('${log._id}')" style="background: transparent; border: 1px solid var(--color-accent); color: var(--color-accent); padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer;">🖼️ Lihat Bukti</button>
         ${deleteBtn}
       </div>`;
+      
+      // Additional row for inline image
+      const imgTr = document.createElement('tr');
+      imgTr.id = `proof-row-${log._id}`;
+      imgTr.style.display = 'none';
+      imgTr.innerHTML = `<td colspan="4" style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.02);">
+        <img src="${imageUrl}" alt="Bukti" style="max-width: 100%; max-height: 400px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+      </td>`;
+      
+      // Store imgTr to append later
+      tr.imgTr = imgTr;
+
     } else {
       statusHtml = '<span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 0.35rem 0.65rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">❌ Belum Bayar</span>';
       actionHtml = `<button class="btn" style="background: var(--color-primary); border-color: var(--color-primary); padding: 0.25rem 0.75rem; font-size: 0.85rem; margin: 0;" onclick="openPaymentUploadModal('${member}')">📤 Upload</button>`;
@@ -3913,6 +3933,7 @@ function renderPaymentTable() {
       <td style="text-align: center;">${actionHtml}</td>
     `;
     tbody.appendChild(tr);
+    if (tr.imgTr) tbody.appendChild(tr.imgTr);
   });
 }
 
@@ -4068,5 +4089,17 @@ async function deletePayment(id) {
     }
   } catch (err) {
     showToast('Terjadi kesalahan koneksi saat menghapus data.');
+  }
+}
+
+
+function toggleProof(id) {
+  const row = document.getElementById(`proof-row-${id}`);
+  if (row) {
+    if (row.style.display === 'none') {
+      row.style.display = 'table-row';
+    } else {
+      row.style.display = 'none';
+    }
   }
 }

@@ -1077,22 +1077,21 @@ const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs) =>
   const dateObj = new Date(date);
   const formattedDate = dateObj.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-  let msg = `*LAPORAN IURAN KAS HARIAN*\n`;
-  msg += `Tanggal: ${formattedDate}\n\n`;
-  msg += `Berikut adalah status pembayaran iuran hari ini:\n\n`;
+  let msg = `*IURAN KAS HARIAN*\n`;
+  msg += `Tanggal: ${formattedDate}\n`;
 
   let totalPaid = 0;
   allMembers.forEach((member, i) => {
     if (paidMembers.includes(member)) {
-      msg += `${i + 1}. ${member} ✅ (Sudah Bayar)\n`;
+      msg += `${i + 1}. ${member} ✅\n`;
       totalPaid++;
     } else {
-      msg += `${i + 1}. ${member} ❌ (Belum Bayar)\n`;
+      msg += `${i + 1}. ${member} ❌\n`;
     }
   });
 
-  msg += `\nTotal Sudah Bayar: *${totalPaid} / ${allMembers.length} Orang*\n`;
-  msg += `\n_Pesan otomatis dikirim oleh Sistem Informasi KKN_`;
+  msg += `\nTotal Sudah Bayar: ${totalPaid} / ${allMembers.length} Orang\n`;
+  msg += `https://kkngiat16tanjungsari.foerta.tech`;
 
   try {
     const fetch = (await import('node-fetch')).default;
@@ -1214,6 +1213,33 @@ router.delete('/payment/:id', async (req, res) => {
     const log = await PaymentLog.findByIdAndDelete(id);
     if (!log) return res.status(404).json({ error: 'Data pembayaran tidak ditemukan.' });
     res.json({ success: true, message: 'Berhasil dihapus' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+// ================= PENGATURAN QRIS =================
+router.get('/settings/qris', async (req, res) => {
+  try {
+    const setting = await AppSetting.findOne({ key: 'qris_url' });
+    res.json({ url: setting ? setting.value.url : null });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post('/settings/qris', async (req, res) => {
+  try {
+    const { url } = req.body;
+    let setting = await AppSetting.findOne({ key: 'qris_url' });
+    if (!setting) {
+      setting = new AppSetting({ key: 'qris_url', value: { url } });
+    } else {
+      setting.value = { url };
+    }
+    await setting.save();
+    res.json({ success: true, message: 'QRIS berhasil disimpan' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

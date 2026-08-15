@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GIAT 16 - DESA TANJUNGSARI</title>
   <meta name="description" content="Dashboard monitoring jadwal piket harian dan absensi kehadiran UNNES GIAT 16 Desa Tanjung Sari.">
-  <link rel="stylesheet" href="/style.css?v=276">
+  <link rel="stylesheet" href="/style.css?v=277">
   <!-- Load QRCode.js secara lokal -->
   <script src="/qrcode.min.js"></script>
   <!-- Load SheetJS for Excel Exports -->
@@ -710,7 +710,27 @@
         </h2>
       </div>
       <div class="card-body">
-        <div class="alert alert-info" style="margin-bottom: 1.5rem; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: 8px; padding: 1rem;">
+        
+          <!-- QRIS Section -->
+          <div id="qris-section" style="margin-bottom: 1.5rem; text-align: center; display: none;">
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Scan QRIS di bawah ini untuk pembayaran:</p>
+            <div style="background: white; padding: 10px; border-radius: 8px; display: inline-block; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+              <img id="qris-image" src="" alt="QRIS" style="max-width: 250px; height: auto; display: block; border-radius: 4px;">
+            </div>
+            <div style="margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: center;">
+              <a id="qris-download-btn" href="#" download="QRIS-Pembayaran.jpg" class="btn" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">⬇️ Download QRIS</a>
+            </div>
+          </div>
+          <!-- Admin Upload QRIS -->
+          <div class="admin-only" style="margin-bottom: 1.5rem; text-align: center;">
+            <input type="file" id="qris-file-input" accept="image/*" style="display: none;" onchange="handleQrisSelected()">
+            <button class="btn" onclick="document.getElementById('qris-file-input').click()" style="background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); font-size: 0.85rem;">
+              📤 Upload/Ubah QRIS
+            </button>
+            <div id="qris-upload-status" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;"></div>
+          </div>
+
+          <div class="alert alert-info" style="margin-bottom: 1.5rem; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: 8px; padding: 1rem;">
           <p style="margin: 0; font-size: 0.9rem; color: #93c5fd;">Silakan pilih nama Anda dan upload bukti pembayaran (transfer/cash) untuk hari ini. Daftar akan otomatis terkirim ke WhatsApp saat Anda berhasil upload.</p>
         </div>
 
@@ -788,7 +808,7 @@
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v276</span></p>
+    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v277</span></p>
   </footer>
 
 
@@ -1361,7 +1381,7 @@
     </div>
   </div>
 
-<script src="/app.js?v=276"></script>
+<script src="/app.js?v=277"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 </html>
