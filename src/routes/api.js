@@ -1093,7 +1093,7 @@ const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs) =>
   });
 
   msg += `\nTotal Sudah Bayar: ${totalPaid} / ${allMembers.length} Orang\n`;
-  msg += `https://kkngiat16tanjungsari.foerta.tech`;
+  msg += `https://kkngiat16tanjungsari.foerta.tech/#pembayaran`;
 
   try {
     const fetch = (await import('node-fetch')).default;

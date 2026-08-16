@@ -146,6 +146,12 @@ let currentAttendanceFilter = 'today';
 let allAttendanceData = [];
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Cek URL Hash untuk direct routing
+  const hash = window.location.hash;
+  if (hash === '#pembayaran') {
+    setTimeout(() => switchTab('pembayaran-tab'), 100);
+  }
+
   // Initialize labels
   const wDisplay = document.getElementById('current-week-display');
   const tDisplay = document.getElementById('tpq-week-display');
