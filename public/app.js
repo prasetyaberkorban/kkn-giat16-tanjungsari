@@ -3985,16 +3985,41 @@ async function handlePaymentUpload(e) {
     const todayStr = `${yyyy}-${mm}-${dd}`;
     formData.append('date', todayStr);
 
-    // 1. Upload to GDrive
-    const uploadRes = await fetch('/gdrive/api/drive/upload', {
-      method: 'POST',
-      body: formData
-    });
+    // 1. Upload to GDrive with Progress
+    const uploadData = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/gdrive/api/drive/upload');
+      
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const loadedMB = (event.loaded / (1024 * 1024)).toFixed(2);
+          const totalMB = (event.total / (1024 * 1024)).toFixed(2);
+          const percent = Math.round((event.loaded / event.total) * 100);
+          
+          if (percent < 100) {
+            btn.innerHTML = `<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:spin 1s linear infinite;"></span> Uploading ${percent}% (${loadedMB}MB / ${totalMB}MB)`;
+          } else {
+            btn.innerHTML = `<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:spin 1s linear infinite;"></span> Menyimpan ke Google Drive... (Harap tunggu)`;
+          }
+        }
+      };
 
-    const uploadData = await uploadRes.json();
-    if (!uploadRes.ok || !uploadData.success) {
-      throw new Error(uploadData.error || 'Gagal upload ke Google Drive');
-    }
+      xhr.onload = () => {
+        try {
+          const res = JSON.parse(xhr.responseText);
+          if (xhr.status >= 200 && xhr.status < 300 && res.success) {
+            resolve(res);
+          } else {
+            reject(new Error(res.error || 'Gagal upload ke Google Drive'));
+          }
+        } catch (e) {
+          reject(new Error('Format respons tidak valid dari server'));
+        }
+      };
+      
+      xhr.onerror = () => reject(new Error('Koneksi terputus saat upload ke server'));
+      xhr.send(formData);
+    });
 
     const proofUrl = `https://drive.google.com/file/d/${uploadData.file.id}/view`;
 
@@ -4153,15 +4178,40 @@ async function handleQrisSelected() {
     formData.append('folderId', GDRIVE_PAYMENT_FOLDER_ID);
     formData.append('autoCreateDateFolder', 'false');
 
-    const uploadRes = await fetch('/gdrive/api/drive/upload', {
-      method: 'POST',
-      body: formData
-    });
+    const uploadData = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/gdrive/api/drive/upload');
+      
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const loadedMB = (event.loaded / (1024 * 1024)).toFixed(2);
+          const totalMB = (event.total / (1024 * 1024)).toFixed(2);
+          const percent = Math.round((event.loaded / event.total) * 100);
+          
+          if (percent < 100) {
+            statusEl.innerText = `Mengupload QRIS... ${percent}% (${loadedMB}MB / ${totalMB}MB)`;
+          } else {
+            statusEl.innerText = `Menyimpan ke Google Drive... (Harap tunggu)`;
+          }
+        }
+      };
 
-    const uploadData = await uploadRes.json();
-    if (!uploadRes.ok || !uploadData.success) {
-      throw new Error(uploadData.error || 'Gagal upload ke Google Drive');
-    }
+      xhr.onload = () => {
+        try {
+          const res = JSON.parse(xhr.responseText);
+          if (xhr.status >= 200 && xhr.status < 300 && res.success) {
+            resolve(res);
+          } else {
+            reject(new Error(res.error || 'Gagal upload ke Google Drive'));
+          }
+        } catch (e) {
+          reject(new Error('Format respons tidak valid'));
+        }
+      };
+      
+      xhr.onerror = () => reject(new Error('Koneksi terputus saat upload'));
+      xhr.send(formData);
+    });
 
     const proofUrl = `https://drive.google.com/file/d/${uploadData.file.id}/view`;
 
