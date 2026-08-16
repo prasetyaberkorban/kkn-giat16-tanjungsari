@@ -1093,6 +1093,7 @@ const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs) =>
   });
 
   msg += `\nTotal Sudah Bayar: ${totalPaid} / ${allMembers.length} Orang\n`;
+  msg += `CHOBAROL DISINI\n`;
   msg += `https://kkngiat16tanjungsari.foerta.tech/#pembayaran`;
 
   try {

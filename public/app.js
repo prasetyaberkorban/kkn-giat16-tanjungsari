@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Cek URL Hash untuk direct routing
   const hash = window.location.hash;
   if (hash === '#pembayaran') {
-    setTimeout(() => switchTab('pembayaran-tab'), 100);
+    setTimeout(() => switchTab('pembayaran'), 100);
   }
 
   // Initialize labels
