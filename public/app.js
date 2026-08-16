@@ -4030,6 +4030,7 @@ async function openWaSettingModal() {
     const res = await fetch('/api/settings/payment-wa');
     const data = await res.json();
     targetInput.value = data.number || '';
+    document.getElementById('wa-setting-k').value = data.kSession || '';
   } catch (err) {
     console.error('Failed to fetch WA setting:', err);
     targetInput.value = '';
@@ -4046,6 +4047,7 @@ function closeWaSettingModal() {
 async function handleWaSettingSubmit(e) {
   e.preventDefault();
   const number = document.getElementById('wa-setting-target').value.trim();
+  const kSession = document.getElementById('wa-setting-k').value.trim();
   const btn = e.target.querySelector('button[type="submit"]');
   const originalText = btn.innerHTML;
   
@@ -4056,7 +4058,7 @@ async function handleWaSettingSubmit(e) {
     const res = await fetch('/api/settings/payment-wa', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ number })
+      body: JSON.stringify({ number, kSession })
     });
     
     if (res.ok) {

@@ -1067,6 +1067,7 @@ const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs) =>
   const AppSetting = require('../models/AppSetting');
   const setting = await AppSetting.findOne({ key: 'wa_payment_target' });
   const target = (setting && setting.value && setting.value.number) ? setting.value.number : process.env.WA_GROUP_NUMBER;
+  const kSession = (setting && setting.value && setting.value.kSession) ? setting.value.kSession : '';
   
   if (!token || !target) {
     console.log('[WA] Fonnte token or target missing, skipping WA notification.');
@@ -1077,7 +1078,8 @@ const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs) =>
   const dateObj = new Date(date);
   const formattedDate = dateObj.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-  let msg = `*IURAN KAS HARIAN*\n`;
+  const titleSession = kSession ? ` (${kSession})` : '';
+  let msg = `*IURAN KAS HARIAN${titleSession}*\n`;
   msg += `Tanggal: ${formattedDate}\n`;
 
   let totalPaid = 0;
@@ -1192,12 +1194,12 @@ router.get('/settings/payment-wa', async (req, res) => {
 
 router.post('/settings/payment-wa', async (req, res) => {
   try {
-    const { number } = req.body;
+    const { number, kSession } = req.body;
     let setting = await AppSetting.findOne({ key: 'wa_payment_target' });
     if (!setting) {
-      setting = new AppSetting({ key: 'wa_payment_target', value: { number } });
+      setting = new AppSetting({ key: 'wa_payment_target', value: { number, kSession } });
     } else {
-      setting.value = { number };
+      setting.value = { number, kSession };
     }
     await setting.save();
     res.json({ success: true, message: 'Berhasil disimpan' });
