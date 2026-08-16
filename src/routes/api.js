@@ -1186,7 +1186,8 @@ router.get('/settings/payment-wa', async (req, res) => {
   try {
     const setting = await AppSetting.findOne({ key: 'wa_payment_target' });
     const number = (setting && setting.value && setting.value.number) ? setting.value.number : process.env.WA_GROUP_NUMBER;
-    res.json({ number: number || '' });
+    const kSession = (setting && setting.value && setting.value.kSession) ? setting.value.kSession : '';
+    res.json({ number: number || '', kSession });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
