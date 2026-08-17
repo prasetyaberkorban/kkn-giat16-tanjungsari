@@ -1075,6 +1075,11 @@ const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs) =>
   }
 
   const paidMembers = paymentLogs.map(p => p.memberName);
+  
+  if (paidMembers.length >= allMembers.length) {
+    console.log('[WA] Semua anggota sudah bayar, menghentikan notifikasi.');
+    return;
+  }
   const dateObj = new Date(date);
   const formattedDate = dateObj.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
