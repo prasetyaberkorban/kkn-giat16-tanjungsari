@@ -3906,26 +3906,36 @@ function renderPaymentTable() {
       
       
       let imageUrl = log.proofUrl;
-      if (imageUrl.includes('drive.google.com/file/d/')) {
-        const fileId = imageUrl.split('/d/')[1].split('/')[0];
-        imageUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+      if (imageUrl === 'CASH') {
+        actionHtml = `<div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center;">
+          <span style="display:inline-block; padding: 0.25rem 0.6rem; font-size: 0.75rem; font-weight: bold; background: rgba(245, 158, 11, 0.2); color: #f59e0b; border-radius: 4px; border: 1px solid rgba(245, 158, 11, 0.4);">💳 Bayar Cash</span>
+          ${deleteBtn}
+        </div>`;
+        
+        // No image row for CASH
+        const emptyTr = document.createElement('tr');
+        emptyTr.style.display = 'none';
+        tr.imgTr = emptyTr;
+      } else {
+        if (imageUrl.includes('drive.google.com/file/d/')) {
+          const fileId = imageUrl.split('/d/')[1].split('/')[0];
+          imageUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+        }
+        
+        actionHtml = `<div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center;">
+          <button class="btn" onclick="toggleProof('${log._id}')" style="background: transparent; border: 1px solid var(--color-accent); color: var(--color-accent); padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer;">🖼️ Lihat Bukti</button>
+          ${deleteBtn}
+        </div>`;
+        
+        // Additional row for inline image
+        const imgTr = document.createElement('tr');
+        imgTr.id = `proof-row-${log._id}`;
+        imgTr.style.display = 'none';
+        imgTr.innerHTML = `<td colspan="4" style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.02);">
+          <img src="${imageUrl}" alt="Bukti" style="max-width: 100%; max-height: 400px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+        </td>`;
+        tr.imgTr = imgTr;
       }
-      
-      actionHtml = `<div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center;">
-        <button class="btn" onclick="toggleProof('${log._id}')" style="background: transparent; border: 1px solid var(--color-accent); color: var(--color-accent); padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer;">🖼️ Lihat Bukti</button>
-        ${deleteBtn}
-      </div>`;
-      
-      // Additional row for inline image
-      const imgTr = document.createElement('tr');
-      imgTr.id = `proof-row-${log._id}`;
-      imgTr.style.display = 'none';
-      imgTr.innerHTML = `<td colspan="4" style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.02);">
-        <img src="${imageUrl}" alt="Bukti" style="max-width: 100%; max-height: 400px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
-      </td>`;
-      
-      // Store imgTr to append later
-      tr.imgTr = imgTr;
 
     } else {
       statusHtml = '<span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 0.35rem 0.65rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">❌ Belum Bayar</span>';
@@ -4232,5 +4242,45 @@ async function handleQrisSelected() {
   } catch (err) {
     console.error(err);
     statusEl.innerText = 'Gagal upload QRIS.';
+  }
+}
+
+
+async function handleCashPayment() {
+  const memberName = document.getElementById('payment-member-name').value;
+  const btnCash = document.getElementById('btn-cash-payment');
+  
+  if (!memberName) return;
+
+  btnCash.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid #f59e0b; border-top-color:transparent; border-radius:50%; animation:spin 1s linear infinite;"></span> Menyimpan...';
+  btnCash.disabled = true;
+
+  try {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+
+    const saveRes = await fetch('/api/payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        date: todayStr,
+        memberName,
+        proofUrl: 'CASH'
+      })
+    });
+
+    if (!saveRes.ok) throw new Error('Gagal mencatat pembayaran');
+
+    showToast(`Pembayaran cash untuk ${memberName} berhasil dicatat!`);
+    closePaymentUploadModal();
+    fetchPaymentData(); // Refresh data
+  } catch (err) {
+    showToast(err.message);
+  } finally {
+    btnCash.innerHTML = '💳 Bayar Tunai (Tanpa Bukti)';
+    btnCash.disabled = false;
   }
 }

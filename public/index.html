@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GIAT 16 - DESA TANJUNGSARI</title>
   <meta name="description" content="Dashboard monitoring jadwal piket harian dan absensi kehadiran UNNES GIAT 16 Desa Tanjung Sari.">
-  <link rel="stylesheet" href="/style.css?v=285">
+  <link rel="stylesheet" href="/style.css?v=286">
   <!-- Load QRCode.js secara lokal -->
   <script src="/qrcode.min.js"></script>
   <!-- Load SheetJS for Excel Exports -->
@@ -777,6 +777,9 @@
         <button type="submit" class="btn" id="btn-submit-payment" style="width: 100%; background: var(--color-success); border-color: var(--color-success); margin: 0;">
           Upload Sekarang
         </button>
+        <button type="button" class="btn" id="btn-cash-payment" onclick="handleCashPayment()" style="width: 100%; background: rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.4); color: #f59e0b; margin-top: 0.8rem;">
+          💳 Bayar Tunai (Tanpa Bukti)
+        </button>
       </form>
     </div>
   </div>
@@ -811,7 +814,7 @@
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v285</span></p>
+    <p>&copy; 2026 UNNES GIAT 16 Desa Tanjung Sari. Sistem Piket & Absensi Posko. <span style="opacity: 0.7;">v286</span></p>
   </footer>
 
 
@@ -1384,7 +1387,7 @@
     </div>
   </div>
 
-<script src="/app.js?v=285"></script>
+<script src="/app.js?v=286"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 </html>
