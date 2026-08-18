@@ -1062,7 +1062,7 @@ cron.schedule('0 6,18 * * *', async () => {
 // KAS PEMBAYARAN & WHATSAPP
 // ==========================================
 
-const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs) => {
+const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs, isCron = false) => {
   const token = process.env.FONNTE_TOKEN;
   const AppSetting = require('../models/AppSetting');
   const setting = await AppSetting.findOne({ key: 'wa_payment_target' });
@@ -1076,8 +1076,8 @@ const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs) =>
 
   const paidMembers = paymentLogs.map(p => p.memberName);
   
-  if (paidMembers.length >= allMembers.length) {
-    console.log('[WA] Semua anggota sudah bayar, menghentikan notifikasi.');
+  if (isCron && paidMembers.length >= allMembers.length) {
+    console.log('[WA] Semua anggota sudah bayar, menghentikan notifikasi cron.');
     return;
   }
   const dateObj = new Date(date);
@@ -1270,7 +1270,7 @@ cron.schedule('0 7,18,20,23 * * *', async () => {
     const allLogs = await PaymentLog.find({ date: todayStr });
     
     console.log(`[CRON] Mengirim laporan iuran WA untuk ${todayStr}...`);
-    await sendWhatsAppPaymentNotification(todayStr, allMembers, allLogs);
+    await sendWhatsAppPaymentNotification(todayStr, allMembers, allLogs, true);
   } catch (err) {
     console.error('[CRON Error] Gagal mengirim jadwal WA:', err);
   }
