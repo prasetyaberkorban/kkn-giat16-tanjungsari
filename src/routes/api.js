@@ -1062,7 +1062,22 @@ cron.schedule('0 6,18 * * *', async () => {
 // KAS PEMBAYARAN & WHATSAPP
 // ==========================================
 
-const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs, isCron = false) => {
+
+const memberPhones = {
+  'Mey': '6281215385664',
+  'Fay': '6285890087464',
+  'Zii': '6285770038145',
+  'Firzan': '6281328766750',
+  'Zahra': '6285643336850',
+  'Naila': '6288295057751',
+  'Cio': '6289684206080',
+  'Valen': '62895412634980',
+  'Ananda': '628562159560',
+  'Tian': '6282329272080',
+  'Hani': '628886880448'
+};
+
+const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs, isCron = false, withMention = false) => {
   const token = process.env.FONNTE_TOKEN;
   const AppSetting = require('../models/AppSetting');
   const setting = await AppSetting.findOne({ key: 'wa_payment_target' });
@@ -1093,7 +1108,11 @@ const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs, is
       msg += `${i + 1}. ${member} ✅\n`;
       totalPaid++;
     } else {
-      msg += `${i + 1}. ${member} ❌\n`;
+      if (withMention && memberPhones[member]) {
+        msg += `${i + 1}. ${member} @${memberPhones[member]} ❌\n`;
+      } else {
+        msg += `${i + 1}. ${member} ❌\n`;
+      }
     }
   });
 
@@ -1155,6 +1174,30 @@ router.post('/payment', async (req, res) => {
   }
 });
 // ==========================================
+
+
+// ==========================================
+// MANUAL NOTIFY ENDPOINT
+// ==========================================
+router.post('/payment/notify-manual', async (req, res) => {
+  try {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+
+    const allMembers = ['Mey', 'Fay', 'Zii', 'Firzan', 'Zahra', 'Naila', 'Cio', 'Valen', 'Ananda', 'Tian', 'Hani'];
+    const allLogs = await PaymentLog.find({ date: todayStr });
+    
+    // Call with isCron=false, withMention=true
+    await sendWhatsAppPaymentNotification(todayStr, allMembers, allLogs, false, true);
+    
+    res.json({ success: true, message: 'Pesan tag berhasil dikirim ke grup WA' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Get Global Theme
 router.get('/theme', async (req, res) => {

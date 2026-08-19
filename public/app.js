@@ -4284,3 +4284,28 @@ async function handleCashPayment() {
     btnCash.disabled = false;
   }
 }
+
+
+async function sendManualMention(btn) {
+  if (!confirm('Kirim pesan ke grup WA dan TAG semua yang belum bayar hari ini?')) return;
+  
+  const originalHtml = btn.innerHTML;
+  btn.innerHTML = 'Memproses...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/payment/notify-manual', { method: 'POST' });
+    const data = await res.json();
+    
+    if (res.ok && data.success) {
+      showToast('Berhasil mengirim tag ke grup WhatsApp!');
+    } else {
+      throw new Error(data.error || 'Gagal mengirim pesan manual');
+    }
+  } catch (err) {
+    showToast(err.message);
+  } finally {
+    btn.innerHTML = originalHtml;
+    btn.disabled = false;
+  }
+}
