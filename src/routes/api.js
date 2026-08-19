@@ -1063,19 +1063,6 @@ cron.schedule('0 6,18 * * *', async () => {
 // ==========================================
 
 
-const memberPhones = {
-  'Mey': '6281215385664',
-  'Fay': '6285890087464',
-  'Zii': '6285770038145',
-  'Firzan': '6281328766750',
-  'Zahra': '6285643336850',
-  'Naila': '6288295057751',
-  'Cio': '6289684206080',
-  'Valen': '62895412634980',
-  'Ananda': '628562159560',
-  'Tian': '6282329272080',
-  'Hani': '628886880448'
-};
 
 const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs, isCron = false, withMention = false) => {
   const token = process.env.FONNTE_TOKEN;
@@ -1108,11 +1095,7 @@ const sendWhatsAppPaymentNotification = async (date, allMembers, paymentLogs, is
       msg += `${i + 1}. ${member} ✅\n`;
       totalPaid++;
     } else {
-      if (withMention && memberPhones[member]) {
-        msg += `${i + 1}. ${member} @${memberPhones[member]} ❌\n`;
-      } else {
-        msg += `${i + 1}. ${member} ❌\n`;
-      }
+      msg += `${i + 1}. ${member} ❌\n`;
     }
   });
 

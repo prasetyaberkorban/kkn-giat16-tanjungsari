@@ -4287,7 +4287,7 @@ async function handleCashPayment() {
 
 
 async function sendManualMention(btn) {
-  if (!confirm('Kirim pesan ke grup WA dan TAG semua yang belum bayar hari ini?')) return;
+  if (!confirm('Kirim pesan list pembayaran hari ini ke grup WA?')) return;
   
   const originalHtml = btn.innerHTML;
   btn.innerHTML = 'Memproses...';
